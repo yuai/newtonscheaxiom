@@ -23,8 +23,8 @@ class XYPlot:
 
   def resize(self,event ):
     self.repaint(self.bgcolor)
-    self.width=event.width-6
-    self.height=event.height-6
+    self.width=event.width-4
+    self.height=event.height-4
     self.canvas.configure(width=self.width,height=self.height)
     self.repaint(self.fgcolor)
 
