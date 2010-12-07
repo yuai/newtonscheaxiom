@@ -15,8 +15,25 @@ class XYPlotApp:
       bPlotData.pack(side="right")
       fButtons.pack(fill="both",expand="1")
       self.mainWindow.pack(fill="both",expand="1")
+      
+      menubar = Menu(mainWindow)
+      filemenu = Menu(menubar, tearoff=0)
+      filemenu.add_command(label="Import", command=donothing)
+      filemenu.add_separator()
+      filemenu.add_command(label="Exit", command=mainWindow.quit)
+      menubar.add_cascade(label="File", menu=filemenu)
+      helpmenu = Menu(menubar, tearoff=0)
+      helpmenu.add_command(label="Help Index", command=donothing)
+      helpmenu.add_command(label="About...", command=donothing)
+      menubar.add_cascade(label="Help", menu=helpmenu)
+      mainWindow.config(menu=menubar)
+      
+
+def donothing():
+  filewin = Toplevel(mainWindow)
+  button = Button(filewin, text="Do nothing button")
+  button.pack()
 
 mainWindow=Tk()
 app=XYPlotApp(mainWindow)
 mainWindow.mainloop()
-
