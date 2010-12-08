@@ -35,7 +35,7 @@ class XYPlotApp:
       bPlotDot=Button(fButtons, text="Draw Dot",command=self.xyPlot.plotSampleData)
       bPlotLine=Button(fButtons, text="Draw Line",command=self.xyPlot.plotSampleData)
       bApproximateLine=Button(fButtons, text="Approximate Line",command=self.xyPlot.plotSampleData)
-      bPlotDifferent=Button(fButtons, text="Different",command=self.xyPlot.plotSampleData)
+      bPlotDifferent=Button(fButtons, text="Different",command=self.xyPlot.drawSmooth)
       bPlotInterate=Button(fButtons, text="Draw Interate",command=self.xyPlot.plotSampleData)
       bQuit.pack(side="right")
       bRectangle.pack(side="right")
