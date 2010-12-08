@@ -18,8 +18,8 @@ class XYPlot:
     
   def repaint(self,_color):
     self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
-    self.canvas.create_line(0,self.height/2,self.width,self.height/2,width=2,fill=_color)
-    self.canvas.create_line(self.width/2,0,self.width/2,self.height,width=2,fill=_color)
+    self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
+    self.canvas.create_line(0.1*self.width,0.9 * self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
 
   def resize(self,event ):
     self.repaint(self.bgcolor)
@@ -41,6 +41,21 @@ class XYPlot:
     self.canvas.create_line(data,fill=self.drawcolor)
     
   def drawSmooth(self):
+      '''test for drawing splines trough points'''
       self.canvas.create_line(0,0,20,80,100,60,smooth = 'true')
-
-
+      
+  def transAxis(self,x,y,maxX,maxY):
+      ''' Transforms x,y Values into scale of Canvas'''
+      if x == 0.0 and y == 0.0:
+          x = 0.1 * self.width
+          y = 0.9 * self.height
+      elif x == 0.0 and y <> 0.0:
+         x =  x = 0.1 * self.width
+         y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
+      elif x <> 0.0 and y == 0.0:
+         x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
+         y = 0.9 * self.height
+      elif x<>0.0 and y <> 0.0:        
+          x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
+          y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
+      
