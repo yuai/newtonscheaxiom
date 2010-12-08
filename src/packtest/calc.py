@@ -35,6 +35,9 @@ class Calc:
         c = y_w - a* x_w
      
         print " y = %f * x + 0" %a
+        
+        
+    
     
         
 
