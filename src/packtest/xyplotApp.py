@@ -4,6 +4,19 @@ from xyplot import *
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class XYPlotApp:
    def __init__(self, parent=0):
+      #Checkbox
+      CheckVar1 = IntVar()
+      CheckVar2 = IntVar()
+      C1 = Checkbutton(left, text = "Plot", variable = CheckVar1,onvalue = 1, offvalue = 0, height=1,width = 25)
+      C2 = Checkbutton(left, text = "Table", variable = CheckVar2,onvalue = 1, offvalue = 0, height=1,width = 25)
+      C1.pack(side="top")
+      C2.pack(side="top")
+      C1 = Checkbutton(left, text = "Plot", variable = CheckVar1,onvalue = 1, offvalue = 0, height=1,width = 25)
+      C2 = Checkbutton(left, text = "Table", variable = CheckVar2,onvalue = 1, offvalue = 0, height=1,width = 25)
+      C1.pack(side="top")
+      C2.pack(side="top")
+       
+       
       scrollbar = Scrollbar(left)
       scrollbar.pack( side=RIGHT, fill=Y )
 
@@ -11,21 +24,12 @@ class XYPlotApp:
       for line in range(100):
            mylist.insert(END, "This is line number " + str(line))
 
-      mylist.pack( side=LEFT, fill=BOTH )
+      mylist.pack( side=TOP, fill=BOTH, expand=1)
       scrollbar.config( command = mylist.yview )
-      
-      
-      #Checkbox
-      CheckVar1 = IntVar()
-      CheckVar2 = IntVar()
-      C1 = Checkbutton(top, text = "Plot", variable = CheckVar1,onvalue = 1, offvalue = 0, height=2,width = 5)
-      C2 = Checkbutton(top, text = "Table", variable = CheckVar2,onvalue = 1, offvalue = 0, height=2,width = 5)
-      C1.pack(side="left")
-      C2.pack(side="left")
       
       # XYPlot
       self.mainWindow = Frame(main)
-      self.xyPlot=XYPlot(main,500,350)
+      self.xyPlot=XYPlot(main,400,250)
       
       # Buttons
       fButtons = Frame(main, border=2, relief="groove")
@@ -78,13 +82,13 @@ def importer():
 
 
 mainWindow=Tk()
-mainWindow.minsize(500,350)
+mainWindow.minsize(800,600)
 
 # PanedWindow
 m1 = PanedWindow(orient=VERTICAL)
 m1.pack(fill=BOTH, expand=1)
-top = Label(m1)
-m1.add(top)
+#top = Label(m1)
+#m1.add(top)
 m2 = PanedWindow(m1)
 left = Label(m2)
 m2.add(left)
