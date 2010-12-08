@@ -47,6 +47,9 @@ class XYPlotApp:
       bPlotInterate.pack(side="right")
       fButtons.pack(fill=X,expand="0",side="bottom")
       
+      
+      self.xyPlot.canvas.pack(fill="both", expand="1")
+      
       self.mainWindow.pack(fill="both",expand="1")
       
 
@@ -54,6 +57,23 @@ def donothing():
   filewin = Toplevel(mainWindow)
   button = Button(filewin, text="Do nothing button")
   button.pack()
+  
+def importer():
+  import os
+  from Tkinter import Tk
+  import tkFileDialog
+
+  toplevel = Tk()
+  toplevel.withdraw()
+
+  filename = tkFileDialog.askopenfilename()
+
+  if os.path.isfile(filename):
+    for line in open(filename,'r'):
+        print line,
+  else: print 'No file chosen'
+  raw_input('Ready, push Enter')
+
 
 
 
@@ -76,7 +96,7 @@ m1.add(m2)
 # Menu
 menubar = Menu(mainWindow)
 filemenu = Menu(menubar, tearoff=0)
-filemenu.add_command(label="Import", command=donothing)
+filemenu.add_command(label="Import", command=importer)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=mainWindow.quit)
 menubar.add_cascade(label="File", menu=filemenu)
