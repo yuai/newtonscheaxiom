@@ -39,5 +39,8 @@ class XYPlot:
   	  data.append(self.height-(randint(0,self.height)))
     self.repaint(self.fgcolor)
     self.canvas.create_line(data,fill=self.drawcolor)
+    
+  def drawSmooth(self):
+      self.canvas.create_line(0,0,20,80,100,60,smooth = 'true')
 
 
