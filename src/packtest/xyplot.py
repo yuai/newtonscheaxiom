@@ -13,7 +13,7 @@ class XYPlot:
     self.drawcolor="blue"
     self.canvas = Canvas(self.parent,width=self.width,height=self.height,bg=self.bgcolor)
     self.repaint(self.fgcolor)
-    self.canvas.pack(fill="both", expand="1")
+#    self.canvas.pack(fill="both", expand="1")
     self.canvas.bind('<Configure>',self.resize)
     
   def repaint(self,_color):
