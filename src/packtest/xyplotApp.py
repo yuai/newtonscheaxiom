@@ -62,6 +62,17 @@ def donothing():
   button = Button(filewin, text="Do nothing button")
   button.pack()
   
+def opendDB():
+  filewin = Toplevel(mainWindow)
+  scrollbar = Scrollbar(filewin)
+  scrollbar.pack( side=RIGHT, fill=Y )
+  mylist = Listbox(filewin, yscrollcommand = scrollbar.set )
+  for line in range(100):
+      mylist.insert(END, "This is line number " + str(line))
+      
+  mylist.pack( side=TOP, fill=BOTH, expand=1)
+  scrollbar.config( command = mylist.yview )
+  
 def importer():
   import os
   from Tkinter import Tk
@@ -101,6 +112,7 @@ m1.add(m2)
 menubar = Menu(mainWindow)
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Import", command=importer)
+filemenu.add_command(label="open DB", command=opendDB)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=mainWindow.quit)
 menubar.add_cascade(label="File", menu=filemenu)
