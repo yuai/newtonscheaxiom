@@ -1,29 +1,37 @@
-import sys
-import sqlite3
+import csv
 
-conn = sqlite3.connect("halle")
 
-c = conn.cursor()
+class NewtonImporter:
+    
+    
+    def __init__(self,name):
+        try:
+            csvfile = open(name, "rb")
+            dialect = csv.Sniffer().sniff(csvfile.read(1024))
+            csvfile.seek(0)
+            self.reader = csv.reader(csvfile, dialect)
+            self.x = []
+            self.fillX()
+            
+        except csv.Error:
+            print "Es ist keine Datei mit diesem namen Vorhanden"
+            
+    def fillX(self):
+        for row in self.reader:
+            if len(row)>0 :
+                print row[0]
+        
+            
+            
+        
+            
+        
+              
+        
+            
+        
+            
+        
+test = NewtonImporter("officialTemplate.csv")
 
-# Create table
-def create():
-    c.execute("""CREATE TABLE sqlite (id UNIQE INT, value TEXT)""")
 
-# Insert a row of data
-def insert():
-    c.execute("""INSERT INTO sqlite VALUES (0, "null")""")
-
-def read():
-    c.execute("""SELECT * FROM sqlite""")
-    for row in c:
-        print row
-
-create()
-insert()
-read()
-
-# Save (commit) the changes
-conn.commit()
-
-# We can also close the cursor if we are done with it
-c.close()
