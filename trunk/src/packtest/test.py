@@ -31,9 +31,11 @@ class NewtonImporter:
         '''fill Method, iterates through every Row of csv file and fills Array'''
         i = 0
         for row in self.reader:
+            
             if i > 0:
                 break
             for line in self.reader:
+                
                 if i > 0:
                     break
                 
@@ -45,8 +47,9 @@ class NewtonImporter:
                         print "Wrong Template, read an String instead of an float"
                         i = 1
                         
-                    
-                    self.Meta.append(line[2])
+                self.Meta.append(line[2])
+     
+            
         
     #Print out just for Testing purposes
         print 'X'            
@@ -57,34 +60,10 @@ class NewtonImporter:
               print self.y[i] 
         print 'META'      
         for i in range (0,len(self.Meta)):             
-              print self.Meta[i] 
+              print self.Meta[i]
+     
             
             
-  
-                 
-                     
-              
-            
-       
-    
-    
-   
-    
-   
-            
-        
-        
-            
-            
-        
-            
-        
-              
-        
-            
-        
-            
-        
 #test = NewtonImporter("C:\Users\Xandman\Desktop\pfadtest.csv")
 
 
