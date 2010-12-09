@@ -13,7 +13,6 @@ class XYPlot:
     self.drawcolor="blue"
     self.canvas = Canvas(self.parent,width=self.width,height=self.height,bg=self.bgcolor)
     self.repaint(self.fgcolor)
-#    self.canvas.pack(fill="both", expand="1")
     self.canvas.bind('<Configure>',self.resize)
     
   def repaint(self,_color):
@@ -29,6 +28,10 @@ class XYPlot:
     self.repaint(self.fgcolor)
 
   def drawRectangle(self):
+    self.repaint(self.fgcolor)
+    self.canvas.create_rectangle(self.width/2-self.width/10,self.height/2-self.height/10, self.width/2+self.width/10, self.height/2+self.height/10,fill=self.drawcolor)
+    
+  def test(self,event):
     self.repaint(self.fgcolor)
     self.canvas.create_rectangle(self.width/2-self.width/10,self.height/2-self.height/10, self.width/2+self.width/10, self.height/2+self.height/10,fill=self.drawcolor)
     
