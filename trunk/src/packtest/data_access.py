@@ -38,7 +38,7 @@ http://www.gnu.org/licenses/gpl.html
         if Experiment.debug == True: print "sql: " + str(sql)
         self.c.execute(sql)
        
-    def __init__(self, p=':memory:', vn =15):
+    def __init__(self, p=':memory:', vn =1):
         """
 initiate a new experiment
 :Parameters:
