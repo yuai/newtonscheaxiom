@@ -1,6 +1,8 @@
 from Tkinter import *
 from xyplot import *
+from xyplotApp import *
 from test import *
+from data_access import Experiment
     
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class XYPlotApp:
@@ -54,6 +56,9 @@ class XYPlotApp:
       
       self.mainWindow.pack(fill="both",expand="1")
       
+      
+      
+      
    def opendDB(self):
       filewin = Toplevel(mainWindow)
       scrollbar = Scrollbar(filewin)
@@ -106,6 +111,9 @@ def importer():
 mainWindow=Tk()
 mainWindow.minsize(800,600)
 
+e = Experiment(':memory:',1) 
+
+
 #---------------------------- PanedWindow
 m1 = PanedWindow(orient=VERTICAL)
 m1.pack(fill=BOTH, expand=1)
@@ -120,6 +128,7 @@ m1.add(m2)
 
 
 app=XYPlotApp(main)
+
 app.createMenu()
 
 mainWindow.mainloop()
