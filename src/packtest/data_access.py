@@ -11,7 +11,7 @@ the latest version of this code can be found on github:
 https://github.com/P2000/penview
 (EpyDoc generated) documentation is available on wuala:
 http://content.wuala.com/contents/patrick2000/Shared/school/11_Projekt/Pendulum/Dokumentation/DB%20V3.pdf?dl=1
-initial version by Tobias Thüring
+initial version by Tobias Thï¿½ring
 modified by Patrick Pfeifer
 Copyleft in December 2010 under the terms of the GNU GPL version 3 or any later version:
 http://www.gnu.org/licenses/gpl.html
@@ -38,7 +38,7 @@ http://www.gnu.org/licenses/gpl.html
         if Experiment.debug == True: print "sql: " + str(sql)
         self.c.execute(sql)
        
-    def __init__(self, p=':memory:', vn=1):
+    def __init__(self, p=':memory:', vn =15):
         """
 initiate a new experiment
 :Parameters:
@@ -89,6 +89,8 @@ http://content.wuala.com/contents/patrick2000/Shared/school/11_Projekt/Pendulum/
  
         if type(nr) != int:
             raise Exception("Experiment number must be given as an int")
+        print len(a[0])
+        print self.nvalues
  
         if len(a[0])-1 != self.nvalues:
             raise Exception("wrong number of values")
