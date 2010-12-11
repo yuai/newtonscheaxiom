@@ -1,4 +1,6 @@
 import csv
+import data_access
+import xyplotApp
 
 
 class NewtonImporter:
@@ -18,8 +20,9 @@ class NewtonImporter:
             self.reader = csv.reader(csvfile, dialect)
             self.x = []
             self.y = []
+            self.data = []
             self.Meta= []
-            self.fill()
+            self.fillSql()
             csvfile.close()
             
        except csv.Error:
@@ -27,7 +30,7 @@ class NewtonImporter:
             
     
     
-   def fill(self):
+   def fillArray(self):
         '''fill Method, iterates through every Row of csv file and fills Array'''
         i = 0
         for row in self.reader:
@@ -46,21 +49,38 @@ class NewtonImporter:
                     except ValueError:
                         print "Wrong Template, read an String instead of an float"
                         i = 1
-                        
-                self.Meta.append(line[2])
+                if line[2]!= "":          
+                    self.Meta.append(line[2])
+                
+       # metaDic = {'date':self.Meta[0],'exp_name'}
+       
+                                
+        self.data.append(self.x)
+        self.data.append(self.y)
      
             
         
     #Print out just for Testing purposes
-        print 'X'            
+        print 'X__________'            
         for i in range (0,len(self.x)):             
             print self.x[i]
-        print 'Y'   
+        print 'Y__________'   
         for i in range (0,len(self.y)):             
               print self.y[i] 
-        print 'META'      
+        print 'META_______'      
         for i in range (0,len(self.Meta)):             
               print self.Meta[i]
+              
+              
+   def fillSql(self):
+       self.fillArray()
+       xyplotApp.e.store_values(15,self.data)
+       #result = e.load_values(1)
+       
+       
+       
+       
+                
      
             
             
