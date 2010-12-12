@@ -2,13 +2,14 @@ import csv
 import data_access
 import xyplotApp
 
-
 class NewtonImporter:
     
    '''Object opens csv file, reads tables and writes them into
    3 Arrays:X-Coordinates as floats
             Y-Coordinates as floats
-            Meta-Data     as String'''
+            Meta-Data     as Strings
+            later the Metadatarray is portet to a Dictionary and all Data
+            is written to an SqlLite File '''
    def __init__(self,path):
        
        '''Constructor of NewtonImporter, initialzises Arrays and fills them 
@@ -52,24 +53,19 @@ class NewtonImporter:
                 if line[2]!= "":          
                     self.Meta.append(line[2])
                 
-       # metaDic = {'date':self.Meta[0],'exp_name'}
+        self.metaDic = {'date':self.Meta[0],'exp_name':self.Meta[1],'actor_name':self.Meta[2],
+                   'nr_series':self.Meta[3],'vn_unit':self.Meta[4],'vn_desc':self.Meta[5],
+                   'vn_fault':self.Meta[6],'additional_info':self.Meta[7]}
        
                                 
         self.data.append(self.x)
         self.data.append(self.y)
-     
+       #test, looking if everything is in the right place in the dictionary
+        print(self.metaDic)
             
         
-    #Print out just for Testing purposes
-        print 'X__________'            
-        for i in range (0,len(self.x)):             
-            print self.x[i]
-        print 'Y__________'   
-        for i in range (0,len(self.y)):             
-              print self.y[i] 
-        print 'META_______'      
-        for i in range (0,len(self.Meta)):             
-              print self.Meta[i]
+    
+       
               
               
    def fillSql(self):
