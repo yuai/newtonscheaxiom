@@ -1,7 +1,7 @@
 from Tkinter import *
 from xyplot import *
 from xyplotApp import *
-from test import *
+from newtonImporter import *
 from data_access import Experiment
     
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
