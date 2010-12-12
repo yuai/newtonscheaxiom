@@ -1,6 +1,7 @@
 import csv
 import data_access
 import xyplotApp
+import fail
 
 class NewtonImporter:
     
@@ -48,7 +49,7 @@ class NewtonImporter:
                         self.x.append(float(line[0]))
                         self.y.append(float(line[1]))
                     except ValueError:
-                        print "Wrong Template, read an String instead of an float"
+                        fail.Fail("converting Float error")
                         i = 1
                 if line[2]!= "":          
                     self.Meta.append(line[2])
@@ -60,17 +61,16 @@ class NewtonImporter:
                                 
         self.data.append(self.x)
         self.data.append(self.y)
-       #test, looking if everything is in the right place in the dictionary
-        print(self.metaDic)
-            
-        
-    
-       
+      
+
               
               
    def fillSql(self):
        self.fillArray()
-       xyplotApp.e.store_values(15,self.data)
+       xyplotApp.e.store_metadata(self.metaDic)
+       testdic =  xyplotApp.e.load_metadata()
+       print testdic
+       #xyplotApp.e.store_values(15,self.data)
        #result = e.load_values(1)
        
        
