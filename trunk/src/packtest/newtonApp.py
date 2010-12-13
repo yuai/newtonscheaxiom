@@ -58,6 +58,7 @@ class NewtonApp:
       self.mainWindow.pack(fill="both",expand="1")
       
    def opendDB(self):
+      ''' open new window with the experiences from DB '''
       filewin = Toplevel(mainWindow)
       scrollbar = Scrollbar(filewin)
       scrollbar.pack( side="right", fill="y" )
@@ -75,7 +76,7 @@ class NewtonApp:
       mylist.bind('<Double-Button-1>', self.xyPlot.test)
    
    def createMenu(self):
-      #---------------------------- Menu
+      ''' create Menu for the application '''
       menubar = Menu(mainWindow)
       filemenu = Menu(menubar, tearoff=0)
       filemenu.add_command(label="Import", command=self.importer)
@@ -90,10 +91,10 @@ class NewtonApp:
       mainWindow.config(menu=menubar)   
       
    def importer(self):
+       ''' open new Window to select a .csv file to import into to the DB '''
        import os
        from Tkinter import Tk
        import tkFileDialog
-
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
