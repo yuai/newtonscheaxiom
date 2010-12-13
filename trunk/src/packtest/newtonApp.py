@@ -62,10 +62,14 @@ class NewtonApp:
       scrollbar = Scrollbar(filewin)
       scrollbar.pack( side="right", fill="y" )
       mylist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20 )
-      testdata = self.e.load_metadata()
-      print testdata
+      exp_metadata = self.e.load_metadata()
+      nr_series = exp_metadata['nr_series']
+      actor_name = exp_metadata['actor_name']
+      exp_name = exp_metadata['exp_name']
+      
       for line in range(100):
-          mylist.insert(END, "This is line number " + str(line))   
+          mylist.insert(END, nr_series + ": " 
+                        + actor_name + " " + exp_name)   
       mylist.pack( side="top", fill="both", expand=1)
       scrollbar.config( command = mylist.yview )
       mylist.bind('<Double-Button-1>', self.xyPlot.test)
