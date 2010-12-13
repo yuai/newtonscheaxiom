@@ -57,7 +57,6 @@ class NewtonImporter:
        testdic =  self.exp.load_metadata()
        print testdic
        result = self.exp.load_values(1)
-       print result
        
        
        
