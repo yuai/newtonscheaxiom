@@ -37,7 +37,6 @@ class XYPlot:
     
   def getExpData(self,event):
     self.repaint(self.fgcolor)
-    print event.num
     
   def plotSampleData(self):
     data=[]
