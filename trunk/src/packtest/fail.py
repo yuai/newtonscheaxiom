@@ -1,9 +1,13 @@
 from Tkinter import *
 
 class Fail:
-    def _init_(self,message):
-        failWindow = Tk()
-        err_message = Label(failWindow, text = message)
-        err_button = Button (failWindow,text = "OK",command=self.failWindow.quit)
+    def __init__(self,message):
+        self.failWindow = Tk()
+        err_message = Label(self.failWindow, text = message)
+        err_button = Button (self.failWindow,text = "OK",command=self.failWindow.quit)
+        err_message.pack()
+        err_button.pack()
+        
+    
 
         
