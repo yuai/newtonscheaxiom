@@ -27,47 +27,50 @@ class NewtonApp:
       
       #---------------------------- Scrollbar
       scrollbar = Scrollbar(left)
-      scrollbar.pack( side=RIGHT, fill=Y )
+      scrollbar.pack( side="right", fill="y" )
       
       #---------------------------- ListBox
       mylist = Listbox(left, yscrollcommand = scrollbar.set )
       for line in range(100):
            mylist.insert(END, "This is line number " + str(line))
-      mylist.pack( side=TOP, fill=BOTH, expand=1)
+      mylist.pack( side="top", fill="both", expand=1)
       scrollbar.config( command = mylist.yview )
       
       #---------------------------- Buttons
       fButtons = Frame(main, border=2, relief="groove")
       bQuit = Button(fButtons, text="Quit",command=self.mainWindow.quit)
-      bRectangle=Button(fButtons, text="Draw Rectangle",command=self.xyPlot.drawRectangle)
-      bPlotData=Button(fButtons, text="Draw Data",command=self.xyPlot.plotSampleData)
-      bPlotDot=Button(fButtons, text="Draw Dot",command=self.xyPlot.plotSampleData)
-      bPlotLine=Button(fButtons, text="Draw Line",command=self.xyPlot.plotSampleData)
-      bApproximateLine=Button(fButtons, text="Approximate Line",command=self.xyPlot.transAxis(5.0,5.0,10.0,10.0))
       bQuit.pack(side="right")
-      bRectangle.pack(side="right")
-      bPlotData.pack(side="right")
-      bPlotDot.pack(side="right")
-      bPlotLine.pack(side="right")
-      bApproximateLine.pack(side="right")
+      #---------------------------- Radiobutton
+      var = IntVar()
+      R1 = Radiobutton(fButtons, text="Draw Rectangle", variable=var, value=1
+                       ,command=self.xyPlot.drawRectangle,indicatoron =0)
+      R1.pack(side="right")
+      R2 = Radiobutton(fButtons, text="Draw Data", variable=var, value=2
+                       ,command=self.xyPlot.plotSampleData,indicatoron =0)
+      R2.pack(side="right")
+      R3 = Radiobutton(fButtons, text="Draw Dot", variable=var, value=3
+                       ,command=self.xyPlot.plotSampleData,indicatoron =0)
+      R3.pack(side="right")
+      R4 = Radiobutton(fButtons, text="Draw Line", variable=var, value=4
+                       ,command=self.xyPlot.plotSampleData,indicatoron =0)
+      R4.pack(side="right")
+      R5 = Radiobutton(fButtons, text="Approximate Line", variable=var, value=5
+                       ,command=self.xyPlot.transAxis(5.0,5.0,10.0,10.0),indicatoron =0)
+      R5.pack(side="right")
       fButtons.pack(fill=X,expand="0",side="bottom")
-      
       #---------------------------- Canvas
       self.xyPlot.canvas.pack(fill="both", expand="1")
-      
       self.mainWindow.pack(fill="both",expand="1")
-      
-      
       
       
    def opendDB(self):
       filewin = Toplevel(mainWindow)
       scrollbar = Scrollbar(filewin)
-      scrollbar.pack( side=RIGHT, fill=Y )
+      scrollbar.pack( side="right", fill="y" )
       mylist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20 )
       for line in range(100):
           mylist.insert(END, "This is line number " + str(line))   
-      mylist.pack( side=TOP, fill=BOTH, expand=1)
+      mylist.pack( side="top", fill="both", expand=1)
       scrollbar.config( command = mylist.yview )
       mylist.bind('<Double-Button-1>', self.xyPlot.test)
    
@@ -84,10 +87,7 @@ class NewtonApp:
       helpmenu.add_command(label="Help Index", command=donothing)
       helpmenu.add_command(label="About...", command=donothing)
       menubar.add_cascade(label="Help", menu=helpmenu)
-      mainWindow.config(menu=menubar)
-      
-      
-      
+      mainWindow.config(menu=menubar)   
       
    def importer(self):
        import os
@@ -98,31 +98,14 @@ class NewtonApp:
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
        test=NewtonImporter(filename,self.e)
-  #if os.path.isfile(filename):
-  #  for line in open(filename,'r'):
-  #      print line,
-  #else: print 'No file chosen'
-  #raw_input('Ready, push Enter')         
-
-def donothing():
-  filewin = Toplevel(mainWindow)
-  button = Button(filewin, text="Do nothing button")
-  button.pack()
-
-
 
 
 mainWindow=Tk()
 mainWindow.minsize(800,600)
 
- 
-
-
 #---------------------------- PanedWindow
 m1 = PanedWindow(orient=VERTICAL)
-m1.pack(fill=BOTH, expand=1)
-#top = Label(m1)
-#m1.add(top)
+m1.pack(fill="both", expand=1)
 m2 = PanedWindow(m1)
 left = Label(m2)
 m2.add(left)
@@ -132,7 +115,6 @@ m1.add(m2)
 
 
 app=NewtonApp(main)
-
 app.createMenu()
 
 mainWindow.mainloop()
