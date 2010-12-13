@@ -1,77 +1,52 @@
 import csv
 import data_access
-import xyplotApp
-import fail
+#import newtonApp
+from fail import Fail
 
 class NewtonImporter:
-    
-   '''Object opens csv file, reads tables and writes them into
-   3 Arrays:X-Coordinates as floats
-            Y-Coordinates as floats
-            Meta-Data     as Strings
-            later the Metadatarray is portet to a Dictionary and all Data
-            is written to an SqlLite File '''
-   def __init__(self,path):
-       
-       '''Constructor of NewtonImporter, initialzises Arrays and fills them 
-       with csv content''' 
-       try:
-            csvfile = open(path, "rb")
+    def __init__(self,path,e):
+        try:
+            csvfile = open(path, 'r')
             dialect = csv.Sniffer().sniff(csvfile.read(1024))
             csvfile.seek(0)
-            self.reader = csv.reader(csvfile, dialect)
+            self.exp = e
+            self.reader = csv.reader(csvfile,delimiter = ';' , dialect = csv.excel)
             self.x = []
             self.y = []
             self.data = []
-            self.Meta= []
+            self.meta= []
             self.fillSql()
             csvfile.close()
             
-       except csv.Error:
+        except csv.Error:
             print "There is no File with this name "
             
     
     
-   def fillArray(self):
+    def fillArray(self):
         '''fill Method, iterates through every Row of csv file and fills Array'''
         i = 0
+        go = 0
         for row in self.reader:
+            if go > 0:
+                print row [0]
+                print row [1]
+                print row [2]
             
-            if i > 0:
-                break
-            for line in self.reader:
-                
-                if i > 0:
-                    break
-                
-                if line > 0:
-                    try:    
-                        self.x.append(float(line[0]))
-                        self.y.append(float(line[1]))
-                    except ValueError:
-                        fail.Fail("converting Float error")
-                        i = 1
-                if line[2]!= "":          
-                    self.Meta.append(line[2])
-                
-        self.metaDic = {'date':self.Meta[0],'exp_name':self.Meta[1],'actor_name':self.Meta[2],
-                   'nr_series':self.Meta[3],'vn_unit':self.Meta[4],'vn_desc':self.Meta[5],
-                   'vn_fault':self.Meta[6],'additional_info':self.Meta[7]}
-       
-                                
-        self.data.append(self.x)
-        self.data.append(self.y)
-      
-
+                self.x.append(float(row[0]))
+                self.y.append(float(row[1]))
+                self.meta.append(row[2])
+            go = 1
+        print self.x
               
               
-   def fillSql(self):
+    def fillSql(self):
        self.fillArray()
-       xyplotApp.e.store_metadata(self.metaDic)
-       testdic =  xyplotApp.e.load_metadata()
-       print testdic
-       #xyplotApp.e.store_values(15,self.data)
-       #result = e.load_values(1)
+       #self.exp.store_metadata(self.metaDic)
+       #testdic =  self.exp.load_metadata()
+       #print testdic
+       self.exp.store_values(1,*self.data)
+       result = self.exp.load_values(1)
        
        
        
@@ -80,6 +55,6 @@ class NewtonImporter:
      
             
             
-#test = NewtonImporter("C:\Users\Xandman\Desktop\pfadtest.csv")
+#test = NewtonImporter("C:\Users\Xandman\Desktop\NewtonTemplate.csv")
 
 
