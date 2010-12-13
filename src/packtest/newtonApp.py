@@ -1,12 +1,13 @@
 from Tkinter import *
 from xyplot import *
-from xyplotApp import *
-from newtonImporter import *
+from newtonImporter import NewtonImporter
 from data_access import Experiment
     
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-class XYPlotApp:
+class NewtonApp:
    def __init__(self, parent=0):
+       
+      self.e = Experiment(':memory:',1)
       #------------------------------ Checkbox
       CheckVar1 = IntVar()
       CheckVar2 = IntVar()
@@ -74,7 +75,7 @@ class XYPlotApp:
       #---------------------------- Menu
       menubar = Menu(mainWindow)
       filemenu = Menu(menubar, tearoff=0)
-      filemenu.add_command(label="Import", command=importer)
+      filemenu.add_command(label="Import", command=self.importer)
       filemenu.add_command(label="open DB", command=self.opendDB)
       filemenu.add_separator()
       filemenu.add_command(label="Exit", command=mainWindow.quit)
@@ -83,27 +84,30 @@ class XYPlotApp:
       helpmenu.add_command(label="Help Index", command=donothing)
       helpmenu.add_command(label="About...", command=donothing)
       menubar.add_cascade(label="Help", menu=helpmenu)
-      mainWindow.config(menu=menubar)     
+      mainWindow.config(menu=menubar)
+      
+      
+      
+      
+   def importer(self):
+       import os
+       from Tkinter import Tk
+       import tkFileDialog
+
+       toplevel = Tk()
+       toplevel.withdraw()
+       filename = tkFileDialog.askopenfilename()
+       test=NewtonImporter(filename,self.e)
+  #if os.path.isfile(filename):
+  #  for line in open(filename,'r'):
+  #      print line,
+  #else: print 'No file chosen'
+  #raw_input('Ready, push Enter')         
 
 def donothing():
   filewin = Toplevel(mainWindow)
   button = Button(filewin, text="Do nothing button")
   button.pack()
-  
-def importer():
-  import os
-  from Tkinter import Tk
-  import tkFileDialog
-
-  toplevel = Tk()
-  toplevel.withdraw()
-  filename = tkFileDialog.askopenfilename()
-  test=NewtonImporter(filename)
-  #if os.path.isfile(filename):
-  #  for line in open(filename,'r'):
-  #      print line,
-  #else: print 'No file chosen'
-  #raw_input('Ready, push Enter')
 
 
 
@@ -111,7 +115,7 @@ def importer():
 mainWindow=Tk()
 mainWindow.minsize(800,600)
 
-e = Experiment(':memory:',1) 
+ 
 
 
 #---------------------------- PanedWindow
@@ -127,7 +131,7 @@ m2.add(main)
 m1.add(m2)
 
 
-app=XYPlotApp(main)
+app=NewtonApp(main)
 
 app.createMenu()
 
