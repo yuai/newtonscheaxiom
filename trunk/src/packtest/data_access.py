@@ -77,12 +77,15 @@ the database is lost when python quits - good for testing)
  # else:
  # pass # opening of an existing experiment
 
+    def store_values_v(self, nr, a):
+        store_values(zip(*a))        
+        
     def store_values(self, nr, a):
         """
 store values a in 'values' table
 :Parameters:
 nr data-set number
-a values - ex. array of [[t, v1, v2, ...]]
+a values - ex. array of [[t], [v1], v2, ...]]
 the data format is documented in "DB V3.pdf":
 http://content.wuala.com/contents/patrick2000/Shared/school/11_Projekt/Pendulum/Dokumentation/DB%20V3.pdf?dl=1
 """
