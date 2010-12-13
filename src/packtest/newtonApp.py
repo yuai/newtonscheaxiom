@@ -62,6 +62,8 @@ class NewtonApp:
       scrollbar = Scrollbar(filewin)
       scrollbar.pack( side="right", fill="y" )
       mylist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20 )
+      testdata = self.e.load_metadata()
+      print testdata
       for line in range(100):
           mylist.insert(END, "This is line number " + str(line))   
       mylist.pack( side="top", fill="both", expand=1)
