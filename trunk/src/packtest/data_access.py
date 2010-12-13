@@ -92,8 +92,6 @@ http://content.wuala.com/contents/patrick2000/Shared/school/11_Projekt/Pendulum/
  
         if type(nr) != int:
             raise Exception("Experiment number must be given as an int")
-        print len(a[0])
-        print self.nvalues
  
         if len(a[0])-1 != self.nvalues:
             raise Exception("wrong number of values")
