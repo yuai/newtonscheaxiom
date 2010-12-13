@@ -31,6 +31,10 @@ class XYPlot:
     self.repaint(self.fgcolor)
     self.canvas.create_rectangle(self.width/2-self.width/10,self.height/2-self.height/10, self.width/2+self.width/10, self.height/2+self.height/10,fill=self.drawcolor)
     
+  def test(self,event):
+    self.repaint(self.fgcolor)
+    self.canvas.create_rectangle(self.width/2-self.width/10,self.height/2-self.height/10, self.width/2+self.width/10, self.height/2+self.height/10,fill=self.drawcolor)  
+    
   def getExpData(self,event):
     self.repaint(self.fgcolor)
     print event.num
