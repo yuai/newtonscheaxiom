@@ -19,23 +19,18 @@ class NewtonApp:
       C2 = Checkbutton(left, text = "Table", variable = CheckVar2,onvalue = 1, offvalue = 0, height=1,width = 25)
       C1.pack(side="top")
       C2.pack(side="top")
-       
-       
       #---------------------------- XYPlot
       self.mainWindow = Frame(main)
       self.xyPlot=XYPlot(main,400,250)
-      
       #---------------------------- Scrollbar
       scrollbar = Scrollbar(left)
       scrollbar.pack( side="right", fill="y" )
-      
       #---------------------------- ListBox
       mylist = Listbox(left, yscrollcommand = scrollbar.set )
       for line in range(100):
            mylist.insert(END, "This is line number " + str(line))
       mylist.pack( side="top", fill="both", expand=1)
       scrollbar.config( command = mylist.yview )
-      
       #---------------------------- Buttons
       fButtons = Frame(main, border=2, relief="groove")
       bQuit = Button(fButtons, text="Quit",command=self.mainWindow.quit)
@@ -62,7 +57,6 @@ class NewtonApp:
       self.xyPlot.canvas.pack(fill="both", expand="1")
       self.mainWindow.pack(fill="both",expand="1")
       
-      
    def opendDB(self):
       filewin = Toplevel(mainWindow)
       scrollbar = Scrollbar(filewin)
@@ -84,8 +78,8 @@ class NewtonApp:
       filemenu.add_command(label="Exit", command=mainWindow.quit)
       menubar.add_cascade(label="File", menu=filemenu)
       helpmenu = Menu(menubar, tearoff=0)
-      helpmenu.add_command(label="Help Index", command=donothing)
-      helpmenu.add_command(label="About...", command=donothing)
+      helpmenu.add_command(label="Help Index")
+      helpmenu.add_command(label="About...")
       menubar.add_cascade(label="Help", menu=helpmenu)
       mainWindow.config(menu=menubar)   
       
@@ -99,10 +93,9 @@ class NewtonApp:
        filename = tkFileDialog.askopenfilename()
        test=NewtonImporter(filename,self.e)
 
-
+#---------------------------- Initial Tkinter
 mainWindow=Tk()
 mainWindow.minsize(800,600)
-
 #---------------------------- PanedWindow
 m1 = PanedWindow(orient=VERTICAL)
 m1.pack(fill="both", expand=1)
@@ -112,9 +105,7 @@ m2.add(left)
 main = Label(m2)
 m2.add(main) 
 m1.add(m2)
-
-
+#---------------------------- Start Application
 app=NewtonApp(main)
 app.createMenu()
-
 mainWindow.mainloop()
