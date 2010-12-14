@@ -2,13 +2,25 @@ from Tkinter import *
 from xyplot import *
 from newtonImporter import NewtonImporter
 from data_access import Experiment
+import os
     
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class NewtonApp:
-    
+   
+   ''' Amount of Databases or experiments '''  
    dbCount=0
+   ''' Array for experiments '''
    extable = []
+   
+   indexlist = []
+   
    def __init__(self, parent=0):
+      file_count = len(os.listdir('C:/Users/John Truong/Desktop/db/'))
+      print file_count
+      for i in range(0,file_count):
+          p = str(i)
+          #NewtonApp.indexlist.append(p)
+          NewtonApp.extable.append(Experiment('C:/Users/John Truong/Desktop/db/test'+p+'.db',1))
       #---------------------------- XYPlot
       self.mainWindow = Frame(main)
       self.xyPlot=XYPlot(main,400,250)
@@ -101,25 +113,31 @@ class NewtonApp:
    
    def showExp(self,event):
        index = self.myDBlistbox.curselection()
+       i = int(index[0])
+       NewtonApp.indexlist.append(i)
        expName = self.myDBlistbox.get(index)
        var = StringVar()
        var.set(expName)
        CheckVar1 = IntVar()
        CheckVar2 = IntVar()
-       C1 = Checkbutton(left, text = expName, variable = CheckVar1,command = self.showOnCanvas, anchor=NW)
-       c2 = Checkbutton(left, text = "table", variable = CheckVar2,command = self.showTable, width = 30, anchor=NW)
+       C1 = Checkbutton(left, text = expName, variable = CheckVar1,command = self.getDrawList, anchor=NW)
+       c2 = Checkbutton(left, text = "table", variable = CheckVar2,command = self.showTable(index), width = 30, anchor=NW)
        C1.pack(side="top")
        c2.pack(side="top")
        
    def showOnCanvas(self):
         print "showOnCanvas"
 
-   def showTable(self):
+   def showTable(self,index):
         print "showTable"
-        #result = NewtonApp.exp.load_values(1) #fragen
+        print index[0]
+        i = int(index[0])
+        print i
+        result = NewtonApp.extable[i].load_values(1)
         print result
-        for line in range(10):
-           self.myTablelistbox.insert(END, "This is line number " + str(line))
+        x,y = zip(*result)
+        print x
+        print y
         #count=0
         #for x in NewtonApp.extable:
         #    print NewtonApp.extable[count].load_metadata()
@@ -132,6 +150,16 @@ class NewtonApp:
         #    count=count+1
         #mylist.pack( side="top", fill="both", expand=1)
         #mylist.bind('<Double-Button-1>', self.showExp)
+   
+   def getDrawList(self):
+       valueList = []
+       for x in NewtonApp.indexlist:
+           values = NewtonApp.extable[x].load_values(1)
+           print values
+           valueList.append(values)
+       print "valuelist -------------->"
+       print valueList
+       return valueList 
        
 #---------------------------- Initial Tkinter
 mainWindow=Tk()
