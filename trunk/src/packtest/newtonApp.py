@@ -5,6 +5,8 @@ from data_access import Experiment
     
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class NewtonApp:
+    
+   dbCount=1
    def __init__(self, parent=0):
       #------------------------------ Checkbox
       CheckVar1 = IntVar()
@@ -100,10 +102,9 @@ class NewtonApp:
        import tkFileDialog
        
        self.extable = []
-       i=1
-       stringI = str(i)
+       stringI = str(NewtonApp.dbCount)
        self.extable.append(Experiment('C:/Users/John Truong/Desktop/db/test'+stringI+'.db',1))
-       i=i+1 
+       NewtonApp.dbCount=NewtonApp.dbCount+1 
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
