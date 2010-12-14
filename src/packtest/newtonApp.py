@@ -98,11 +98,17 @@ class NewtonApp:
        import os
        from Tkinter import Tk
        import tkFileDialog
-       self.e = Experiment(':memory:',1)
+       
+       self.extable = []
+       i=1
+       stringI = str(i)
+       self.extable.append(Experiment('C:/Users/John Truong/Desktop/db/test'+stringI+'.db',1))
+       i=i+1 
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
-       test=NewtonImporter(filename,self.e)
+       test=NewtonImporter(filename,self.extable[0])
+       print self.extable[0].load_metadata()
 
 #---------------------------- Initial Tkinter
 mainWindow=Tk()
