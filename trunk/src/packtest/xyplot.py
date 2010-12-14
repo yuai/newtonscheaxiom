@@ -3,7 +3,7 @@ from random import *
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class XYPlot:
-  """ """
+  """ init """
   def __init__(self,_parent,_width,_height):
     self.width=_width
     self.height=_height
