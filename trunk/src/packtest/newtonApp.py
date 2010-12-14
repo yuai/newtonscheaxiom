@@ -6,8 +6,6 @@ from data_access import Experiment
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class NewtonApp:
    def __init__(self, parent=0):
-       
-      self.e = Experiment(':memory:',1)
       #------------------------------ Checkbox
       CheckVar1 = IntVar()
       CheckVar2 = IntVar()
@@ -64,6 +62,11 @@ class NewtonApp:
       scrollbar.pack( side="right", fill="y" )
       mylist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20 )
       exp_metadata = self.e.load_metadata()
+      test1 = self.e.load_values(1)
+      test2 = self.e.load_values(2)
+      print test1
+      print test2
+        
       nr_series = exp_metadata['nr_series']
       actor_name = exp_metadata['actor_name']
       exp_name = exp_metadata['exp_name']
@@ -95,6 +98,7 @@ class NewtonApp:
        import os
        from Tkinter import Tk
        import tkFileDialog
+       self.e = Experiment(':memory:',1)
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
