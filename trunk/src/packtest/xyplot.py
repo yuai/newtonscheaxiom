@@ -60,4 +60,33 @@ class XYPlot:
       elif x<>0.0 and y <> 0.0:        
           x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
           y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
+          
+          
+  def drawControl(self,button):
+      drawlist = NewtonApp.getDrawList()
+      maxima = getMax(drawList)
+      if button == 1 :
+          for element in drawList:
+              drawDots(element)
+        
+        
+        
+    
+  def getMax(self,searchmax):
+      self.maxList = [0.0,0.0,0.0,0.0,0.0,0.0]
+      changeList = []
+      for element in searchmax:
+          valuesTrans = zip(*element)
+          for i in range(0,len(valueTrans)):
+              changeList.append(max(valueTrans[i]))
+            
+          for j in range(0,changeList):
+              if changeList[j] > self.maxList[j]:
+                  self.maxList[j] = changeList[j]
+            
+      return maxList           
+              
+                    
+                    
+    def drawDots(valueList):
       
