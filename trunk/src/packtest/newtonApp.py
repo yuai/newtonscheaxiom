@@ -9,18 +9,17 @@ class NewtonApp:
    
    ''' Amount of Databases or experiments '''  
    dbCount=0
-   ''' Array for experiments '''
+   ''' List for experiments '''
    extable = []
-   
+   ''' List for added experiments '''
    indexlist = []
    
    def __init__(self, parent=0):
       file_count = len(os.listdir('C:/Users/John Truong/Desktop/db/'))
       print file_count
       for i in range(0,file_count):
-          p = str(i)
-          #NewtonApp.indexlist.append(p)
-          NewtonApp.extable.append(Experiment('C:/Users/John Truong/Desktop/db/test'+p+'.db',1))
+          n = str(i)
+          NewtonApp.extable.append(Experiment('C:/Users/John Truong/Desktop/db/test'+n+'.db',1))
       #---------------------------- XYPlot
       self.mainWindow = Frame(main)
       self.xyPlot=XYPlot(main,400,250)
@@ -29,8 +28,6 @@ class NewtonApp:
       scrollbar.pack( side="right", fill="y" )
       #---------------------------- ListBox
       myTablelist = Listbox(left, yscrollcommand = scrollbar.set,width = 30 )
-      #for line in range(10):
-      #     mylist.insert(END, "This is line number " + str(line))
       myTablelist.pack( side="bottom", fill="both", expand=1)
       scrollbar.config( command = myTablelist.yview )
       self.myTablelistbox = myTablelist
@@ -69,7 +66,6 @@ class NewtonApp:
       scrollbar.config( command = myDBlist.yview )
       count=0
       for x in NewtonApp.extable:
-          #print NewtonApp.extable[count].load_metadata()
           exp_metadata = NewtonApp.extable[count].load_metadata()
           nr_series = exp_metadata['nr_series']
           actor_name = exp_metadata['actor_name']
@@ -138,24 +134,11 @@ class NewtonApp:
         x,y = zip(*result)
         print x
         print y
-        #count=0
-        #for x in NewtonApp.extable:
-        #    print NewtonApp.extable[count].load_metadata()
-        #    exp_metadata = NewtonApp.extable[count].load_metadata()
-        #    nr_series = exp_metadata['nr_series']
-        #    actor_name = exp_metadata['actor_name']
-        #    exp_name = exp_metadata['exp_name']
-          
-        #    mylist.insert(count)
-        #    count=count+1
-        #mylist.pack( side="top", fill="both", expand=1)
-        #mylist.bind('<Double-Button-1>', self.showExp)
    
    def getDrawList(self):
        valueList = []
        for x in NewtonApp.indexlist:
            values = NewtonApp.extable[x].load_values(1)
-           print values
            valueList.append(values)
        print "valuelist -------------->"
        print valueList
