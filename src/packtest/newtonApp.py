@@ -6,19 +6,9 @@ from data_access import Experiment
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class NewtonApp:
     
-   dbCount=1
+   dbCount=0
+   extable = []
    def __init__(self, parent=0):
-      #------------------------------ Checkbox
-      CheckVar1 = IntVar()
-      CheckVar2 = IntVar()
-      C1 = Checkbutton(left, text = "Plot", variable = CheckVar1,onvalue = 1, offvalue = 0, height=1,width = 25)
-      C2 = Checkbutton(left, text = "Table", variable = CheckVar2,onvalue = 1, offvalue = 0, height=1,width = 25)
-      C1.pack(side="top")
-      C2.pack(side="top")
-      C1 = Checkbutton(left, text = "Plot", variable = CheckVar1,onvalue = 1, offvalue = 0, height=1,width = 25)
-      C2 = Checkbutton(left, text = "Table", variable = CheckVar2,onvalue = 1, offvalue = 0, height=1,width = 25)
-      C1.pack(side="top")
-      C2.pack(side="top")
       #---------------------------- XYPlot
       self.mainWindow = Frame(main)
       self.xyPlot=XYPlot(main,400,250)
@@ -26,11 +16,12 @@ class NewtonApp:
       scrollbar = Scrollbar(left)
       scrollbar.pack( side="right", fill="y" )
       #---------------------------- ListBox
-      mylist = Listbox(left, yscrollcommand = scrollbar.set )
-      for line in range(100):
-           mylist.insert(END, "This is line number " + str(line))
-      mylist.pack( side="top", fill="both", expand=1)
-      scrollbar.config( command = mylist.yview )
+      myTablelist = Listbox(left, yscrollcommand = scrollbar.set,width = 30 )
+      #for line in range(10):
+      #     mylist.insert(END, "This is line number " + str(line))
+      myTablelist.pack( side="bottom", fill="both", expand=1)
+      scrollbar.config( command = myTablelist.yview )
+      self.myTablelistbox = myTablelist
       #---------------------------- Buttons
       fButtons = Frame(main, border=2, relief="groove")
       bQuit = Button(fButtons, text="Quit",command=self.mainWindow.quit)
@@ -62,24 +53,23 @@ class NewtonApp:
       filewin = Toplevel(mainWindow)
       scrollbar = Scrollbar(filewin)
       scrollbar.pack( side="right", fill="y" )
-      mylist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20 )
-      exp_metadata = self.e.load_metadata()
-      test1 = self.e.load_values(1)
-      test2 = self.e.load_values(2)
-      print test1
-      print test2
-        
-      nr_series = exp_metadata['nr_series']
-      actor_name = exp_metadata['actor_name']
-      exp_name = exp_metadata['exp_name']
+      myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief=SUNKEN )
+      scrollbar.config( command = myDBlist.yview )
+      count=0
+      for x in NewtonApp.extable:
+          #print NewtonApp.extable[count].load_metadata()
+          exp_metadata = NewtonApp.extable[count].load_metadata()
+          nr_series = exp_metadata['nr_series']
+          actor_name = exp_metadata['actor_name']
+          exp_name = exp_metadata['exp_name']
+          
+          myDBlist.insert(count, nr_series + ": " 
+                        + actor_name + " " + exp_name)
+          count=count+1
+      myDBlist.pack( side="top", fill="both", expand=1)
+      myDBlist.bind('<Double-Button-1>', self.showExp)
+      self.myDBlistbox = myDBlist
       
-      for line in range(100):
-          mylist.insert(END, nr_series + ": " 
-                        + actor_name + " " + exp_name)   
-      mylist.pack( side="top", fill="both", expand=1)
-      scrollbar.config( command = mylist.yview )
-      mylist.bind('<Double-Button-1>', self.xyPlot.test)
-   
    def createMenu(self):
       ''' create Menu for the application '''
       menubar = Menu(mainWindow)
@@ -101,16 +91,48 @@ class NewtonApp:
        from Tkinter import Tk
        import tkFileDialog
        
-       self.extable = []
        stringI = str(NewtonApp.dbCount)
-       self.extable.append(Experiment('C:/Users/John Truong/Desktop/db/test'+stringI+'.db',1))
-       NewtonApp.dbCount=NewtonApp.dbCount+1 
+       NewtonApp.extable.append(Experiment('C:/Users/John Truong/Desktop/db/test'+stringI+'.db',1))
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
-       test=NewtonImporter(filename,self.extable[0])
-       print self.extable[0].load_metadata()
+       test=NewtonImporter(filename,NewtonApp.extable[NewtonApp.dbCount])
+       NewtonApp.dbCount=NewtonApp.dbCount+1
+   
+   def showExp(self,event):
+       index = self.myDBlistbox.curselection()
+       expName = self.myDBlistbox.get(index)
+       var = StringVar()
+       var.set(expName)
+       CheckVar1 = IntVar()
+       CheckVar2 = IntVar()
+       C1 = Checkbutton(left, text = expName, variable = CheckVar1,command = self.showOnCanvas, anchor=NW)
+       c2 = Checkbutton(left, text = "table", variable = CheckVar2,command = self.showTable, width = 30, anchor=NW)
+       C1.pack(side="top")
+       c2.pack(side="top")
+       
+   def showOnCanvas(self):
+        print "showOnCanvas"
 
+   def showTable(self):
+        print "showTable"
+        #result = NewtonApp.exp.load_values(1) #fragen
+        print result
+        for line in range(10):
+           self.myTablelistbox.insert(END, "This is line number " + str(line))
+        #count=0
+        #for x in NewtonApp.extable:
+        #    print NewtonApp.extable[count].load_metadata()
+        #    exp_metadata = NewtonApp.extable[count].load_metadata()
+        #    nr_series = exp_metadata['nr_series']
+        #    actor_name = exp_metadata['actor_name']
+        #    exp_name = exp_metadata['exp_name']
+          
+        #    mylist.insert(count)
+        #    count=count+1
+        #mylist.pack( side="top", fill="both", expand=1)
+        #mylist.bind('<Double-Button-1>', self.showExp)
+       
 #---------------------------- Initial Tkinter
 mainWindow=Tk()
 mainWindow.minsize(800,600)
