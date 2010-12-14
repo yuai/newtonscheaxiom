@@ -54,9 +54,9 @@ class NewtonImporter:
        self.exp.store_values(self.Id,self.values)
        
        #____________________Just look if it works
-       testdic =  self.exp.load_metadata()
-       print testdic
-       result = self.exp.load_values(1)
+       #testdic =  self.exp.load_metadata()
+       #print testdic
+       #result = self.exp.load_values(1)
        
        
        
