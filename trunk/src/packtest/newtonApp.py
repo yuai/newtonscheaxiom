@@ -14,11 +14,13 @@ class NewtonApp:
    ''' List for added experiments '''
    indexlist = []
    
+   states = []
+   tablecount = 0
+   
    def __init__(self, parent=0):
       file_count = len(os.listdir('C:/Users/db/'))
       for i in range(0,file_count):
-          nr = str(i)
-          print nr
+          nr = str(i) # number for the name of the database filename
           NewtonApp.extable.append(Experiment('C:/Users/db/test'+nr+'.db',1))
           NewtonApp.dbCount=NewtonApp.dbCount+1
           
@@ -112,7 +114,8 @@ class NewtonApp:
    def showExp(self,event):
        ''' show the specific added experiences on the left side '''
        index = self.myDBlistbox.curselection()
-       self.index = index
+       print "index of shown Experiment"
+       print index
        i = int(index[0]) # convert tuple to integer
        NewtonApp.indexlist.append(i)
        expName = self.myDBlistbox.get(index)
@@ -120,24 +123,44 @@ class NewtonApp:
        self.CheckVar2 = IntVar()
        c1 = Checkbutton(left, text=expName,variable=self.CheckVar1,command=self.getDrawList,anchor=NW,width=30)
        c2 = Checkbutton(left, text="table",variable=self.CheckVar2,command=self.showTable,anchor=NW,width=30)
+       NewtonApp.states.append(self.CheckVar2)
        c1.pack(side="top")
        c2.pack(side="top")
+
        
    def showOnCanvas(self):
         print "showOnCanvas"
+        
 
-   def showTable(self):
+   def showTable(self): 
         print "showTable"
-        i = int(self.index[0])
-        result = NewtonApp.extable[i].load_values(1)
-        print result
-        #print self.CheckVar1.get()
-        x,y = zip(*result)
-        count = 0
-        for c in x:
-            xyString =  "x = %f \t y = %f" % (x[count], y[count]) 
-            self.myTablelistbox.insert(count+1, xyString )
-            count = count + 1
+        self.myTablelistbox.delete(0, END)
+        valueList = []
+        for pin in NewtonApp.indexlist:
+            values = NewtonApp.extable[pin].load_values(1)
+            valueList.append(values)
+        
+        var = self.CheckVar2
+        print map((lambda var: var.get()), NewtonApp.states)
+        
+        for b in range(0,len(valueList)):
+            if NewtonApp.states[b].get() == 1:
+                result = valueList[b]
+                print result
+                x,y = zip(*result)
+                count = 0
+                self.myTablelistbox.insert(NewtonApp.tablecount,"-----------------")
+                for c in x:
+                    NewtonApp.tablecount = NewtonApp.tablecount +1
+                    xyString =  "x[%s] \t= %f \t y[%s] \t= %f" % (str(count), x[count], str(count),y[count]) 
+                    self.myTablelistbox.insert(NewtonApp.tablecount, xyString )
+                    count = count + 1
+                
+            
+            if NewtonApp.states[b].get() == 0:
+                print "remove"
+                #self.myTablelistbox.delete(0, END)
+
    
    def getDrawList(self):
        valueList = []
