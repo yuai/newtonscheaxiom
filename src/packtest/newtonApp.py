@@ -18,6 +18,7 @@ class NewtonApp:
       file_count = len(os.listdir('C:/Users/db/'))
       for i in range(0,file_count):
           nr = str(i)
+          print nr
           NewtonApp.extable.append(Experiment('C:/Users/db/test'+nr+'.db',1))
           NewtonApp.dbCount=NewtonApp.dbCount+1
           
@@ -63,7 +64,7 @@ class NewtonApp:
       filewin = Toplevel(mainWindow)
       scrollbar = Scrollbar(filewin)
       scrollbar.pack( side="right", fill="y" )
-      myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief=SUNKEN )
+      myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief="sunken" )
       scrollbar.config( command = myDBlist.yview )
       count=0
       for x in NewtonApp.extable:
@@ -109,50 +110,52 @@ class NewtonApp:
        NewtonApp.dbCount=NewtonApp.dbCount+1
    
    def showExp(self,event):
+       ''' show the specific added experiences on the left side '''
        index = self.myDBlistbox.curselection()
-       i = int(index[0])
+       self.index = index
+       print index
+       i = int(index[0]) # convert tuple to integer
        NewtonApp.indexlist.append(i)
        expName = self.myDBlistbox.get(index)
-       var = StringVar()
-       var.set(expName)
-       CheckVar1 = IntVar()
-       CheckVar2 = IntVar()
-       C1 = Checkbutton(left, text = expName, variable = CheckVar1,command = self.getDrawList, anchor=NW)
-       c2 = Checkbutton(left, text = "table", variable = CheckVar2,command = self.showTable(index), width = 30, anchor=NW)
-       C1.pack(side="top")
+       self.CheckVar1 = IntVar()
+       self.CheckVar2 = IntVar()
+       c1 = Checkbutton(left, text = expName,onvalue = 1, offvalue = 0
+                        ,variable = self.CheckVar1,command = self.getDrawList, anchor=NW)
+       c2 = Checkbutton(left, text = "table",onvalue = 1, offvalue = 0
+                        ,variable = self.CheckVar2,command = self.showTable,anchor=NW, width = 30 )
+       c1.pack(side="top")
        c2.pack(side="top")
        
    def showOnCanvas(self):
         print "showOnCanvas"
 
-   def showTable(self,index):
+   def showTable(self):
         print "showTable"
-        print index[0]
-        i = int(index[0])
+        i = int(self.index[0])
         print i
         result = NewtonApp.extable[i].load_values(1)
         print result
+        #print self.CheckVar1.get()
         x,y = zip(*result)
-        
-        #self.myTablelistbox.insert(count, )
-        print x
-        print y
+        count = 0
+        for c in x:
+            xyString =  "x = %f \t y = %f" % (x[count], y[count]) 
+            self.myTablelistbox.insert(count+1, xyString )
+            count = count + 1
    
    def getDrawList(self):
        valueList = []
        for x in NewtonApp.indexlist:
            values = NewtonApp.extable[x].load_values(1)
            valueList.append(values)
-       print "valuelist -------------->"
-       print valueList
        self.xyPlot.drawControl(valueList,1)
        
 #---------------------------- Initial Tkinter
 mainWindow=Tk()
 mainWindow.minsize(800,600)
 #---------------------------- PanedWindow
-m1 = PanedWindow(orient=VERTICAL)
-m1.pack(fill="both", expand=1)
+m1 = PanedWindow(orient="vertical")
+m1.pack(fill="both", expand="1")
 m2 = PanedWindow(m1)
 left = Label(m2)
 m2.add(left)
