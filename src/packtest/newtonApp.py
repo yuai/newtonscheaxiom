@@ -143,7 +143,7 @@ class NewtonApp:
            valueList.append(values)
        print "valuelist -------------->"
        print valueList
-       return valueList 
+       self.xyPlot.drawControl(valueList,1)
        
 #---------------------------- Initial Tkinter
 mainWindow=Tk()
