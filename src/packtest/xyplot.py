@@ -23,6 +23,9 @@ class XYPlot:
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
           self.canvas.create_line(0.1*self.width,0.9 * self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
+          
+    
+          
       else:
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
@@ -156,9 +159,14 @@ class XYPlot:
           if abs(minima[i]) > maxima[i]:
               maxima [i] = abs(minima[i])
       absoluteMinimum = min(minima)
+      
       if absoluteMinimum < 0:
           self.NegativValueBool = 1
+      else:
+          self.NegativValueBool = 0   
+      
       self.repaint(self.fgcolor)
+      self.drawMeta()
       print maxima
       colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
                     'LightPink','PaleVioletRed','khaki']
@@ -193,7 +201,14 @@ class XYPlot:
       return maxList,minList
   
   def drawMeta(self):
-      i =i+1
+      xUnit = 's'
+      yUnit =  'm'    #later should be this metadic['vn_unit']
+      if self.NegativValueBool == 0:
+          self.canvas.create_text(0.90*self.width, 0.92*self.height, text="t in Sekunden")
+          self.canvas.create_text(0.08*self.width, 0.05*self.height, text="Strecke in m")
+      else:
+          self.canvas.create_text(0.93*self.width, 0.52*self.height, text="t in Sekunden")
+          self.canvas.create_text(0.4*self.width, 0.05*self.height, text="Strecke in m")
       
                
               
