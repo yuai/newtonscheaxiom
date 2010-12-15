@@ -3,8 +3,11 @@ from random import *
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class XYPlot:
+    
+  
   """ init """
   def __init__(self,_parent,_width,_height):
+    self.NegativValueBool = 0
     self.width=_width
     self.height=_height
     self.parent=_parent
@@ -16,9 +19,15 @@ class XYPlot:
     self.canvas.bind('<Configure>',self.resize)
     
   def repaint(self,_color):
-    self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
-    self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
-    self.canvas.create_line(0.1*self.width,0.9 * self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
+      if self.NegativValueBool == 0:  
+          self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
+          self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
+          self.canvas.create_line(0.1*self.width,0.9 * self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
+      else:
+          self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
+          self.canvas.create_line(0,0.5*self.height,self.width,0.5*self.height,fill=_color)
+          self.canvas.create_line(0.5*self.width,0,0.5*self.width,self.height,fill=_color)
+            
 
   def resize(self,event ):
     self.repaint(self.bgcolor)
@@ -48,7 +57,7 @@ class XYPlot:
       
  
   def transAxis(self,x,y,maxX,maxY):
-      ''' Transforms x,y Values into scale of Canvas'''
+      ''' Is OLD GET IT OUT'''
       if x == 0.0 and y == 0.0:
           x = 0.1 * self.width
           y = 0.9 * self.height
@@ -64,8 +73,41 @@ class XYPlot:
           
       return x,y
 
-
-
+  def negTransAxisX(self,x,y,maxX,maxY):
+      if x == 0.0 and y == 0.0:
+          x = 0.5 *self.width
+          y = 0.5 *self.height
+      elif x == 0.0 and y <> 0.0:
+          x = 0.5*self.width
+          y = 0.5 * self.height - (0.5*self.height/(maxY/y))
+      elif x <> 0.0 and y ==0.0:
+          x = 0.5 * self.width + (0.5*self.width)/(maxX/x)
+          y = 0.5 * self.height    
+      elif x <> 0.0 and y <> 0.0:
+          x = 0.5 * self.width + (0.5*self.width)/(maxX/x)
+          y = 0.5 * self.height - (0.5*self.height/(maxY/y))
+           
+      return x
+  
+  
+  def negTransAxisY(self,x,y,maxX,maxY):
+      if x == 0.0 and y == 0.0:
+          x = 0.5 *self.width
+          y = 0.5 *self.height
+      elif x == 0.0 and y <> 0.0:
+          x = 0.5*self.width
+          y = 0.5 * self.height - (0.5*self.height/(maxY/y))
+      elif x <> 0.0 and y ==0.0:
+          x = 0.5 * self.width + (0.5*self.width)/(maxX/x)
+          y = 0.5 * self.height    
+      elif x <> 0.0 and y <> 0.0:
+          x = 0.5 * self.width + (0.5*self.width)/(maxX/x)
+          y = 0.5 * self.height - (0.5*self.height/(maxY/y))
+           
+      return y
+              
+          
+      
 
   def transAxisX(self,x,y,maxX,maxY):
       ''' Transforms x,y Values into scale of Canvas'''
@@ -73,7 +115,7 @@ class XYPlot:
           x = 0.1 * self.width
           y = 0.9 * self.height
       elif x == 0.0 and y <> 0.0:
-         x =  x = 0.1 * self.width
+         x = 0.1 * self.width
          y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
       elif x <> 0.0 and y == 0.0:
          x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
@@ -105,7 +147,11 @@ class XYPlot:
           
           
   def drawControl(self,drawList,button):
-      maxima = self.getMax(drawList)
+      maxima,minima = self.getMax(drawList)
+      absoluteMinimum = min(minima)
+      if absoluteMinimum < 0:
+          self.NegativValueBool = 1
+      self.repaint(self.fgcolor)
       print maxima
       colorList = ['RoyalBlue1','DarkOliveGreen1','khaki','IndianRed1', 'brown1',
                     'LightPink1','PaleVioletRed1']
@@ -123,30 +169,44 @@ class XYPlot:
     
   def getMax(self,searchmax):
       maxList = [0.0,0.0,0.0,0.0,0.0,0.0]
-      changeList = [0.0,0.0,0.0,0.0,0.0,0.0]
+      minList = [0.0,0.0,0.0,0.0,0.0,0.0]
+      changeListMax = [0.0,0.0,0.0,0.0,0.0,0.0]
+      changeListMin = [0.0,0.0,0.0,0.0,0.0,0.0]
       for element in searchmax:
           valuesTrans = zip(*element)
           for i in range(0,len(valuesTrans)):
-              changeList[i]= max(valuesTrans[i]) 
-          for j in range(0,len(changeList)):
-              if changeList[j] > maxList[j]:
-                  maxList[j] = changeList[j]
+              changeListMax[i]= max(valuesTrans[i]) 
+              changeListMin[i]= min(valuesTrans[i])
+          for j in range(0,len(changeListMax)):
+              if changeListMax[j] > maxList[j]:
+                  maxList[j] = changeListMax[j]
+              if changeListMin[j] < minList[j]:
+                  minList[j] = changeListMin[j]
             
-      return maxList           
+      return maxList,minList           
               
   def drawDots(self,valueList,maxima,color):
       print 'CAME TILL DRAWDOTS'
       vn = len ( valueList[0])
       i = 0
-      while i < vn-1:
-          for j in range (0,len(valueList)):
-              x = valueList[j][0]
-              y = valueList[j][i+1]
-              maxX = maxima [0]
-              maxY = maxima [1]
-              self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = color)
-          i = i+1
-      
+      if self.NegativValueBool == 0:
+          while i < vn-1:
+              for j in range (0,len(valueList)):
+                  x = valueList[j][0]
+                  y = valueList[j][i+1]
+                  maxX = maxima [0]
+                  maxY = maxima [1]
+                  self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = color)
+              i = i+1
+      else:
+          while i < vn-1:
+              for j in range (0,len(valueList)):
+                  x = valueList[j][0]
+                  y = valueList[j][i+1]
+                  maxX = maxima [0]
+                  maxY = maxima [1]
+                  self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-3,self.negTransAxisY(x,y,maxX,maxY)-3,self.negTransAxisX(x,y,maxX,maxY)+3,self.negTransAxisY(x,y,maxX,maxY)+3,fill = color)
+              i = i+1
       
       
 
