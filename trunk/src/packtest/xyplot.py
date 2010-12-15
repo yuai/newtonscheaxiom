@@ -46,6 +46,7 @@ class XYPlot:
       '''test for drawing splines trough points'''
       self.canvas.create_line(0,0,20,80,100,60,smooth = 'true')
       
+ 
   def transAxis(self,x,y,maxX,maxY):
       ''' Transforms x,y Values into scale of Canvas'''
       if x == 0.0 and y == 0.0:
@@ -61,12 +62,53 @@ class XYPlot:
           x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
           y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
           
+      return x,y
+
+
+
+
+  def transAxisX(self,x,y,maxX,maxY):
+      ''' Transforms x,y Values into scale of Canvas'''
+      if x == 0.0 and y == 0.0:
+          x = 0.1 * self.width
+          y = 0.9 * self.height
+      elif x == 0.0 and y <> 0.0:
+         x =  x = 0.1 * self.width
+         y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
+      elif x <> 0.0 and y == 0.0:
+         x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
+         y = 0.9 * self.height
+      elif x<>0.0 and y <> 0.0:        
+          x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
+          y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
+          
+      return x
+  
+  
+  def transAxisY(self,x,y,maxX,maxY):
+      ''' Transforms x,y Values into scale of Canvas'''
+      if x == 0.0 and y == 0.0:
+          x = 0.1 * self.width
+          y = 0.9 * self.height
+      elif x == 0.0 and y <> 0.0:
+         x =  x = 0.1 * self.width
+         y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
+      elif x <> 0.0 and y == 0.0:
+         x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
+         y = 0.9 * self.height
+      elif x<>0.0 and y <> 0.0:        
+          x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
+          y = 0.9 * self.height - (0.8*self.height)/(maxY/y)   
+      return y
+  
+  
+          
           
   def drawControl(self,drawList,button):
       maxima = self.getMax(drawList)
       if button == 1 :
           for element in drawList:
-              self.drawDots(element)
+              self.drawDots(element,maxima)
         
         
         
@@ -85,7 +127,19 @@ class XYPlot:
             
       return maxList           
               
-  def drawDots(self,valueList):
+  def drawDots(self,valueList,maxima):
       print 'CAME TILL DRAWDOTS'
-      print valueList
+      vn = len ( valueList[0])
+      i = 0
+      while i < vn-1:
+          for j in range (0,len(valueList)):
+              x = valueList[j][0]
+              y = valueList[j][i+1]
+              maxX = maxima [0]
+              maxY = maxima [1]
+              self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = 'blue')
+          i = i+1
+      
+      
+      
 
