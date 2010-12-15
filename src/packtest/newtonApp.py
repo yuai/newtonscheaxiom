@@ -19,6 +19,8 @@ class NewtonApp:
       for i in range(0,file_count):
           nr = str(i)
           NewtonApp.extable.append(Experiment('C:/Users/db/test'+nr+'.db',1))
+          NewtonApp.dbCount=NewtonApp.dbCount+1
+          
       #---------------------------- XYPlot
       self.mainWindow = Frame(main)
       self.xyPlot=XYPlot(main,400,250)
