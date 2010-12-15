@@ -112,7 +112,8 @@ class XYPlot:
       if button == 1 :
           i = 0
           for element in drawList:
-              color = colorList[i] 
+              color = colorList[i]
+              print color 
               self.drawDots(element,maxima,color)
               i = i+1
         
