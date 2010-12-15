@@ -106,9 +106,15 @@ class XYPlot:
           
   def drawControl(self,drawList,button):
       maxima = self.getMax(drawList)
+      colorList = ['RoyalBlue1','DarkOliveGreen1','khaki','IndianRed1', 'brown1',
+                    'LightPink1','PaleVioletRed1']
+
       if button == 1 :
+          i = 0
           for element in drawList:
-              self.drawDots(element,maxima)
+              color = colorList[i] 
+              self.drawDots(element,maxima,color)
+              i = i+1
         
         
         
@@ -127,7 +133,7 @@ class XYPlot:
             
       return maxList           
               
-  def drawDots(self,valueList,maxima):
+  def drawDots(self,valueList,maxima,color):
       print 'CAME TILL DRAWDOTS'
       vn = len ( valueList[0])
       i = 0
@@ -137,7 +143,7 @@ class XYPlot:
               y = valueList[j][i+1]
               maxX = maxima [0]
               maxY = maxima [1]
-              self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = 'blue')
+              self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = color)
           i = i+1
       
       
