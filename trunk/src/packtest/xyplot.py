@@ -25,8 +25,8 @@ class XYPlot:
           self.canvas.create_line(0.1*self.width,0.9 * self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
       else:
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
-          self.canvas.create_line(0,0.5*self.height,self.width,0.5*self.height,fill=_color)
-          self.canvas.create_line(0.5*self.width,0,0.5*self.width,self.height,fill=_color)
+          self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
+          self.canvas.create_line(0.5*self.width,0.05,0.5*self.width,self.height-0.05,fill=_color)
             
 
   def resize(self,event ):
@@ -72,20 +72,24 @@ class XYPlot:
           y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
           
       return x,y
-
+  
+  def clear (self):
+      self.repaint(self.bgcolor)
+  
+  
   def negTransAxisX(self,x,y,maxX,maxY):
       if x == 0.0 and y == 0.0:
           x = 0.5 *self.width
           y = 0.5 *self.height
       elif x == 0.0 and y <> 0.0:
           x = 0.5*self.width
-          y = 0.5 * self.height - (0.5*self.height/(maxY/y))
+          y = 0.5 * self.height - (0.45*self.height/(maxY/y))
       elif x <> 0.0 and y ==0.0:
-          x = 0.5 * self.width + (0.5*self.width)/(maxX/x)
+          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)
           y = 0.5 * self.height    
       elif x <> 0.0 and y <> 0.0:
-          x = 0.5 * self.width + (0.5*self.width)/(maxX/x)
-          y = 0.5 * self.height - (0.5*self.height/(maxY/y))
+          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)
+          y = 0.5 * self.height - (0.45*self.height/(maxY/y))
            
       return x
   
@@ -96,13 +100,13 @@ class XYPlot:
           y = 0.5 *self.height
       elif x == 0.0 and y <> 0.0:
           x = 0.5*self.width
-          y = 0.5 * self.height - (0.5*self.height/(maxY/y))
+          y = 0.5 * self.height - (0.45*self.height/(maxY/y))
       elif x <> 0.0 and y ==0.0:
-          x = 0.5 * self.width + (0.5*self.width)/(maxX/x)
+          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)
           y = 0.5 * self.height    
       elif x <> 0.0 and y <> 0.0:
-          x = 0.5 * self.width + (0.5*self.width)/(maxX/x)
-          y = 0.5 * self.height - (0.5*self.height/(maxY/y))
+          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)
+          y = 0.5 * self.height - (0.45*self.height/(maxY/y))
            
       return y
               
@@ -156,8 +160,8 @@ class XYPlot:
           self.NegativValueBool = 1
       self.repaint(self.fgcolor)
       print maxima
-      colorList = ['RoyalBlue1','DarkOliveGreen1','khaki','IndianRed1', 'brown1',
-                    'LightPink1','PaleVioletRed1']
+      colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
+                    'LightPink','PaleVioletRed','khaki']
 
       if button == 1 :
           i = 0
@@ -189,26 +193,28 @@ class XYPlot:
       return maxList,minList           
               
   def drawDots(self,valueList,maxima,color):
-      print 'CAME TILL DRAWDOTS'
+
       vn = len ( valueList[0])
       i = 0
       if self.NegativValueBool == 0:
           while i < vn-1:
+              colortop = str(i+1)
               for j in range (0,len(valueList)):
                   x = valueList[j][0]
                   y = valueList[j][i+1]
                   maxX = maxima [0]
                   maxY = maxima [1]
-                  self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = color)
+                  self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = color+colortop)
               i = i+1
       else:
           while i < vn-1:
+              colortop = str(i+1)
               for j in range (0,len(valueList)):
                   x = valueList[j][0]
                   y = valueList[j][i+1]
                   maxX = maxima [0]
                   maxY = maxima [1]
-                  self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-3,self.negTransAxisY(x,y,maxX,maxY)-3,self.negTransAxisX(x,y,maxX,maxY)+3,self.negTransAxisY(x,y,maxX,maxY)+3,fill = color)
+                  self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-3,self.negTransAxisY(x,y,maxX,maxY)-3,self.negTransAxisX(x,y,maxX,maxY)+3,self.negTransAxisY(x,y,maxX,maxY)+3,fill = color+colortop)
               i = i+1
       
       
