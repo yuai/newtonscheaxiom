@@ -86,9 +86,5 @@ class XYPlot:
             
       return maxList           
               
-
-                
   def drawDots(valueList):
       print valueList
-      
-
