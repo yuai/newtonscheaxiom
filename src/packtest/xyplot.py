@@ -86,11 +86,9 @@ class XYPlot:
             
       return maxList           
               
-<<<<<<< .mine
+
                 
   def drawDots(valueList):
+      print valueList
       
-      =======
-                    
-                    
-  def drawDots(valueList):>>>>>>> .r101
+
