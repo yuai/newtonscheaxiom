@@ -88,5 +88,4 @@ class XYPlot:
               
                     
                     
-    def drawDots(valueList):
-      
+  def drawDots(valueList):
