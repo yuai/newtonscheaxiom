@@ -148,6 +148,9 @@ class XYPlot:
           
   def drawControl(self,drawList,button):
       maxima,minima = self.getMax(drawList)
+      for i in range ( 0,len(maxima)):
+          if abs(minima[i]) > maxima[i]:
+              maxima [i] = abs(minima[i])
       absoluteMinimum = min(minima)
       if absoluteMinimum < 0:
           self.NegativValueBool = 1
