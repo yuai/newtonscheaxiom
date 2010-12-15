@@ -113,16 +113,13 @@ class NewtonApp:
        ''' show the specific added experiences on the left side '''
        index = self.myDBlistbox.curselection()
        self.index = index
-       print index
        i = int(index[0]) # convert tuple to integer
        NewtonApp.indexlist.append(i)
        expName = self.myDBlistbox.get(index)
        self.CheckVar1 = IntVar()
        self.CheckVar2 = IntVar()
-       c1 = Checkbutton(left, text = expName,onvalue = 1, offvalue = 0
-                        ,variable = self.CheckVar1,command = self.getDrawList, anchor=NW)
-       c2 = Checkbutton(left, text = "table",onvalue = 1, offvalue = 0
-                        ,variable = self.CheckVar2,command = self.showTable,anchor=NW, width = 30 )
+       c1 = Checkbutton(left, text=expName,variable=self.CheckVar1,command=self.getDrawList,anchor=NW,width=30)
+       c2 = Checkbutton(left, text="table",variable=self.CheckVar2,command=self.showTable,anchor=NW,width=30)
        c1.pack(side="top")
        c2.pack(side="top")
        
@@ -132,7 +129,6 @@ class NewtonApp:
    def showTable(self):
         print "showTable"
         i = int(self.index[0])
-        print i
         result = NewtonApp.extable[i].load_values(1)
         print result
         #print self.CheckVar1.get()
