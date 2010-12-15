@@ -131,7 +131,8 @@ class NewtonApp:
         result = NewtonApp.extable[i].load_values(1)
         print result
         x,y = zip(*result)
-        self.myTablelistbox.insert(count, )
+        
+        #self.myTablelistbox.insert(count, )
         print x
         print y
    
