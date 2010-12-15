@@ -41,22 +41,25 @@ class NewtonImporter:
         self.metaDic = {'date':self.meta[0],'exp_name' :self.meta[1],'actor_name':self.meta[2],
                    'nr_series':self.meta[3],'vn_unit':self.meta[4],'vn_desc':self.meta[5],
                    'vn_fault':self.meta[6],'additional_info':self.meta[7]}
-              
+        
+        
         self.values = zip(self.x,self.y)
+        
        
          
     def fillSql(self):
+       print 'IMPORTING' 
        self.fillArray()
        self.exp.store_metadata(self.metaDic)
       
        
        self.Id = int(self.meta[3])
-       self.exp.store_values(self.Id,self.values)
+       self.exp.store_values(1,self.values)
        
        #____________________Just look if it works
        #testdic =  self.exp.load_metadata()
-       #print testdic
-       #result = self.exp.load_values(1)
+       result = self.exp.load_values(1)
+       print result
        
        
        
