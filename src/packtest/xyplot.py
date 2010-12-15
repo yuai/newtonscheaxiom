@@ -106,6 +106,7 @@ class XYPlot:
           
   def drawControl(self,drawList,button):
       maxima = self.getMax(drawList)
+      print maxima
       colorList = ['RoyalBlue1','DarkOliveGreen1','khaki','IndianRed1', 'brown1',
                     'LightPink1','PaleVioletRed1']
 
@@ -122,12 +123,11 @@ class XYPlot:
     
   def getMax(self,searchmax):
       maxList = [0.0,0.0,0.0,0.0,0.0,0.0]
-      changeList = []
+      changeList = [0.0,0.0,0.0,0.0,0.0,0.0]
       for element in searchmax:
           valuesTrans = zip(*element)
           for i in range(0,len(valuesTrans)):
-              changeList.append(max(valuesTrans[i]))
-            
+              changeList[i]= max(valuesTrans[i]) 
           for j in range(0,len(changeList)):
               if changeList[j] > maxList[j]:
                   maxList[j] = changeList[j]
