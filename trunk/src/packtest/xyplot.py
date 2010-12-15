@@ -190,7 +190,12 @@ class XYPlot:
               if changeListMin[j] < minList[j]:
                   minList[j] = changeListMin[j]
             
-      return maxList,minList           
+      return maxList,minList
+  
+  def drawMeta(self):
+      i =i+1
+      
+               
               
   def drawDots(self,valueList,maxima,color):
 
@@ -203,7 +208,7 @@ class XYPlot:
                   x = valueList[j][0]
                   y = valueList[j][i+1]
                   maxX = maxima [0]
-                  maxY = maxima [1]
+                  maxY = maxima [i+1]
                   self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = color+colortop)
               i = i+1
       else:
@@ -213,7 +218,7 @@ class XYPlot:
                   x = valueList[j][0]
                   y = valueList[j][i+1]
                   maxX = maxima [0]
-                  maxY = maxima [1]
+                  maxY = maxima [i+1]
                   self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-3,self.negTransAxisY(x,y,maxX,maxY)-3,self.negTransAxisX(x,y,maxX,maxY)+3,self.negTransAxisY(x,y,maxX,maxY)+3,fill = color+colortop)
               i = i+1
       
