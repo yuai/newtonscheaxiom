@@ -15,11 +15,10 @@ class NewtonApp:
    indexlist = []
    
    def __init__(self, parent=0):
-      file_count = len(os.listdir('C:/Users/John Truong/Desktop/db/'))
-      print file_count
+      file_count = len(os.listdir('C:/Users/db/'))
       for i in range(0,file_count):
-          n = str(i)
-          NewtonApp.extable.append(Experiment('C:/Users/John Truong/Desktop/db/test'+n+'.db',1))
+          nr = str(i)
+          NewtonApp.extable.append(Experiment('C:/Users/db/test'+nr+'.db',1))
       #---------------------------- XYPlot
       self.mainWindow = Frame(main)
       self.xyPlot=XYPlot(main,400,250)
@@ -27,12 +26,12 @@ class NewtonApp:
       scrollbar = Scrollbar(left)
       scrollbar.pack( side="right", fill="y" )
       #---------------------------- ListBox
-      myTablelist = Listbox(left, yscrollcommand = scrollbar.set,width = 30 )
-      myTablelist.pack( side="bottom", fill="both", expand=1)
+      myTablelist = Listbox(left, yscrollcommand = scrollbar.set, width=30 )
+      myTablelist.pack( side="bottom", fill="both", expand="1")
       scrollbar.config( command = myTablelist.yview )
       self.myTablelistbox = myTablelist
       #---------------------------- Buttons
-      fButtons = Frame(main, border=2, relief="groove")
+      fButtons = Frame(main, border="2", relief="groove")
       bQuit = Button(fButtons, text="Quit",command=self.mainWindow.quit)
       bQuit.pack(side="right")
       #---------------------------- Radiobutton
@@ -52,7 +51,7 @@ class NewtonApp:
       R5 = Radiobutton(fButtons, text="Approximate Line", variable=var, value=5
                        ,command=self.xyPlot.transAxis(5.0,5.0,10.0,10.0),indicatoron =0)
       R5.pack(side="right")
-      fButtons.pack(fill=X,expand="0",side="bottom")
+      fButtons.pack(fill="x",expand="0",side="bottom")
       #---------------------------- Canvas
       self.xyPlot.canvas.pack(fill="both", expand="1")
       self.mainWindow.pack(fill="both",expand="1")
@@ -132,6 +131,7 @@ class NewtonApp:
         result = NewtonApp.extable[i].load_values(1)
         print result
         x,y = zip(*result)
+        self.myTablelistbox.insert(count, )
         print x
         print y
    
