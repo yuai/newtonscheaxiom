@@ -99,7 +99,7 @@ class NewtonApp:
        import tkFileDialog
        
        stringI = str(NewtonApp.dbCount)
-       NewtonApp.extable.append(Experiment('C:/Users/John Truong/Desktop/db/test'+stringI+'.db',1))
+       NewtonApp.extable.append(Experiment('C:/Users/db/test'+stringI+'.db',1))
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
