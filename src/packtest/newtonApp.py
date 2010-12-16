@@ -23,6 +23,7 @@ class NewtonApp:
    tablecount = 0
    ''' save the check button (for the plot) to change the color ''' 
    checkbuttonPlot = []
+   checkbuttonTable = []
    
    def __init__(self, parent=0):
       ''' constructor '''
@@ -37,22 +38,9 @@ class NewtonApp:
       self.mainWindow = Frame(main)
       self.xyPlot=XYPlot(main,400,250)
       # -----------------------------------------------------------------
-      #---------------------------- ScrollBar
+      #---------------------------- ScrollBar, ListBox
       # -----------------------------------------------------------------
-      scrollbar = Scrollbar(left)
-      scrollbar.pack( side="right", fill="y")
-      # -----------------------------------------------------------------
-      #---------------------------- ListBox
-      # -----------------------------------------------------------------
-      myTablelist = Listbox(left, yscrollcommand = scrollbar.set, width=30)
-      myTablelist.pack( side="bottom", fill="both", expand="1")
-      scrollbar.config( command = myTablelist.yview )
-      self.myTablelistbox = myTablelist
-      
-      fButton = Frame(left, border="2", relief="groove")
-      bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
-      bClean.pack(side="left")
-      fButton.pack(fill="x",expand="0",side="top")
+      self.initListBox()
       # -----------------------------------------------------------------
       # ---------------------------- Buttons for Canvas
       # -----------------------------------------------------------------
@@ -145,25 +133,32 @@ class NewtonApp:
        # -----------------------------------------------------------------
        self.CheckVarPlot = IntVar()
        self.CheckVarTable = IntVar()
-       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=self.CheckVarPlot,anchor=NW,width=30)
-       c2 = Checkbutton(left, text="Table["+expName+"]",variable=self.CheckVarTable
+       self.c1 = Checkbutton(left, text="Plot["+expName+"]",variable=self.CheckVarPlot,anchor=NW,width=30)
+       self.c2 = Checkbutton(left, text="Table["+expName+"]",variable=self.CheckVarTable
                         ,command=self.showTable,anchor=NW,width=30)
        NewtonApp.statesTable.append(self.CheckVarTable)
        NewtonApp.statesPlot.append(self.CheckVarPlot)
-       NewtonApp.checkbuttonPlot.append(c1)
-       c1.pack(side="top")
-       c2.pack(side="top")
+       NewtonApp.checkbuttonPlot.append(self.c1)
+       NewtonApp.checkbuttonTable.append(self.c2)
+       self.c1.pack(side="top")
+       self.c2.pack(side="top")
    
    def cleanAllExp(self):
        print 'cleanAll'
-       NewtonApp.indexList = []
-       statesTable = []
-       statesPlot = []
-       checkbuttonPlot = []
-       tablecount = 0
+       NewtonApp.statesTable = []
+       NewtonApp.statesPlot = []
+       NewtonApp.tablecount = 0
        self.myTablelistbox.delete(0, END)
+       print len(NewtonApp.checkbuttonPlot)
+       for i in range(0, len(NewtonApp.checkbuttonPlot)):
+           NewtonApp.checkbuttonPlot[i].destroy()
+       for i in range(0, len(NewtonApp.checkbuttonTable)):
+           NewtonApp.checkbuttonTable[i].destroy()
+           
+       checkbuttonPlot = []
+       checkbuttonTable = []
+       NewtonApp.indexList = []
        
-
    def showTable(self): 
         ''' show values of the experience in the list-box '''
         self.myTablelistbox.delete(0, END) # delete list-box, list-box will be always generated completely
@@ -220,6 +215,21 @@ class NewtonApp:
                NewtonApp.checkbuttonPlot[tempI].config(selectcolor="white")    
            tempI=tempI+1
        self.xyPlot.drawControl(valueList,1)
+       
+   def initListBox(self):
+       scrollbar = Scrollbar(left)
+       scrollbar.pack( side="right", fill="y")
+       # -----------------------------------------------------------------
+       #---------------------------- ListBox
+       # -----------------------------------------------------------------
+       myTablelist = Listbox(left, yscrollcommand = scrollbar.set, width=30)
+       myTablelist.pack( side="bottom", fill="both", expand="1")
+       scrollbar.config( command = myTablelist.yview )
+       self.myTablelistbox = myTablelist
+       fButton = Frame(left, border="2", relief="groove")
+       bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
+       bClean.pack(side="left")
+       fButton.pack(fill="x",expand="0",side="top")
 
 # -----------------------------------------------------------------  
 #---------------------------- Initial Tkinter
@@ -232,9 +242,9 @@ mainWindow.minsize(800,600)
 m1 = PanedWindow(orient="vertical")
 m1.pack(fill="both", expand="1")
 m2 = PanedWindow(m1)
-left = Label(m2)
+left = Label(m2) # Label for the table
 m2.add(left)
-main = Label(m2)
+main = Label(m2) # Main Label for the canvas
 m2.add(main) 
 m1.add(m2)
 # -----------------------------------------------------------------
