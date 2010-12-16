@@ -18,19 +18,49 @@ class XYPlot:
     self.repaint(self.fgcolor)
     self.canvas.bind('<Configure>',self.resize)
     
-  def repaint(self,_color,):
+  def repaint(self,_color,maxima = None):
       if self.NegativValueBool == 0:  
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
           self.canvas.create_line(0.1*self.width,0.9 * self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
-          self.canvas.create_Line(0.9*self.width,0.9*self.height,0.9*self.width,0.92*self.height,width=2,fill=_color)
-          
-    
-          
+          self.canvas.create_line(0.9*self.width,0.9*self.height,0.9*self.width,0.91*self.height,width=2,fill=_color)
+          next = 0
+          for i in range (0,7):
+              self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.91*self.height,width=2,fill=_color)
+              next = next +(0.8*self.width)/6
+          next = 0    
+          for i in range (0,7):
+              self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.09)*self.width,0.9*self.height-next,width=2,fill=_color)
+              next = next +(0.8*self.height)/6
+              
+          if maxima != None:
+              next = 0
+              for i in range(0,7):
+                  if i > 0:
+                      x_float = maxima[0]/(7-i)
+                  else:
+                      x_float = 0 
+                      
+                  x_float = round(x_float,3)   
+                  x_str = str(x_float)
+                  self.canvas.create_text(0.07*self.width,0.9*self.height-next, text=x_str)
+                  next = next = next +(0.8*self.height)/6
+                  
+                
+                  
+              
       else:
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
           self.canvas.create_line(0.5*self.width,0.05,0.5*self.width,self.height-0.05,fill=_color)
+          next = 0
+          for i in range (0,14):
+              self.canvas.create_line((0.05)*self.width+next,0.5*self.height,(0.05)*self.width+next,0.51*self.height,width=2,fill=_color)
+              next = next +(0.45*self.width)/6
+          next = 0    
+          for i in range (0,14):
+              self.canvas.create_line(0.5*self.width,0.95*self.height-next,0.49*self.width,0.95*self.height-next,width=2,fill=_color)
+              next = next +(0.45*self.height)/6
             
 
   def resize(self,event ):
@@ -166,7 +196,7 @@ class XYPlot:
       else:
           self.NegativValueBool = 0   
       
-      self.repaint(self.fgcolor)
+      self.repaint(self.fgcolor,maxima)
       self.drawMeta()
       print maxima
       colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
@@ -219,7 +249,10 @@ class XYPlot:
       i = 0
       if self.NegativValueBool == 0:
           while i < vn-1:
-              colortop = str(i+1)
+              if i < 4:
+                  colortop = str(i+1)
+              else:
+                  colortop = '1'    
               for j in range (0,len(valueList)):
                   x = valueList[j][0]
                   y = valueList[j][i+1]
@@ -230,6 +263,10 @@ class XYPlot:
       else:
           while i < vn-1:
               colortop = str(i+1)
+              if i < 4:
+                  colortop = str(i+1)
+              else:
+                  colortop = '1' 
               for j in range (0,len(valueList)):
                   x = valueList[j][0]
                   y = valueList[j][i+1]
