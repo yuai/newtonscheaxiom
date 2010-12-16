@@ -18,11 +18,12 @@ class XYPlot:
     self.repaint(self.fgcolor)
     self.canvas.bind('<Configure>',self.resize)
     
-  def repaint(self,_color):
+  def repaint(self,_color,):
       if self.NegativValueBool == 0:  
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
           self.canvas.create_line(0.1*self.width,0.9 * self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
+          self.canvas.create_Line(0.9*self.width,0.9*self.height,0.9*self.width,0.92*self.height,width=2,fill=_color)
           
     
           
