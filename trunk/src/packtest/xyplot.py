@@ -45,10 +45,28 @@ class XYPlot:
                   x_str = str(stringx_float)
                   self.canvas.create_text(0.1 * self.width+next,0.92*self.height, text=x_str)
                   next = next +(0.8*self.width)/6
-                  
-                
-                  
               
+              countMaxima = 0
+              for i in range (0,len(maxima)-1):
+                              if maxima[i]!= 0.0:
+                                  countMaxima = countMaxima +1
+                        
+                      
+              for countY in range (1,countMaxima):
+                  next = 0
+                  y_float = 0
+                  for i in range (0,7):
+                      if i<1:
+                          y_float = 0
+                      else:
+                          y_float = y_float + maxima[countY]/6
+                      stringy_float = round (y_float,3)
+                      y_str = str(stringy_float)
+                      self.canvas.create_text(0.05*self.width,0.9*self.height-next,text = y_str)
+                      next = next + (0.8*self.height)/6        
+                          
+                      
+                      
       else:
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
@@ -79,7 +97,7 @@ class XYPlot:
                   x_str = str(stringx_float)
                   self.canvas.create_text(0.05 * self.width+next,0.53*self.height, text=negx_str)
                   self.canvas.create_text(0.5 * self.width+next,0.53*self.height, text=x_str)
-                  next = next +(0.45*self.width)/6
+                  next = next +(0.45*self.height)/6
               
               
               
