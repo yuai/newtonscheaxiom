@@ -51,7 +51,7 @@ class XYPlot:
                               if maxima[i]!= 0.0:
                                   countMaxima = countMaxima +1
                         
-                      
+              newY  = 0        
               for countY in range (1,countMaxima):
                   next = 0
                   y_float = 0
@@ -62,9 +62,9 @@ class XYPlot:
                           y_float = y_float + maxima[countY]/6
                       stringy_float = round (y_float,3)
                       y_str = str(stringy_float)
-                      self.canvas.create_text(0.05*self.width,0.9*self.height-next,text = y_str)
+                      self.canvas.create_text(0.05*self.width,(0.9+newY)*self.height-next,text = y_str)
                       next = next + (0.8*self.height)/6        
-                          
+                  newY = newY+0.015    
                       
                       
       else:
@@ -91,15 +91,42 @@ class XYPlot:
                   else:
                       negx_float =negx_float + (maxima[0]/6)
                       x_float = x_float + (maxima[0]/6)        
-                  stringnegx_float = round(negx_float,3)   
+                  stringnegx_float = round(negx_float,3)
+                  stringx_float = round(x_float,3)    
                   negx_str = str(stringnegx_float)
-                  stringx_float = round(x_float,3)   
                   x_str = str(stringx_float)
                   self.canvas.create_text(0.05 * self.width+next,0.53*self.height, text=negx_str)
                   self.canvas.create_text(0.5 * self.width+next,0.53*self.height, text=x_str)
-                  next = next +(0.45*self.height)/6
+                  next = next +(0.45*self.width)/6
               
-              
+              countMaxima = 0
+              for i in range (0,len(maxima)-1):
+                              if maxima[i]!= 0.0:
+                                  countMaxima = countMaxima +1
+                                  
+              newY = 0
+              for countY in range (1,countMaxima):
+                  next = 0
+                  y_float = 0
+                  negy_float = 0
+                  for i in range (0,14):
+                      if i<1:
+                          negy_float = -maxima[countY]
+                      else:
+                          negy_float = negy_float + (maxima[countY]/6)
+                          y_float = y_float + maxima[countY]/6
+                          
+                      stringnegy_float = round(negy_float,3)
+                      stringy_float = round(y_float,3)    
+                      negy_str = str(stringnegy_float)
+                      y_str = str(stringy_float)
+                      self.canvas.create_text(0.45*self.width,(0.95+newY)*self.height-next,text = negy_str)
+                      self.canvas.create_text(0.45*self.width,(0.5+newY)*self.height-next,text = y_str)
+                      
+                      next = next + (0.45*self.height)/6
+                  newY = newY + 0.015    
+                      
+                              
               
         
             
