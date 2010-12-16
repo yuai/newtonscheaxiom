@@ -155,8 +155,6 @@ class NewtonApp:
                     xyString =  "x[%s] \t= %f \t y[%s] \t= %f" % (str(count), x[count], str(count),y[count]) 
                     self.myTablelistbox.insert(NewtonApp.tablecount, xyString )
                     count = count + 1
-                
-            
             if NewtonApp.states[b].get() == 0:
                 print "remove"
                 #self.myTablelistbox.delete(0, END)
