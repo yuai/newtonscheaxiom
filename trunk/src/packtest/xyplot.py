@@ -35,16 +35,16 @@ class XYPlot:
               
           if maxima != None:
               next = 0
+              x_float = 0
               for i in range(0,7):
-                  if i > 0:
-                      x_float = maxima[0]/(7-i)
+                  if i<1:
+                      x_float = 0
                   else:
-                      x_float = 0 
-                      
-                  x_float = round(x_float,3)   
-                  x_str = str(x_float)
-                  self.canvas.create_text(0.07*self.width,0.9*self.height-next, text=x_str)
-                  next = next = next +(0.8*self.height)/6
+                      x_float = x_float + maxima[0]/6
+                  stringx_float = round(x_float,3)   
+                  x_str = str(stringx_float)
+                  self.canvas.create_text(0.1 * self.width+next,0.92*self.height, text=x_str)
+                  next = next +(0.8*self.width)/6
                   
                 
                   
@@ -61,6 +61,29 @@ class XYPlot:
           for i in range (0,14):
               self.canvas.create_line(0.5*self.width,0.95*self.height-next,0.49*self.width,0.95*self.height-next,width=2,fill=_color)
               next = next +(0.45*self.height)/6
+        
+          if maxima != None:
+              next = 0
+              x_float = 0
+              negx_float = 0
+              for i in range(0,7):
+                  if i==0:
+                      negx_float = -maxima[0]
+                      
+                  else:
+                      negx_float =negx_float + (maxima[0]/6)
+                      x_float = x_float + (maxima[0]/6)        
+                  stringnegx_float = round(negx_float,3)   
+                  negx_str = str(stringnegx_float)
+                  stringx_float = round(x_float,3)   
+                  x_str = str(stringx_float)
+                  self.canvas.create_text(0.05 * self.width+next,0.53*self.height, text=negx_str)
+                  self.canvas.create_text(0.5 * self.width+next,0.53*self.height, text=x_str)
+                  next = next +(0.45*self.width)/6
+              
+              
+              
+        
             
 
   def resize(self,event ):
@@ -235,11 +258,11 @@ class XYPlot:
       xUnit = 's'
       yUnit =  'm'    #later should be this metadic['vn_unit']
       if self.NegativValueBool == 0:
-          self.canvas.create_text(0.90*self.width, 0.92*self.height, text="t in Sekunden")
-          self.canvas.create_text(0.08*self.width, 0.05*self.height, text="Strecke in m")
+          self.canvas.create_text(0.90*self.width, 0.92*self.height, text="")
+          self.canvas.create_text(0.08*self.width, 0.05*self.height, text="")
       else:
-          self.canvas.create_text(0.93*self.width, 0.52*self.height, text="t in Sekunden")
-          self.canvas.create_text(0.4*self.width, 0.05*self.height, text="Strecke in m")
+          self.canvas.create_text(0.93*self.width, 0.52*self.height, text="")
+          self.canvas.create_text(0.4*self.width, 0.05*self.height, text="")
       
                
               
