@@ -43,7 +43,8 @@ class XYPlot:
                       x_float = x_float + maxima[0]/6
                   stringx_float = round(x_float,3)   
                   x_str = str(stringx_float)
-                  self.canvas.create_text(0.1 * self.width+next,0.92*self.height, text=x_str)
+                  if x_str != '0':
+                      self.canvas.create_text(0.1 * self.width+next,0.92*self.height, text=x_str)
                   next = next +(0.8*self.width)/6
               
               countMaxima = 0
@@ -62,7 +63,8 @@ class XYPlot:
                           y_float = y_float + maxima[countY]/6
                       stringy_float = round (y_float,3)
                       y_str = str(stringy_float)
-                      self.canvas.create_text(0.05*self.width,(0.9+newY)*self.height-next,text = y_str)
+                      if stringy_float != 0.0:
+                          self.canvas.create_text(0.05*self.width,(0.9+newY)*self.height-next,text = y_str)
                       next = next + (0.8*self.height)/6        
                   newY = newY+0.015    
                       
@@ -71,6 +73,7 @@ class XYPlot:
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
           self.canvas.create_line(0.5*self.width,0.05,0.5*self.width,self.height-0.05,fill=_color)
+          self.canvas.create_text(0.48*self.width,0.53*self.height,text = '0')
           next = 0
           for i in range (0,14):
               self.canvas.create_line((0.05)*self.width+next,0.5*self.height,(0.05)*self.width+next,0.51*self.height,width=2,fill=_color)
@@ -95,8 +98,10 @@ class XYPlot:
                   stringx_float = round(x_float,3)    
                   negx_str = str(stringnegx_float)
                   x_str = str(stringx_float)
-                  self.canvas.create_text(0.05 * self.width+next,0.53*self.height, text=negx_str)
-                  self.canvas.create_text(0.5 * self.width+next,0.53*self.height, text=x_str)
+                  if stringnegx_float != 0.0:
+                      self.canvas.create_text(0.05 * self.width+next,0.53*self.height, text=negx_str)
+                  if stringx_float != 0.0:
+                      self.canvas.create_text(0.5 * self.width+next,0.53*self.height, text=x_str)
                   next = next +(0.45*self.width)/6
               
               countMaxima = 0
@@ -120,8 +125,10 @@ class XYPlot:
                       stringy_float = round(y_float,3)    
                       negy_str = str(stringnegy_float)
                       y_str = str(stringy_float)
-                      self.canvas.create_text(0.45*self.width,(0.95+newY)*self.height-next,text = negy_str)
-                      self.canvas.create_text(0.45*self.width,(0.5+newY)*self.height-next,text = y_str)
+                      if stringnegy_float != 0.0:
+                          self.canvas.create_text(0.45*self.width,(0.95+newY)*self.height-next,text = negy_str)
+                      if stringy_float != 0.0:    
+                          self.canvas.create_text(0.45*self.width,(0.5+newY)*self.height-next,text = y_str)
                       
                       next = next + (0.45*self.height)/6
                   newY = newY + 0.015    
@@ -266,7 +273,6 @@ class XYPlot:
       
       self.repaint(self.fgcolor,maxima)
       self.drawMeta()
-      print maxima
       colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
                     'LightPink','PaleVioletRed','khaki']
 
@@ -274,7 +280,6 @@ class XYPlot:
           i = 0
           for element in drawList:
               color = colorList[i]
-              print color 
               self.drawDots(element,maxima,color)
               i = i+1
         
