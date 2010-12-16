@@ -50,7 +50,7 @@ class NewtonApp:
       self.myTablelistbox = myTablelist
       
       fButton = Frame(left, border="2", relief="groove")
-      bClean = Button(fButton, text="Clean all",command=self.mainWindow.quit)
+      bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
       bClean.pack(side="left")
       fButton.pack(fill="x",expand="0",side="top")
       # -----------------------------------------------------------------
@@ -153,6 +153,16 @@ class NewtonApp:
        NewtonApp.checkbuttonPlot.append(c1)
        c1.pack(side="top")
        c2.pack(side="top")
+   
+   def cleanAllExp(self):
+       print 'cleanAll'
+       NewtonApp.indexList = []
+       statesTable = []
+       statesPlot = []
+       checkbuttonPlot = []
+       tablecount = 0
+       self.myTablelistbox.delete(0, END)
+       
 
    def showTable(self): 
         ''' show values of the experience in the list-box '''
