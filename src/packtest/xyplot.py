@@ -276,12 +276,19 @@ class XYPlot:
       colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
                     'LightPink','PaleVioletRed','khaki']
 
-      if button == 1 :
+      if button == 2 :
           i = 0
           for element in drawList:
               color = colorList[i]
               self.drawDots(element,maxima,color)
               i = i+1
+      elif button == 1 :
+           i = 0
+           for element in drawList:
+              color = colorList[i]
+              self.drawLine(element,maxima,color,1)
+              i = i+1
+                  
         
         
         
@@ -313,11 +320,66 @@ class XYPlot:
       else:
           self.canvas.create_text(0.93*self.width, 0.52*self.height, text="")
           self.canvas.create_text(0.4*self.width, 0.05*self.height, text="")
+          
+
+
+  def drawLine(self,valueList,maxima,color,smooth=1):
+       self.drawDots(valueList, maxima, color)
+       vn = len(valueList[0])
+       i = 0
+       if self.NegativValueBool == 0 :
+           while i < vn-1:
+               if i < 4:
+                   colortop = str(i+1)
+               else:
+                   colortop = '1'
+               
+               for j in range(0,len(valueList)-1):
+                   print valueList[j][i+1] 
+                   x1 = valueList[j][0]
+                   y1 = valueList[j][i+1]
+                   x2 = valueList[j+1][0]
+                   y2 = valueList[j+1][i+1]
+                   maxX = maxima[0]
+                   maxY = maxima[i+1]
+                   if smooth == 0:
+                       self.canvas.create_line(self.transAxisX(x1,y1,maxX,maxY),self.transAxisY(x1,y1,maxX,maxY),self.transAxisX(x2,y2,maxX,maxY),self.transAxisY(x2,y2,maxX,maxY),fill = color+colortop)
+                   else:
+                       self.canvas.create_line(self.transAxisX(x1,y1,maxX,maxY),self.transAxisY(x1,y1,maxX,maxY),self.transAxisX(x2,y2,maxX,maxY),self.transAxisY(x2,y2,maxX,maxY),fill = color+colortop,smooth = 'true')
+               i=i+1  
+       else:
+           while i < vn-1:
+              colortop = str(i+1)
+              if i < 4:
+                  colortop = str(i+1)
+              else:
+                  colortop = '1' 
+              for j in range (0,len(valueList)-1):
+                  x1 = valueList[j][0]
+                  y1 = valueList[j][i+1]
+                  x2 = valueList[j+1][0]
+                  y2 = valueList[j+1][i+1]
+                  maxX = maxima [0]
+                  maxY = maxima [i+1]
+                  if smooth == 0:
+                       self.canvas.create_line(self.negTransAxisX(x1,y1,maxX,maxY),self.negTransAxisY(x1,y1,maxX,maxY),self.negTransAxisX(x2,y2,maxX,maxY),self.negTransAxisY(x2,y2,maxX,maxY),fill = color+colortop)
+                  else:
+                       self.canvas.create_line(self.negTransAxisX(x1,y1,maxX,maxY),self.negTransAxisY(x1,y1,maxX,maxY),self.negTransAxisX(x2,y2,maxX,maxY),self.negTransAxisY(x2,y2,maxX,maxY),fill = color+colortop,smooth = 'true')
+                 
+                  
+              i = i+1
+                         
+       
+       
+       
+       
+              
+      
       
                
               
   def drawDots(self,valueList,maxima,color):
-
+      
       vn = len ( valueList[0])
       i = 0
       if self.NegativValueBool == 0:
