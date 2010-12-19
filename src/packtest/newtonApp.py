@@ -201,6 +201,7 @@ class NewtonApp:
    def getDrawList(self):
        ''' get values from the experience '''
        valueList = []
+       metaList = []
        tempI=0 # variable increment go thought the check-buttons
        tempSel=0 # variable increment by selected check-buttons for the color
        colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
@@ -208,13 +209,15 @@ class NewtonApp:
        for x in NewtonApp.indexList:
            if NewtonApp.statesPlot[tempI].get() == 1:
                values = NewtonApp.extable[x].load_values(1)
+               Meta   =   NewtonApp.extable[x].load_metadata()
+               metaList.append(Meta)
                valueList.append(values)
                NewtonApp.checkbuttonPlot[tempI].config(selectcolor=colorList[tempSel])
                tempSel=tempSel+1
            if NewtonApp.statesPlot[tempI].get() == 0:
                NewtonApp.checkbuttonPlot[tempI].config(selectcolor="white")    
            tempI=tempI+1
-       self.xyPlot.drawControl(valueList,1)
+       self.xyPlot.drawControl(valueList,metaList,1)
        
    def initListBox(self):
        scrollbar = Scrollbar(left)
