@@ -12,7 +12,7 @@ class NewtonApp:
    ''' Amount of Databases or experiments '''  
    dbCount=0
    ''' List for experiments '''
-   extable = []
+   exTable = []
    ''' List for added experiments '''
    indexList = []
    ''' states of table of the check-buttons '''
@@ -30,7 +30,7 @@ class NewtonApp:
       file_count = len(os.listdir('C:/Users/db/'))
       for i in range(0,file_count):
           nr = str(i) # number (increment) for the database filename
-          NewtonApp.extable.append(Experiment('C:/Users/db/test'+nr+'.db',1))
+          NewtonApp.exTable.append(Experiment('C:/Users/db/test'+nr+'.db',1))
           NewtonApp.dbCount=NewtonApp.dbCount+1
       # -----------------------------------------------------------------   
       #---------------------------- XYPlot
@@ -50,20 +50,20 @@ class NewtonApp:
       # -----------------------------------------------------------------
       #---------------------------- RadioButton
       # -----------------------------------------------------------------
-      var = IntVar()
-      R1 = Radiobutton(fButtons, text="Draw Rectangle", variable=var, value=1
+      self.var = IntVar()
+      R1 = Radiobutton(fButtons, text="Draw Rectangle", variable=self.var, value=1
                        ,command=self.xyPlot.drawRectangle,indicatoron =0)
       R1.pack(side="right")
-      R2 = Radiobutton(fButtons, text="Draw Data", variable=var, value=2
+      R2 = Radiobutton(fButtons, text="Draw Data", variable=self.var, value=2
                        ,command=self.xyPlot.plotSampleData,indicatoron =0)
       R2.pack(side="right")
-      R3 = Radiobutton(fButtons, text="Draw Dot", variable=var, value=3
+      R3 = Radiobutton(fButtons, text="Draw Dot", variable=self.var, value=3
                        ,command=self.getDrawList,indicatoron =0)
       R3.pack(side="right")
-      R4 = Radiobutton(fButtons, text="Draw Line", variable=var, value=4
+      R4 = Radiobutton(fButtons, text="Draw Line", variable=self.var, value=4
                        ,command=self.xyPlot.plotSampleData,indicatoron =0)
       R4.pack(side="right")
-      R5 = Radiobutton(fButtons, text="Approximate Line", variable=var, value=5
+      R5 = Radiobutton(fButtons, text="Approximate Line", variable=self.var, value=5
                        ,command=self.xyPlot.transAxis(5.0,5.0,10.0,10.0),indicatoron =0)
       R5.pack(side="right")
       fButtons.pack(fill="x",expand="0",side="bottom")
@@ -81,8 +81,8 @@ class NewtonApp:
       myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief="sunken" )
       scrollbar.config( command = myDBlist.yview )
       tempCount=0 # increment to load all metaData of the experiences
-      for x in NewtonApp.extable:
-          exp_metadata = NewtonApp.extable[tempCount].load_metadata()
+      for index in NewtonApp.exTable:
+          exp_metadata = self.getMetaData(tempCount)
           nr_series = exp_metadata['nr_series']
           actor_name = exp_metadata['actor_name']
           exp_name = exp_metadata['exp_name']
@@ -115,11 +115,11 @@ class NewtonApp:
        import tkFileDialog
        
        stringI = str(NewtonApp.dbCount)
-       NewtonApp.extable.append(Experiment('C:/Users/db/test'+stringI+'.db',1))
+       NewtonApp.exTable.append(Experiment('C:/Users/db/test'+stringI+'.db',1))
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
-       test=NewtonImporter(filename,NewtonApp.extable[NewtonApp.dbCount])
+       test=NewtonImporter(filename,NewtonApp.exTable[NewtonApp.dbCount])
        NewtonApp.dbCount=NewtonApp.dbCount+1
    
    def showExp(self,event):
@@ -131,25 +131,25 @@ class NewtonApp:
        # -----------------------------------------------------------------
        #---------------------------- CheckButton for experience
        # -----------------------------------------------------------------
-       self.CheckVarPlot = IntVar()
-       self.CheckVarTable = IntVar()
-       self.c1 = Checkbutton(left, text="Plot["+expName+"]",variable=self.CheckVarPlot,anchor=NW,width=30)
-       self.c2 = Checkbutton(left, text="Table["+expName+"]",variable=self.CheckVarTable
+       CheckVarPlot = IntVar()
+       CheckVarTable = IntVar()
+       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot,anchor=NW,width=30)
+       c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
                         ,command=self.showTable,anchor=NW,width=30)
-       NewtonApp.statesTable.append(self.CheckVarTable)
-       NewtonApp.statesPlot.append(self.CheckVarPlot)
-       NewtonApp.checkbuttonPlot.append(self.c1)
-       NewtonApp.checkbuttonTable.append(self.c2)
-       self.c1.pack(side="top")
-       self.c2.pack(side="top")
+       NewtonApp.statesTable.append(CheckVarTable)
+       NewtonApp.statesPlot.append(CheckVarPlot)
+       NewtonApp.checkbuttonPlot.append(c1)
+       NewtonApp.checkbuttonTable.append(c2)
+       c1.pack(side="top")
+       c2.pack(side="top")
    
    def cleanAllExp(self):
        print 'cleanAll'
+       self.var.set(0)
        NewtonApp.statesTable = []
        NewtonApp.statesPlot = []
        NewtonApp.tablecount = 0
        self.myTablelistbox.delete(0, END)
-       print len(NewtonApp.checkbuttonPlot)
        for i in range(0, len(NewtonApp.checkbuttonPlot)):
            NewtonApp.checkbuttonPlot[i].destroy()
        for i in range(0, len(NewtonApp.checkbuttonTable)):
@@ -158,18 +158,38 @@ class NewtonApp:
        NewtonApp.checkbuttonPlot = []
        NewtonApp.checkbuttonTable = []
        NewtonApp.indexList = []
-       
+   
+   def getValueList(self):
+       ''' load values from exTable'''
+       valueList = []
+       for pin in NewtonApp.indexList:
+           values = NewtonApp.exTable[pin].load_values(1)
+           valueList.append(values)
+       return valueList
+   
+   def getValues(self,index):
+       ''' get Values from index  '''
+       values = NewtonApp.exTable[index].load_values(1)
+       return values
+   
+   def getMetaList(self):
+       ''' load metaData from exTable'''
+       metaList = []
+       for pin in NewtonApp.indexList:
+           metas = NewtonApp.exTable[pin].load_metadata()
+           metaList.append(metas)
+       return metaList
+   
+   def getMetaData(self,index):
+       ''' get meta data from index '''
+       metadata = NewtonApp.exTable[index].load_metadata()
+       return metadata
+           
    def showTable(self): 
         ''' show values of the experience in the list-box '''
         self.myTablelistbox.delete(0, END) # delete list-box, list-box will be always generated completely
-        valueList = []
-        for pin in NewtonApp.indexList:
-            values = NewtonApp.extable[pin].load_values(1)
-            valueList.append(values)
-        metaList = []
-        for pin in NewtonApp.indexList:
-            metas = NewtonApp.extable[pin].load_metadata()
-            metaList.append(metas) 
+        valueList = self.getValueList()
+        metaList = self.getMetaList() 
         for tempI in range(0,len(valueList)):
             if NewtonApp.statesTable[tempI].get() == 1: # if argument is 0 do nothing
                 # -----------------------------------------------------------------
@@ -206,9 +226,9 @@ class NewtonApp:
        tempSel=0 # variable increment by selected check-buttons for the color
        colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
                     'LightPink','PaleVioletRed','khaki']
-       for x in NewtonApp.indexList:
+       for index in NewtonApp.indexList:
            if NewtonApp.statesPlot[tempI].get() == 1:
-               values = NewtonApp.extable[x].load_values(1)
+               values = self.getValues(index)
                Meta   =   NewtonApp.extable[x].load_metadata()
                metaList.append(Meta)
                valueList.append(values)
@@ -218,6 +238,12 @@ class NewtonApp:
                NewtonApp.checkbuttonPlot[tempI].config(selectcolor="white")    
            tempI=tempI+1
        self.xyPlot.drawControl(valueList,metaList,1)
+       
+   def updatePlot(self):
+       print 'updatePlot'
+       self.var
+       
+         
        
    def initListBox(self):
        scrollbar = Scrollbar(left)
@@ -231,7 +257,9 @@ class NewtonApp:
        self.myTablelistbox = myTablelist
        fButton = Frame(left, border="2", relief="groove")
        bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
+       bUpdate = Button(fButton, text="Update",command=self.updatePlot)
        bClean.pack(side="left")
+       bUpdate.pack(side="left")
        fButton.pack(fill="x",expand="0",side="top")
 
 # -----------------------------------------------------------------  
