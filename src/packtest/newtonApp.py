@@ -230,8 +230,8 @@ class NewtonApp:
        for index in NewtonApp.indexList:
            if NewtonApp.statesPlot[tempI].get() == 1:
                values = self.getValues(index)
-               Meta   =   NewtonApp.extable[x].load_metadata()
-               metaList.append(Meta)
+               metadata   =   NewtonApp.extable[x].load_metadata()
+               metaList.append(metadata)
                valueList.append(values)
                NewtonApp.checkbuttonPlot[tempI].config(selectcolor=colorList[tempSel])
                tempSel=tempSel+1
