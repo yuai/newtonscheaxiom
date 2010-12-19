@@ -1,5 +1,6 @@
 from Tkinter import *
-from xyplot import *
+from expList import ExpList
+from xyplot import XYPlot
 from newtonImporter import NewtonImporter
 from data_access import Experiment
 import os
@@ -9,12 +10,6 @@ class NewtonApp:
    # -----------------------------------------------------------------
    # ---------------------------- variables of class NewtonApp
    # -----------------------------------------------------------------
-   ''' Amount of Databases or experiments '''  
-   dbCount=0
-   ''' List for experiments '''
-   exTable = []
-   ''' List for added experiments '''
-   indexList = []
    ''' states of table of the check-buttons '''
    statesTable = []
    ''' states of plot of the check-buttons '''
@@ -29,10 +24,10 @@ class NewtonApp:
    def __init__(self, parent=0):
       ''' constructor '''
       file_count = len(os.listdir('C:/Users/db/'))
+      self.explist = ExpList()
       for i in range(0,file_count):
           nr = str(i) # number (increment) for the database filename
-          NewtonApp.exTable.append(Experiment('C:/Users/db/test'+nr+'.db',1))
-          NewtonApp.dbCount=NewtonApp.dbCount+1
+          self.explist.addExp(Experiment('C:/Users/db/test'+nr+'.db',1))
       # -----------------------------------------------------------------   
       #---------------------------- XYPlot
       # -----------------------------------------------------------------
@@ -82,8 +77,11 @@ class NewtonApp:
       myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief="sunken" )
       scrollbar.config( command = myDBlist.yview )
       tempCount=0 # increment to load all metaData of the experiences
-      for obj in NewtonApp.exTable:
-          exp_metadata = self.getMetaData(tempCount)
+      print 'tst'
+      print self.explist.getMetaData(tempCount)
+      for obj in self.explist:
+          #exp_metadata = self.explist.getMetaData(tempCount)
+          exp_metadata = obj.load_metadata()
           nr_series = exp_metadata['nr_series']
           actor_name = exp_metadata['actor_name']
           exp_name = exp_metadata['exp_name']
@@ -115,19 +113,18 @@ class NewtonApp:
        from Tkinter import Tk
        import tkFileDialog
        
-       stringI = str(NewtonApp.dbCount)
-       NewtonApp.exTable.append(Experiment('C:/Users/db/test'+stringI+'.db',1))
+       stringI = str(self.explist.dbCount)
+       self.explist.addExp(Experiment('C:/Users/db/test'+stringI+'.db',1))
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
-       test=NewtonImporter(filename,NewtonApp.exTable[NewtonApp.dbCount])
-       NewtonApp.dbCount=NewtonApp.dbCount+1
+       test=NewtonImporter(filename,self.explist.getExp(self.explist.dbCount-1))
    
    def showExp(self,event):
        ''' show the specific added experience on the left side of the user interface '''
        index = self.myDBlistbox.curselection()
        i = int(index[0]) # convert tuple to integer
-       NewtonApp.indexList.append(i) # add all added experience into indexList[]
+       self.explist.addIndexList(i)
        expName = self.myDBlistbox.get(index)
        # -----------------------------------------------------------------
        #---------------------------- CheckButton for experience
@@ -158,39 +155,13 @@ class NewtonApp:
            
        NewtonApp.checkbuttonPlot = []
        NewtonApp.checkbuttonTable = []
-       NewtonApp.indexList = []
-   
-   def getValueList(self):
-       ''' load values from exTable'''
-       valueList = []
-       for pin in NewtonApp.indexList:
-           values = NewtonApp.exTable[pin].load_values(1)
-           valueList.append(values)
-       return valueList
-   
-   def getValues(self,index):
-       ''' get Values from index  '''
-       values = NewtonApp.exTable[index].load_values(1)
-       return values
-   
-   def getMetaList(self):
-       ''' load metaData from exTable'''
-       metaList = []
-       for pin in NewtonApp.indexList:
-           metas = NewtonApp.exTable[pin].load_metadata()
-           metaList.append(metas)
-       return metaList
-   
-   def getMetaData(self,index):
-       ''' get meta data from index '''
-       metadata = NewtonApp.exTable[index].load_metadata()
-       return metadata
+       self.explist.resetIndexList()
            
    def showTable(self): 
         ''' show values of the experience in the list-box '''
         self.myTablelistbox.delete(0, END) # delete list-box, list-box will be always generated completely
-        valueList = self.getValueList()
-        metaList = self.getMetaList() 
+        valueList = self.explist.getValueList()
+        metaList = self.explist.getMetaList() 
         for tempI in range(0,len(valueList)):
             if NewtonApp.statesTable[tempI].get() == 1: # if argument is 0 do nothing
                 # -----------------------------------------------------------------
@@ -227,10 +198,10 @@ class NewtonApp:
        tempSel=0 # variable increment by selected check-buttons for the color
        colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
                     'LightPink','PaleVioletRed','khaki']
-       for index in NewtonApp.indexList:
+       for index in self.explist.indexList:
            if NewtonApp.statesPlot[tempI].get() == 1:
-               values = self.getValues(index)
-               metadata = self.getMetaData(index)
+               values = self.explist.getValues(index)
+               metadata = self.explist.getMetaData(index)
                metaList.append(metadata)
                valueList.append(values)
                NewtonApp.checkbuttonPlot[tempI].config(selectcolor=colorList[tempSel])
