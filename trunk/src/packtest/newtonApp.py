@@ -77,7 +77,9 @@ class NewtonApp:
       myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief="sunken" )
       scrollbar.config( command = myDBlist.yview )
       tempCount=0 # increment to load all metaData of the experiences
-      for x in range(0,1):
+      print 'test1'
+      print self.explist.dbCount
+      for x in range(0,self.explist.dbCount):
           exp_metadata = self.explist.getMetaData(tempCount)
           print 'test'
           print exp_metadata
@@ -116,9 +118,13 @@ class NewtonApp:
        self.explist.addExp(Experiment('C:/Users/db/test'+stringI+'.db',1))
        toplevel = Tk()
        toplevel.withdraw()
-       filename = tkFileDialog.askopenfilename()
-       test=NewtonImporter(filename,self.explist.getExp(self.explist.dbCount-1))
-   
+       try:
+           filename = tkFileDialog.askopenfilename()
+           test=NewtonImporter(filename,self.explist.getExp(self.explist.dbCount-1))
+       except csv.Error:
+           print "There is no File with this name "
+       
+       
    def showExp(self,event):
        ''' show the specific added experience on the left side of the user interface '''
        index = self.myDBlistbox.curselection()
