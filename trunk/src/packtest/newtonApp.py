@@ -23,6 +23,7 @@ class NewtonApp:
    tablecount = 0
    ''' save the check button (for the plot) to change the color ''' 
    checkbuttonPlot = []
+   ''' save checkbuttonTable to destroy after clean '''
    checkbuttonTable = []
    
    def __init__(self, parent=0):
@@ -81,7 +82,7 @@ class NewtonApp:
       myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief="sunken" )
       scrollbar.config( command = myDBlist.yview )
       tempCount=0 # increment to load all metaData of the experiences
-      for index in NewtonApp.exTable:
+      for obj in NewtonApp.exTable:
           exp_metadata = self.getMetaData(tempCount)
           nr_series = exp_metadata['nr_series']
           actor_name = exp_metadata['actor_name']
@@ -237,13 +238,7 @@ class NewtonApp:
            if NewtonApp.statesPlot[tempI].get() == 0:
                NewtonApp.checkbuttonPlot[tempI].config(selectcolor="white")    
            tempI=tempI+1
-       self.xyPlot.drawControl(valueList,metaList,1)
-       
-   def updatePlot(self):
-       print 'updatePlot'
-       self.var
-       
-         
+       self.xyPlot.drawControl(valueList,metaList,1)  
        
    def initListBox(self):
        scrollbar = Scrollbar(left)
@@ -257,9 +252,7 @@ class NewtonApp:
        self.myTablelistbox = myTablelist
        fButton = Frame(left, border="2", relief="groove")
        bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
-       bUpdate = Button(fButton, text="Update",command=self.updatePlot)
        bClean.pack(side="left")
-       bUpdate.pack(side="left")
        fButton.pack(fill="x",expand="0",side="top")
 
 # -----------------------------------------------------------------  
