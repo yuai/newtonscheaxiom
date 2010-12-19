@@ -77,11 +77,10 @@ class NewtonApp:
       myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief="sunken" )
       scrollbar.config( command = myDBlist.yview )
       tempCount=0 # increment to load all metaData of the experiences
-      print 'tst'
-      print self.explist.getMetaData(tempCount)
-      for obj in self.explist:
-          #exp_metadata = self.explist.getMetaData(tempCount)
-          exp_metadata = obj.load_metadata()
+      for x in range(0,1):
+          exp_metadata = self.explist.getMetaData(tempCount)
+          print 'test'
+          print exp_metadata
           nr_series = exp_metadata['nr_series']
           actor_name = exp_metadata['actor_name']
           exp_name = exp_metadata['exp_name']
