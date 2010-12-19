@@ -3,16 +3,18 @@ from data_access import Experiment
 class ExpList:
     ''' list of experiences '''
     
+    dbCount = 0
+    
     def __init__(self):
         ''' init '''
         self.expList = [] # all experiences
-        self.dbCount = 0  # amount of experiences 
+        ExpList.dbCount = 0  # amount of experiences 
         self.indexList = [] # selected experiences
         
     def addExp(self,exp):
         ''' add experience into the expList'''
         self.expList.append(exp)
-        self.dbCount=self.dbCount+1
+        ExpList.dbCount=ExpList.dbCount+1
     
     def addIndexList(self,i):
         ''' add experience into the indexList '''    
