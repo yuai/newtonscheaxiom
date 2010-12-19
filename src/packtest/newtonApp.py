@@ -10,21 +10,21 @@ class NewtonApp:
    # -----------------------------------------------------------------
    # ---------------------------- variables of class NewtonApp
    # -----------------------------------------------------------------
-   ''' states of table of the check-buttons '''
-   statesTable = []
-   ''' states of plot of the check-buttons '''
-   statesPlot = []
    ''' set tablecount. increment to show more tables in the list-box '''
    tablecount = 0
-   ''' save the check button (for the plot) to change the color ''' 
-   checkbuttonPlot = []
-   ''' save checkbuttonTable to destroy after clean '''
-   checkbuttonTable = []
    
    def __init__(self, parent=0):
       ''' constructor '''
-      file_count = len(os.listdir('C:/Users/db/'))
       self.explist = ExpList()
+      self.statesPlot = [] # states of plot of the check-buttons
+      self.radiobutton = [] # save radioButtons with special command
+      self.statesTable = [] # states of table of the check buttons
+      self.checkbuttonPlot = [] # save check button (for the plot) to change the color
+      self.checkbuttonTable = [] # save checkbuttonTable to destroy it
+      
+      
+      
+      file_count = len(os.listdir('C:/Users/db/'))
       for i in range(0,file_count):
           nr = str(i) # number (increment) for the database filename
           self.explist.addExp(Experiment('C:/Users/db/test'+nr+'.db',1))
@@ -50,18 +50,23 @@ class NewtonApp:
       R1 = Radiobutton(fButtons, text="Draw Rectangle", variable=self.var, value=1
                        ,command=self.xyPlot.drawRectangle,indicatoron =0)
       R1.pack(side="right")
+      self.radiobutton.append(R1)
       R2 = Radiobutton(fButtons, text="Draw Data", variable=self.var, value=2
                        ,command=self.xyPlot.plotSampleData,indicatoron =0)
       R2.pack(side="right")
+      self.radiobutton.append(R2)
       R3 = Radiobutton(fButtons, text="Draw Dot", variable=self.var, value=3
                        ,command=self.getDrawList,indicatoron =0)
       R3.pack(side="right")
+      self.radiobutton.append(R3)
       R4 = Radiobutton(fButtons, text="Draw Line", variable=self.var, value=4
                        ,command=self.xyPlot.plotSampleData,indicatoron =0)
       R4.pack(side="right")
+      self.radiobutton.append(R4)
       R5 = Radiobutton(fButtons, text="Approximate Line", variable=self.var, value=5
                        ,command=self.xyPlot.transAxis(5.0,5.0,10.0,10.0),indicatoron =0)
       R5.pack(side="right")
+      self.radiobutton.append(R5)
       fButtons.pack(fill="x",expand="0",side="bottom")
       # -----------------------------------------------------------------
       #---------------------------- Canvas
@@ -81,8 +86,6 @@ class NewtonApp:
       print self.explist.dbCount
       for x in range(0,self.explist.dbCount):
           exp_metadata = self.explist.getMetaData(tempCount)
-          print 'test'
-          print exp_metadata
           nr_series = exp_metadata['nr_series']
           actor_name = exp_metadata['actor_name']
           exp_name = exp_metadata['exp_name']
@@ -136,39 +139,47 @@ class NewtonApp:
        # -----------------------------------------------------------------
        CheckVarPlot = IntVar()
        CheckVarTable = IntVar()
-       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot,anchor=NW,width=30)
+       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot
+                        ,command=self.selectedPlot, anchor=NW,width=30)
        c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
                         ,command=self.showTable,anchor=NW,width=30)
-       NewtonApp.statesTable.append(CheckVarTable)
-       NewtonApp.statesPlot.append(CheckVarPlot)
-       NewtonApp.checkbuttonPlot.append(c1)
-       NewtonApp.checkbuttonTable.append(c2)
+       self.statesTable.append(CheckVarTable)
+       self.statesPlot.append(CheckVarPlot)
+       self.checkbuttonPlot.append(c1)
+       self.checkbuttonTable.append(c2)
        c1.pack(side="top")
        c2.pack(side="top")
    
    def cleanAllExp(self):
        print 'cleanAll'
        self.var.set(0)
-       NewtonApp.statesTable = []
-       NewtonApp.statesPlot = []
-       NewtonApp.tablecount = 0
+       self.statesTable = []
+       self.statesPlot = []
+       self.tablecount = 0
        self.myTablelistbox.delete(0, END)
-       for i in range(0, len(NewtonApp.checkbuttonPlot)):
-           NewtonApp.checkbuttonPlot[i].destroy()
-       for i in range(0, len(NewtonApp.checkbuttonTable)):
-           NewtonApp.checkbuttonTable[i].destroy()
+       for i in range(0, len(self.checkbuttonPlot)):
+           self.checkbuttonPlot[i].destroy()
+       for i in range(0, len(self.checkbuttonTable)):
+           self.checkbuttonTable[i].destroy()
            
-       NewtonApp.checkbuttonPlot = []
-       NewtonApp.checkbuttonTable = []
+       self.checkbuttonPlot = []
+       self.checkbuttonTable = []
        self.explist.resetIndexList()
-           
+   
+   def selectedPlot(self):
+       print 'sel'
+       print self.var.get()
+       if self.var.get() == 3:
+           self.radiobutton[3].config(selectcolor="RoyalBlue")
+       
+               
    def showTable(self): 
         ''' show values of the experience in the list-box '''
         self.myTablelistbox.delete(0, END) # delete list-box, list-box will be always generated completely
         valueList = self.explist.getValueList()
         metaList = self.explist.getMetaList() 
         for tempI in range(0,len(valueList)):
-            if NewtonApp.statesTable[tempI].get() == 1: # if argument is 0 do nothing
+            if self.statesTable[tempI].get() == 1: # if argument is 0 do nothing
                 # -----------------------------------------------------------------
                 # -------------------------- Show Meta Data on List box
                 # -----------------------------------------------------------------
@@ -204,15 +215,15 @@ class NewtonApp:
        colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
                     'LightPink','PaleVioletRed','khaki']
        for index in self.explist.indexList:
-           if NewtonApp.statesPlot[tempI].get() == 1:
+           if self.statesPlot[tempI].get() == 1:
                values = self.explist.getValues(index)
                metadata = self.explist.getMetaData(index)
                metaList.append(metadata)
                valueList.append(values)
-               NewtonApp.checkbuttonPlot[tempI].config(selectcolor=colorList[tempSel])
+               self.checkbuttonPlot[tempI].config(selectcolor=colorList[tempSel])
                tempSel=tempSel+1
-           if NewtonApp.statesPlot[tempI].get() == 0:
-               NewtonApp.checkbuttonPlot[tempI].config(selectcolor="white")    
+           if self.statesPlot[tempI].get() == 0:
+               self.checkbuttonPlot[tempI].config(selectcolor="white")    
            tempI=tempI+1
        self.xyPlot.drawControl(valueList,metaList,1)  
        
