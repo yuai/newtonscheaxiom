@@ -17,6 +17,8 @@ class XYPlot:
     self.canvas = Canvas(self.parent,width=self.width,height=self.height,bg=self.bgcolor)
     self.repaint(self.fgcolor)
     self.canvas.bind('<Configure>',self.resize)
+    self.colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
+                    'LightPink','PaleVioletRed','khaki']
     
   def repaint(self,_color,maxima = None):
       if self.NegativValueBool == 0:  
@@ -189,32 +191,24 @@ class XYPlot:
   def negTransAxisX(self,x,y,maxX,maxY):
       if x == 0.0 and y == 0.0:
           x = 0.5 *self.width
-          y = 0.5 *self.height
       elif x == 0.0 and y <> 0.0:
           x = 0.5*self.width
-          y = 0.5 * self.height - (0.45*self.height/(maxY/y))
       elif x <> 0.0 and y ==0.0:
-          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)
-          y = 0.5 * self.height    
+          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)   
       elif x <> 0.0 and y <> 0.0:
           x = 0.5 * self.width + (0.45*self.width)/(maxX/x)
-          y = 0.5 * self.height - (0.45*self.height/(maxY/y))
            
       return x
   
   
   def negTransAxisY(self,x,y,maxX,maxY):
       if x == 0.0 and y == 0.0:
-          x = 0.5 *self.width
           y = 0.5 *self.height
       elif x == 0.0 and y <> 0.0:
-          x = 0.5*self.width
           y = 0.5 * self.height - (0.45*self.height/(maxY/y))
       elif x <> 0.0 and y ==0.0:
-          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)
           y = 0.5 * self.height    
       elif x <> 0.0 and y <> 0.0:
-          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)
           y = 0.5 * self.height - (0.45*self.height/(maxY/y))
            
       return y
@@ -226,16 +220,12 @@ class XYPlot:
       ''' Transforms x,y Values into scale of Canvas'''
       if x == 0.0 and y == 0.0:
           x = 0.1 * self.width
-          y = 0.9 * self.height
       elif x == 0.0 and y <> 0.0:
          x = 0.1 * self.width
-         y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
       elif x <> 0.0 and y == 0.0:
          x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
-         y = 0.9 * self.height
       elif x<>0.0 and y <> 0.0:        
           x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
-          y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
           
       return x
   
@@ -243,23 +233,20 @@ class XYPlot:
   def transAxisY(self,x,y,maxX,maxY):
       ''' Transforms x,y Values into scale of Canvas'''
       if x == 0.0 and y == 0.0:
-          x = 0.1 * self.width
           y = 0.9 * self.height
       elif x == 0.0 and y <> 0.0:
-         x =  x = 0.1 * self.width
          y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
       elif x <> 0.0 and y == 0.0:
-         x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
          y = 0.9 * self.height
       elif x<>0.0 and y <> 0.0:        
-          x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
           y = 0.9 * self.height - (0.8*self.height)/(maxY/y)   
+      
       return y
   
   
           
           
-  def drawControl(self,drawList,button):
+  def drawControl(self,drawList,metaList,button):
       maxima,minima = self.getMax(drawList)
       for i in range ( 0,len(maxima)):
           if abs(minima[i]) > maxima[i]:
@@ -272,20 +259,18 @@ class XYPlot:
           self.NegativValueBool = 0   
       
       self.repaint(self.fgcolor,maxima)
-      self.drawMeta()
-      colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
-                    'LightPink','PaleVioletRed','khaki']
+      self.drawMeta(metaList)
 
       if button == 2 :
           i = 0
           for element in drawList:
-              color = colorList[i]
+              color = self.colorList[i]
               self.drawDots(element,maxima,color)
               i = i+1
       elif button == 1 :
            i = 0
            for element in drawList:
-              color = colorList[i]
+              color = self.colorList[i]
               self.drawLine(element,maxima,color,1)
               i = i+1
                   
@@ -311,24 +296,33 @@ class XYPlot:
             
       return maxList,minList
   
-  def drawMeta(self):
-      xUnit = 's'
-      yUnit =  'm'    #later should be this metadic['vn_unit']
+  def drawMeta(self,metaList):
+      print metaList
+    #later should be this metadic['vn_unit']
       if self.NegativValueBool == 0:
-          self.canvas.create_text(0.90*self.width, 0.92*self.height, text="")
-          self.canvas.create_text(0.08*self.width, 0.05*self.height, text="")
+          self.canvas.create_text(0.90*self.width, 0.95*self.height, text="t in Sekunden")
+          space = 0
+          for i in range(0,len(metaList)):
+              self.canvas.create_text((0.08+space)*self.width, 0.05*self.height, text=metaList[i]['vn_unit']+' ; ',fill = self.colorList[i])
+              space = space+0.08
+              
       else:
-          self.canvas.create_text(0.93*self.width, 0.52*self.height, text="")
-          self.canvas.create_text(0.4*self.width, 0.05*self.height, text="")
+          self.canvas.create_text(0.93*self.width, 0.60*self.height, text="t in Sekunden")
+          space = 0
+          for i in range(0,len(metaList)):
+              self.canvas.create_text((0.46-space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit']+' ; ',fill = self.colorList[i])
+              space = space+0.08
           
 
 
   def drawLine(self,valueList,maxima,color,smooth=1):
        self.drawDots(valueList, maxima, color)
        vn = len(valueList[0])
+       LineArray = []
        i = 0
        if self.NegativValueBool == 0 :
            while i < vn-1:
+               del LineArray[:]
                if i < 4:
                    colortop = str(i+1)
                else:
@@ -342,14 +336,20 @@ class XYPlot:
                    y2 = valueList[j+1][i+1]
                    maxX = maxima[0]
                    maxY = maxima[i+1]
-                   if smooth == 0:
-                       self.canvas.create_line(self.transAxisX(x1,y1,maxX,maxY),self.transAxisY(x1,y1,maxX,maxY),self.transAxisX(x2,y2,maxX,maxY),self.transAxisY(x2,y2,maxX,maxY),fill = color+colortop)
-                   else:
-                       self.canvas.create_line(self.transAxisX(x1,y1,maxX,maxY),self.transAxisY(x1,y1,maxX,maxY),self.transAxisX(x2,y2,maxX,maxY),self.transAxisY(x2,y2,maxX,maxY),fill = color+colortop,smooth = 'true')
+                   LineArray.append(self.transAxisX(x1,y1,maxX,maxY))
+                   LineArray.append(self.transAxisY(x1,y1,maxX,maxY))
+                   LineArray.append(self.transAxisX(x2,y2,maxX,maxY))
+                   LineArray.append(self.transAxisY(x2,y2,maxX,maxY))
+                   
+                   
+               if smooth == 0:
+                   self.canvas.create_line(LineArray,smooth = 'true',fill = color+colortop)
+               else:
+                   self.canvas.create_line(LineArray,smooth = 'true',fill = color+colortop)
                i=i+1  
        else:
            while i < vn-1:
-              colortop = str(i+1)
+              del LineArray[:]
               if i < 4:
                   colortop = str(i+1)
               else:
@@ -361,10 +361,15 @@ class XYPlot:
                   y2 = valueList[j+1][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
-                  if smooth == 0:
-                       self.canvas.create_line(self.negTransAxisX(x1,y1,maxX,maxY),self.negTransAxisY(x1,y1,maxX,maxY),self.negTransAxisX(x2,y2,maxX,maxY),self.negTransAxisY(x2,y2,maxX,maxY),fill = color+colortop)
-                  else:
-                       self.canvas.create_line(self.negTransAxisX(x1,y1,maxX,maxY),self.negTransAxisY(x1,y1,maxX,maxY),self.negTransAxisX(x2,y2,maxX,maxY),self.negTransAxisY(x2,y2,maxX,maxY),fill = color+colortop,smooth = 'true')
+                  LineArray.append(self.negTransAxisX(x1,y1,maxX,maxY))
+                  LineArray.append(self.negTransAxisY(x1,y1,maxX,maxY))
+                  LineArray.append(self.negTransAxisX(x2,y2,maxX,maxY))
+                  LineArray.append(self.negTransAxisY(x2,y2,maxX,maxY))
+                  
+              if smooth == 0:
+                  self.canvas.create_line(LineArray,smooth = 'true',fill = color+colortop)
+              else:
+                  self.canvas.create_line(LineArray,smooth = 'true',fill = color+colortop)
                  
                   
               i = i+1
