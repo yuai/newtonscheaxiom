@@ -1,6 +1,6 @@
 from Tkinter import *
 from random import *
-
+from calc import Calc
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class XYPlot:
     
@@ -267,12 +267,18 @@ class XYPlot:
               color = self.colorList[i]
               self.drawDots(element,maxima,color)
               i = i+1
-      elif button == 1 :
+      elif button == 3 :
            i = 0
            for element in drawList:
               color = self.colorList[i]
               self.drawLine(element,maxima,color,1)
               i = i+1
+      elif button == 1 :
+           i = 0
+           for element in drawList:
+              color = self.colorList[i]
+              self.drawRegLine(element,maxima,color)
+              i = i+1        
                   
         
         
@@ -414,6 +420,53 @@ class XYPlot:
                   maxY = maxima [i+1]
                   self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-3,self.negTransAxisY(x,y,maxX,maxY)-3,self.negTransAxisX(x,y,maxX,maxY)+3,self.negTransAxisY(x,y,maxX,maxY)+3,fill = color+colortop)
               i = i+1
+              
+              
+  def drawRegLine(self,valueList,maxima,color):
+       self.drawDots(valueList, maxima, color)
+       regList = zip(*valueList)
+       calc = Calc()
+       vn = len ( valueList[0])
+       i = 0
+       if self.NegativValueBool == 0:
+           if i < 4:
+                  colortop = str(i+1)
+           else:
+               colortop = '1'
+           for j in range (0,len(valueList)): 
+               x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
+               maxX = maxima [0]
+               maxY = maxima [i+1]
+               x1 = self.transAxisX(x1, y1, maxX, maxY)
+               y1 = self.transAxisY(x1, y1, maxX, maxY)
+               x2 = self.transAxisX(x2, y2, maxX, maxY)
+               y2 = self.transAxisY(x2, y2, maxX, maxY)
+               
+               self.canvas.create_line(x1,y1,x2,y2,fill = color+colortop)
+               
+       else:
+            if i < 4:
+                  colortop = str(i+1)
+            else:
+                  colortop = '1' 
+                  
+            for j in range (0,len(valueList)): 
+               x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
+               maxX = maxima [0]
+               maxY = maxima [i+1]
+               x1 = self.negTransAxisX(x1, y1, maxX, maxY)
+               y1 = self.negTransAxisY(x1, y1, maxX, maxY)
+               x2 = self.negTransAxisX(x2, y2, maxX, maxY)
+               y2 = self.negTransAxisY(x2, y2, maxX, maxY)
+               
+               self.canvas.create_line(x1,y1,x2,y2,fill = color+colortop)
+                  
+                   
+               
+           
+           
+       
+      
       
       
 
