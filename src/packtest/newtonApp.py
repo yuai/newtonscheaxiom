@@ -155,8 +155,8 @@ class NewtonApp:
        for i in range(0, len(NewtonApp.checkbuttonTable)):
            NewtonApp.checkbuttonTable[i].destroy()
            
-       checkbuttonPlot = []
-       checkbuttonTable = []
+       NewtonApp.checkbuttonPlot = []
+       NewtonApp.checkbuttonTable = []
        NewtonApp.indexList = []
        
    def showTable(self): 
