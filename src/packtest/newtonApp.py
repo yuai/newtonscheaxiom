@@ -19,7 +19,6 @@ class NewtonApp:
       ''' constructor '''
       self.explist = ExpList()
       self.statesPlot = [] # states of plot of the check-buttons
-      self.radiobutton = [] # save radioButtons with special command
       self.statesTable = [] # states of table of the check buttons
       self.checkbuttonPlot = [] # save check button (for the plot) to change the color
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
@@ -47,26 +46,15 @@ class NewtonApp:
       #---------------------------- RadioButton
       # -----------------------------------------------------------------
       self.var = IntVar()
-      R1 = Radiobutton(fButtons, text="Draw Rectangle", variable=self.var, value=0
-                       ,command=self.xyPlot.drawRectangle,indicatoron =0)
+      R1 = Radiobutton(fButtons, text="Draw Dot", variable=self.var, value=1
+                       ,command=self.getDrawList,indicatoron =0)
       R1.pack(side="right")
-      self.radiobutton.append(R1)
-      R2 = Radiobutton(fButtons, text="Draw Data", variable=self.var, value=0
-                       ,command=self.xyPlot.plotSampleData,indicatoron =0)
+      R2 = Radiobutton(fButtons, text="Draw Line", variable=self.var, value=2
+                       ,command=self.getDrawList,indicatoron =0)
       R2.pack(side="right")
-      self.radiobutton.append(R2)
-      R3 = Radiobutton(fButtons, text="Draw Dot", variable=self.var, value=1
+      R3 = Radiobutton(fButtons, text="Approximate Line", variable=self.var, value=3
                        ,command=self.getDrawList,indicatoron =0)
       R3.pack(side="right")
-      self.radiobutton.append(R3)
-      R4 = Radiobutton(fButtons, text="Draw Line", variable=self.var, value=2
-                       ,command=self.getDrawList,indicatoron =0)
-      R4.pack(side="right")
-      self.radiobutton.append(R4)
-      R5 = Radiobutton(fButtons, text="Approximate Line", variable=self.var, value=3
-                       ,command=self.getDrawList,indicatoron =0)
-      R5.pack(side="right")
-      self.radiobutton.append(R5)
       fButtons.pack(fill="x",expand="0",side="bottom")
       # -----------------------------------------------------------------
       #---------------------------- Canvas
@@ -156,11 +144,7 @@ class NewtonApp:
        self.explist.resetIndexList()
    
    def updatePlot(self):
-       print 'sel'
-       print self.var.get()
-       if self.var.get() == 3:
-           self.radiobutton[2].config(command=self.getDrawList)
-       
+       self.getDrawList()
                
    def showTable(self): 
         ''' show values of the experience in the list-box '''
