@@ -30,7 +30,7 @@ class Calc:
             Sxy += (X[i]-x_w)*(Y[i]-y_w)
     
         Sxx = Sxx /(len(X))
-        Sxy = Sxy /(len(Y))   
+        Sxy = Sxy /(len(Y))  
         a = Sxy/Sxx
         c = y_w - a* x_w
         xpart = 1
