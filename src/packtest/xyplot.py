@@ -264,8 +264,7 @@ class XYPlot:
       
       self.repaint(self.fgcolor,maxima)
       self.drawMeta(metaList)
-      print 'Button is '+str(button)
-
+      
       if button == 1 :
           i = 0
           for element in drawList:
@@ -276,14 +275,20 @@ class XYPlot:
            i = 0
            for element in drawList:
               color = self.colorList[i]
-              self.drawLine(element,maxima,color,1)
+              self.drawLine(element,maxima,color,0)
               i = i+1
       elif button == 3 :
            i = 0
            for element in drawList:
               color = self.colorList[i]
               self.drawRegLine(element,maxima,color)
-              i = i+1        
+              i = i+1
+      elif button == 4:
+           i = 0
+           for element in drawList:
+              color = self.colorList[i]
+              self.drawLine(element,maxima,color,1)
+              i = i+1   
                   
         
         
@@ -325,7 +330,7 @@ class XYPlot:
           
 
 
-  def drawLine(self,valueList,maxima,color,smooth=1):
+  def drawLine(self,valueList,maxima,color,smooth):
        self.drawDots(valueList, maxima, color)
        vn = len(valueList[0])
        LineArray = []
@@ -338,24 +343,19 @@ class XYPlot:
                else:
                    colortop = '1'
                
-               for j in range(0,len(valueList)-1):
+               for j in range(0,len(valueList)):
                    print valueList[j][i+1] 
                    x1 = valueList[j][0]
                    y1 = valueList[j][i+1]
-                   x2 = valueList[j+1][0]
-                   y2 = valueList[j+1][i+1]
                    maxX = maxima[0]
                    maxY = maxima[i+1]
                    LineArray.append(self.transAxisX(x1,y1,maxX,maxY))
                    LineArray.append(self.transAxisY(x1,y1,maxX,maxY))
-                   LineArray.append(self.transAxisX(x2,y2,maxX,maxY))
-                   LineArray.append(self.transAxisY(x2,y2,maxX,maxY))
-                   
-                   
+               
                if smooth == 0:
-                   self.canvas.create_line(LineArray,smooth = 'true',fill = color+colortop)
+                   self.canvas.create_line(LineArray,smooth = "false",fill = color+colortop)
                else:
-                   self.canvas.create_line(LineArray,smooth = 'true',fill = color+colortop)
+                   self.canvas.create_line(LineArray,smooth = "true",fill = color+colortop)
                i=i+1  
        else:
            while i < vn-1:
@@ -377,18 +377,12 @@ class XYPlot:
                   LineArray.append(self.negTransAxisY(x2,y2,maxX,maxY))
                   
               if smooth == 0:
-                  self.canvas.create_line(LineArray,smooth = 'true',fill = color+colortop)
+                  self.canvas.create_line(LineArray,smooth = 'false',fill = color+colortop)
               else:
                   self.canvas.create_line(LineArray,smooth = 'true',fill = color+colortop)
-                 
                   
               i = i+1
-                         
-       
-       
-       
-       
-              
+  
       
       
                
@@ -424,6 +418,9 @@ class XYPlot:
                   maxY = maxima [i+1]
                   self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-3,self.negTransAxisY(x,y,maxX,maxY)-3,self.negTransAxisX(x,y,maxX,maxY)+3,self.negTransAxisY(x,y,maxX,maxY)+3,fill = color+colortop)
               i = i+1
+              
+              
+              
               
               
   def drawRegLine(self,valueList,maxima,color):
