@@ -4,6 +4,7 @@ from xyplot import XYPlot
 from newtonImporter import NewtonImporter
 from data_access import Experiment
 import os
+import csv
     
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class NewtonApp:
