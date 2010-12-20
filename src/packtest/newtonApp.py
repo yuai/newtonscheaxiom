@@ -4,6 +4,7 @@ from xyplot import XYPlot
 from newtonImporter import NewtonImporter
 from data_access import Experiment
 import os
+import tkFileDialog
 import csv
     
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -22,8 +23,6 @@ class NewtonApp:
       self.statesTable = [] # states of table of the check buttons
       self.checkbuttonPlot = [] # save check button (for the plot) to change the color
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
-      
-      
       
       file_count = len(os.listdir('C:/Users/db/'))
       for i in range(0,file_count):
@@ -83,8 +82,6 @@ class NewtonApp:
       myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief="sunken" )
       scrollbar.config( command = myDBlist.yview )
       tempCount=0 # increment to load all metaData of the experiences
-      print 'test1'
-      print self.explist.dbCount
       for x in range(0,self.explist.dbCount):
           exp_metadata = self.explist.getMetaData(tempCount)
           nr_series = exp_metadata['nr_series']
@@ -114,19 +111,12 @@ class NewtonApp:
       
    def importer(self):
        ''' open new Window to select a .csv file to import into to the DB '''
-       import os
-       from Tkinter import Tk
-       import tkFileDialog
-       
        stringI = str(self.explist.dbCount)
        self.explist.addExp(Experiment('C:/Users/db/test'+stringI+'.db',1))
        toplevel = Tk()
        toplevel.withdraw()
-       try:
-           filename = tkFileDialog.askopenfilename()
-           test=NewtonImporter(filename,self.explist.getExp(self.explist.dbCount-1))
-       except csv.Error:
-           print "There is no File with this name "
+       filename = tkFileDialog.askopenfilename()
+       NewtonImporter(filename,self.explist.getExp(self.explist.dbCount-1))
        
        
    def showExp(self,event):
@@ -140,8 +130,7 @@ class NewtonApp:
        # -----------------------------------------------------------------
        CheckVarPlot = IntVar()
        CheckVarTable = IntVar()
-       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot
-                        ,command=self.selectedPlot, anchor=NW,width=30)
+       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot, anchor=NW,width=30)
        c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
                         ,command=self.showTable,anchor=NW,width=30)
        self.statesTable.append(CheckVarTable)
@@ -152,11 +141,10 @@ class NewtonApp:
        c2.pack(side="top")
    
    def cleanAllExp(self):
-       print 'cleanAll'
-       self.var.set(0)
+       self.var.set(0) # reset radio button
        self.statesTable = []
        self.statesPlot = []
-       self.tablecount = 0
+       NewtonApp.tablecount = 0
        self.myTablelistbox.delete(0, END)
        for i in range(0, len(self.checkbuttonPlot)):
            self.checkbuttonPlot[i].destroy()
@@ -167,11 +155,11 @@ class NewtonApp:
        self.checkbuttonTable = []
        self.explist.resetIndexList()
    
-   def selectedPlot(self):
+   def updatePlot(self):
        print 'sel'
        print self.var.get()
        if self.var.get() == 3:
-           self.radiobutton[3].config(selectcolor="RoyalBlue")
+           self.radiobutton[2].config(command=self.getDrawList)
        
                
    def showTable(self): 
@@ -241,6 +229,8 @@ class NewtonApp:
        fButton = Frame(left, border="2", relief="groove")
        bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
        bClean.pack(side="left")
+       bUpdate = Button(fButton, text="Update",command=self.updatePlot)
+       bUpdate.pack(side="left")
        fButton.pack(fill="x",expand="0",side="top")
 
 # -----------------------------------------------------------------  
