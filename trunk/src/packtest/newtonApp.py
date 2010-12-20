@@ -15,8 +15,9 @@ class NewtonApp:
    ''' set tablecount. increment to show more tables in the list-box '''
    tablecount = 0
    
-   def __init__(self, parent=0):
+   def __init__(self, parent=0,left=0):
       ''' constructor '''
+      
       self.explist = ExpList()
       self.statesPlot = [] # states of plot of the check-buttons
       self.statesTable = [] # states of table of the check buttons
@@ -55,6 +56,9 @@ class NewtonApp:
       R3 = Radiobutton(fButtons, text="Approximate Line", variable=self.var, value=3
                        ,command=self.getDrawList,indicatoron =0)
       R3.pack(side="right")
+      R4 = Radiobutton(fButtons, text="Draw Spline", variable=self.var, value=4
+                       ,command=self.getDrawList,indicatoron =0)
+      R4.pack(side="right")
       fButtons.pack(fill="x",expand="0",side="bottom")
       # -----------------------------------------------------------------
       #---------------------------- Canvas
@@ -118,9 +122,9 @@ class NewtonApp:
        # -----------------------------------------------------------------
        CheckVarPlot = IntVar()
        CheckVarTable = IntVar()
-       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot, anchor=NW,width=30)
+       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot, anchor=NW, width="35")
        c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
-                        ,command=self.showTable,anchor=NW,width=30)
+                        ,command=self.showTable,anchor=NW,width="35")
        self.statesTable.append(CheckVarTable)
        self.statesPlot.append(CheckVarPlot)
        self.checkbuttonPlot.append(c1)
@@ -206,7 +210,7 @@ class NewtonApp:
        # -----------------------------------------------------------------
        #---------------------------- ListBox
        # -----------------------------------------------------------------
-       myTablelist = Listbox(left, yscrollcommand = scrollbar.set, width=30)
+       myTablelist = Listbox(left, yscrollcommand = scrollbar.set, width="35")
        myTablelist.pack( side="bottom", fill="both", expand="1")
        scrollbar.config( command = myTablelist.yview )
        self.myTablelistbox = myTablelist
@@ -223,19 +227,15 @@ class NewtonApp:
 mainWindow=Tk()
 mainWindow.minsize(800,600)
 # -----------------------------------------------------------------
-#---------------------------- PanedWindow
+#---------------------------- Label
 # -----------------------------------------------------------------
-m1 = PanedWindow(orient="vertical")
-m1.pack(fill="both", expand="1")
-m2 = PanedWindow(m1)
-left = Label(m2) # Label for the table
-m2.add(left)
-main = Label(m2) # Main Label for the canvas
-m2.add(main) 
-m1.add(m2)
+left = Label(mainWindow,width="35")
+left.pack(side="left",fill="y",expand="0")
+main = Label(mainWindow)
+main.pack(side="right",fill="both",expand="1")
 # -----------------------------------------------------------------
 #---------------------------- Start Application
 # -----------------------------------------------------------------
-app=NewtonApp(main)
+app=NewtonApp(main,left)
 app.createMenu()
-mainWindow.mainloop()
+mainloop()
