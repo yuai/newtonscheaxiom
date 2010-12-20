@@ -264,20 +264,21 @@ class XYPlot:
       
       self.repaint(self.fgcolor,maxima)
       self.drawMeta(metaList)
+      print 'Button is '+str(button)
 
-      if button == 2 :
+      if button == 1 :
           i = 0
           for element in drawList:
               color = self.colorList[i]
               self.drawDots(element,maxima,color)
               i = i+1
-      elif button == 3 :
+      elif button == 2 :
            i = 0
            for element in drawList:
               color = self.colorList[i]
               self.drawLine(element,maxima,color,1)
               i = i+1
-      elif button == 1 :
+      elif button == 3 :
            i = 0
            for element in drawList:
               color = self.colorList[i]
