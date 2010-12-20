@@ -48,24 +48,24 @@ class NewtonApp:
       #---------------------------- RadioButton
       # -----------------------------------------------------------------
       self.var = IntVar()
-      R1 = Radiobutton(fButtons, text="Draw Rectangle", variable=self.var, value=1
+      R1 = Radiobutton(fButtons, text="Draw Rectangle", variable=self.var, value=0
                        ,command=self.xyPlot.drawRectangle,indicatoron =0)
       R1.pack(side="right")
       self.radiobutton.append(R1)
-      R2 = Radiobutton(fButtons, text="Draw Data", variable=self.var, value=2
+      R2 = Radiobutton(fButtons, text="Draw Data", variable=self.var, value=0
                        ,command=self.xyPlot.plotSampleData,indicatoron =0)
       R2.pack(side="right")
       self.radiobutton.append(R2)
-      R3 = Radiobutton(fButtons, text="Draw Dot", variable=self.var, value=3
+      R3 = Radiobutton(fButtons, text="Draw Dot", variable=self.var, value=1
                        ,command=self.getDrawList,indicatoron =0)
       R3.pack(side="right")
       self.radiobutton.append(R3)
-      R4 = Radiobutton(fButtons, text="Draw Line", variable=self.var, value=4
-                       ,command=self.xyPlot.plotSampleData,indicatoron =0)
+      R4 = Radiobutton(fButtons, text="Draw Line", variable=self.var, value=2
+                       ,command=self.getDrawList,indicatoron =0)
       R4.pack(side="right")
       self.radiobutton.append(R4)
-      R5 = Radiobutton(fButtons, text="Approximate Line", variable=self.var, value=5
-                       ,command=self.xyPlot.transAxis(5.0,5.0,10.0,10.0),indicatoron =0)
+      R5 = Radiobutton(fButtons, text="Approximate Line", variable=self.var, value=3
+                       ,command=self.getDrawList,indicatoron =0)
       R5.pack(side="right")
       self.radiobutton.append(R5)
       fButtons.pack(fill="x",expand="0",side="bottom")
@@ -226,7 +226,7 @@ class NewtonApp:
            if self.statesPlot[tempI].get() == 0:
                self.checkbuttonPlot[tempI].config(selectcolor="white")    
            tempI=tempI+1
-       self.xyPlot.drawControl(valueList,metaList,1)  
+       self.xyPlot.drawControl(valueList,metaList,self.var.get())  
        
    def initListBox(self):
        scrollbar = Scrollbar(left)
