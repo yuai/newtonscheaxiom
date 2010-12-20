@@ -5,46 +5,66 @@ from fail import Fail
 class NewtonImporter:
     def __init__(self,path,e):
         try:
-            csvfile = open(path, 'r')
-            dialect = csv.Sniffer().sniff(csvfile.read(1024))
-            csvfile.seek(0)
-            self.exp = e
-            self.reader = csv.reader(csvfile,delimiter = ';' , dialect = csv.excel)
-            self.x = []
-            self.y = []
-            self.y2 = []
-            self.y3 = []
             
+            self.collen = self.lookForLen(path)
+            self.csvfile = open(path, 'r')
+            dialect = csv.Sniffer().sniff(self.csvfile.read(1024))
+            self.csvfile.seek(0)
+            self.exp = e
+            self.reader = csv.reader(self.csvfile,delimiter = ';' , dialect = csv.excel)
+            self.values = []
             self.data = []
             self.meta= []
+            
             self.fillSql()
-            csvfile.close()
+            self.csvfile.close()
             
         except csv.Error:
             print "There is no File with this name "
+            
+            
+            
+            
+            
+    def lookForLen(self,path):
+        
+        collen = 0
+        lenTest = open(path, 'r')
+        reader = csv.reader(lenTest,delimiter = ';' , dialect = csv.excel)
+        
+        for row in reader:
+            print row
+            collen = len(row)
+        
+
+        lenTest.close() 
+        return collen  
+                
             
     
     
     def fillArray(self):
         '''fill Method, iterates through every Row of csv file and fills Array'''
+       
         i = 0
         go = 0
         
+        for i in range(0,self.collen-1):
+            self.values.append([])
         
         for row in self.reader:
             if go > 0 :
-                if(row[1]!="" and row[2]!=""):    
-                    self.x.append(float(row[1]))
-                    self.y.append(float(row[2]))
-                  #  if(row[3]!=""):
-                       # self.y2.append(float(row[3]))
-                    #if(row[4]!=""):
-                     #   self.y3.append(float(row[3]))
-                            
-                    
+                if(row[1]!="" and row[2]!=""):
+                    for i in range (1,self.collen):
+                        self.values[i-1].append(float(row[i]))
+                        
+                        
+              
                 if row[0]!="":
                      print row[0]
                      self.meta.append(row[0])
+            
+                    
             go = 1
        
            
@@ -52,19 +72,14 @@ class NewtonImporter:
                    'nr_series':self.meta[3],'vn_unit':self.meta[4],'vn_desc':self.meta[5],
                    'vn_fault':self.meta[6],'additional_info':self.meta[7]}
         
-        if len(self.y2)>0 and len(self.y3)>0:
-            self.values = zip(self.x,self.y,self.y2,self.y3)
-        elif len(self.y2)>0:
-            
-            self.values = zip(self.x,self.y,self.y2)
-        elif len(self.y2)==0 and len(self.y3)==0:
-            self.values = zip(self.x,self.y)
+     
             
                      
         
         print self.values
         print self.metaDic
-        
+        self.values = zip(*self.values)
+        print self.values
        
          
     def fillSql(self):
@@ -72,8 +87,6 @@ class NewtonImporter:
        self.fillArray()
        self.exp.store_metadata(self.metaDic)
       
-       
-       self.Id = int(self.meta[3])
        self.exp.store_values(1,self.values)
        
        #____________________Just look if it works
