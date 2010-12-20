@@ -11,7 +11,7 @@ class XYPlot:
     self.width=_width
     self.height=_height
     self.parent=_parent
-    self.bgcolor="#EEEEEE"
+    self.bgcolor="white"
     self.fgcolor="black"
     self.drawcolor="blue"
     self.canvas = Canvas(self.parent,width=self.width,height=self.height,bg=self.bgcolor)
@@ -29,12 +29,12 @@ class XYPlot:
           next = 0
           for i in range (0,7):
               self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.91*self.height,width=2,fill=_color)
-              self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.1*self.height,width=0.1,fill= 'grey20')
+              self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.1*self.height,width=0.1,fill= 'LightGrey')
               next = next +(0.8*self.width)/6
           next = 0    
           for i in range (0,7):
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.09)*self.width,0.9*self.height-next,width=2,fill=_color)
-              self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.9)*self.width,0.9*self.height-next,width=0.1,fill='grey20')
+              self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.9)*self.width,0.9*self.height-next,width=0.1,fill='LightGrey')
               next = next +(0.8*self.height)/6
               
           if maxima != None:
@@ -81,12 +81,12 @@ class XYPlot:
           next = 0
           for i in range (0,14):
               self.canvas.create_line((0.05)*self.width+next,0.5*self.height,(0.05)*self.width+next,0.51*self.height,width=2,fill=_color)
-              self.canvas.create_line((0.05)*self.width+next,0.05*self.height,(0.05)*self.width+next,0.95*self.height,width=0.1,fill='grey20')
+              self.canvas.create_line((0.05)*self.width+next,0.05*self.height,(0.05)*self.width+next,0.95*self.height,width=0.1,fill='LightGrey')
               next = next +(0.45*self.width)/6
           next = 0    
           for i in range (0,14):
               self.canvas.create_line(0.5*self.width,0.95*self.height-next,0.49*self.width,0.95*self.height-next,width=2,fill=_color)
-              self.canvas.create_line(0.05*self.width,0.95*self.height-next,0.95*self.width,0.95*self.height-next,width=0.1,fill='grey20')
+              self.canvas.create_line(0.05*self.width,0.95*self.height-next,0.95*self.width,0.95*self.height-next,width=0.1,fill='LightGrey')
               next = next +(0.45*self.height)/6
         
           if maxima != None:
@@ -307,8 +307,7 @@ class XYPlot:
       return maxList,minList
   
   def drawMeta(self,metaList):
-      print metaList
-    #later should be this metadic['vn_unit']
+      
       if self.NegativValueBool == 0:
           self.canvas.create_text(0.90*self.width, 0.95*self.height, text="t in Sekunden")
           space = 0
