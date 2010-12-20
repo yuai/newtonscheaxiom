@@ -29,10 +29,12 @@ class XYPlot:
           next = 0
           for i in range (0,7):
               self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.91*self.height,width=2,fill=_color)
+              self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.1*self.height,width=0.1,fill= 'grey20')
               next = next +(0.8*self.width)/6
           next = 0    
           for i in range (0,7):
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.09)*self.width,0.9*self.height-next,width=2,fill=_color)
+              self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.9)*self.width,0.9*self.height-next,width=0.1,fill='grey20')
               next = next +(0.8*self.height)/6
               
           if maxima != None:
@@ -79,10 +81,12 @@ class XYPlot:
           next = 0
           for i in range (0,14):
               self.canvas.create_line((0.05)*self.width+next,0.5*self.height,(0.05)*self.width+next,0.51*self.height,width=2,fill=_color)
+              self.canvas.create_line((0.05)*self.width+next,0.05*self.height,(0.05)*self.width+next,0.95*self.height,width=0.1,fill='grey20')
               next = next +(0.45*self.width)/6
           next = 0    
           for i in range (0,14):
               self.canvas.create_line(0.5*self.width,0.95*self.height-next,0.49*self.width,0.95*self.height-next,width=2,fill=_color)
+              self.canvas.create_line(0.05*self.width,0.95*self.height-next,0.95*self.width,0.95*self.height-next,width=0.1,fill='grey20')
               next = next +(0.45*self.height)/6
         
           if maxima != None:
@@ -442,7 +446,7 @@ class XYPlot:
                x2 = self.transAxisX(x2, y2, maxX, maxY)
                y2 = self.transAxisY(x2, y2, maxX, maxY)
                
-               self.canvas.create_line(x1,y1,x2,y2,fill = color+colortop)
+               self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = color+colortop)
                
        else:
             if i < 4:
@@ -459,7 +463,7 @@ class XYPlot:
                x2 = self.negTransAxisX(x2, y2, maxX, maxY)
                y2 = self.negTransAxisY(x2, y2, maxX, maxY)
                
-               self.canvas.create_line(x1,y1,x2,y2,fill = color+colortop)
+               self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = color+colortop)
                   
                    
                
