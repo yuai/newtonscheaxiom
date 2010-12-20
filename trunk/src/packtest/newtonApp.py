@@ -17,7 +17,6 @@ class NewtonApp:
    
    def __init__(self, parent=0,left=0):
       ''' constructor '''
-      
       self.explist = ExpList()
       self.statesPlot = [] # states of plot of the check-buttons
       self.statesTable = [] # states of table of the check buttons
@@ -122,15 +121,23 @@ class NewtonApp:
        # -----------------------------------------------------------------
        CheckVarPlot = IntVar()
        CheckVarTable = IntVar()
-       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot, anchor=NW, width="35")
-       c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
-                        ,command=self.showTable,anchor=NW,width="35")
        self.statesTable.append(CheckVarTable)
        self.statesPlot.append(CheckVarPlot)
+       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot, anchor=NW, width="35")
+       c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
+                                ,command=self.showTable,anchor=NW,width="35")
        self.checkbuttonPlot.append(c1)
        self.checkbuttonTable.append(c2)
-       c1.pack(side="top")
-       c2.pack(side="top")
+       if len(self.checkbuttonPlot) == 1:
+           self.checkbuttonPlot[0].pack(side="top")
+           self.checkbuttonTable[0].pack(side="top")
+       else:
+           for i in range(0,len(self.checkbuttonPlot)):
+               print 'i test'
+               print i
+               self.checkbuttonPlot[i].pack(side="bottom")
+               self.checkbuttonTable[i].pack(side="bottom")            
+           
    
    def cleanAllExp(self):
        self.var.set(0) # reset radio button
@@ -146,6 +153,7 @@ class NewtonApp:
        self.checkbuttonPlot = []
        self.checkbuttonTable = []
        self.explist.resetIndexList()
+    
    
    def updatePlot(self):
        self.getDrawList()
@@ -219,7 +227,7 @@ class NewtonApp:
        bClean.pack(side="left")
        bUpdate = Button(fButton, text="Update",command=self.updatePlot)
        bUpdate.pack(side="left")
-       fButton.pack(fill="x",expand="0",side="top")
+       fButton.pack(fill="x",expand="0",side="bottom")
 
 # -----------------------------------------------------------------  
 #---------------------------- Initial Tkinter
