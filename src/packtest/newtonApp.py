@@ -128,15 +128,8 @@ class NewtonApp:
                                 ,command=self.showTable,anchor=NW,width="35")
        self.checkbuttonPlot.append(c1)
        self.checkbuttonTable.append(c2)
-       if len(self.checkbuttonPlot) == 1:
-           self.checkbuttonPlot[0].pack(side="top")
-           self.checkbuttonTable[0].pack(side="top")
-       else:
-           for i in range(0,len(self.checkbuttonPlot)):
-               print 'i test'
-               print i
-               self.checkbuttonPlot[i].pack(side="bottom")
-               self.checkbuttonTable[i].pack(side="bottom")            
+       c1.pack(side="bottom")
+       c2.pack(side="bottom")          
            
    
    def cleanAllExp(self):
