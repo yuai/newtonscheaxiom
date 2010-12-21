@@ -157,9 +157,11 @@ class XYPlot:
                       negy_str = str(stringnegy_float)
                       y_str = str(stringy_float)
                       if stringnegy_float != 0.0:
+                          print negy_str
                           self.canvas.create_text(0.45*self.width,(0.95+newY)*self.height-next,text = negy_str)
-                      if stringy_float != 0.0:    
-                          self.canvas.create_text(0.45*self.width,(0.5+newY)*self.height-next,text = y_str)
+                      if stringy_float != 0.0:  
+                           print y_str 
+                           self.canvas.create_text(0.45*self.width,(0.5+newY)*self.height-next,text = y_str)
                       
                       next = next + (0.45*self.height)/6
                   newY = newY + 0.018    
@@ -375,9 +377,9 @@ class XYPlot:
                    LineArray.append(self.transAxisY(x1,y1,maxX,maxY))
                
                if smooth == 0:
-                   self.canvas.create_line(LineArray,smooth = "false",fill = newcolor)
+                   self.canvas.create_line(LineArray,smooth = "false",width=2,fill = newcolor)
                else:
-                   self.canvas.create_line(LineArray,smooth = "true",fill = newcolor)
+                   self.canvas.create_line(LineArray,smooth = "true",width=2,fill = newcolor)
                i=i+1  
        else:
            while i < vn-1:
@@ -399,9 +401,9 @@ class XYPlot:
                   LineArray.append(self.negTransAxisY(x2,y2,maxX,maxY))
                   
               if smooth == 0:
-                  self.canvas.create_line(LineArray,smooth = 'false',fill = newcolor)
+                  self.canvas.create_line(LineArray,smooth = 'false',width=2,fill = newcolor)
               else:
-                  self.canvas.create_line(LineArray,smooth = 'true',fill = newcolor)
+                  self.canvas.create_line(LineArray,smooth = 'true',width=2,fill = newcolor)
                   
               i = i+1
   
@@ -495,11 +497,8 @@ class XYPlot:
       hexlen = len(hex)
       for i in range(0,hexlen,hexlen/3):
           str = hex[i]+hex[i+1]
-          print str
           rgb.append(int(str,16))
-      print rgb
-      count = 0
-      print rgb 
+      count = 0 
       index = rgb.index(max(rgb))   
       rgb[index]=rgb[index]-(60*fade)
       if rgb[index]<= 0:
