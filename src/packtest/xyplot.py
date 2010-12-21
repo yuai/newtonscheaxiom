@@ -35,9 +35,6 @@ class XYPlot:
 # -----------------------------------------------------------------      
       if self.NegativValueBool == 0:  
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
-          self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
-          self.canvas.create_line(0.1*self.width,0.9 * self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
-          self.canvas.create_line(0.9*self.width,0.9*self.height,0.9*self.width,0.91*self.height,width=2,fill=_color)
           next = 0
           for i in range (0,7):
               self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.91*self.height,width=2,fill=_color)
@@ -48,6 +45,10 @@ class XYPlot:
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.09)*self.width,0.9*self.height-next,width=2,fill=_color)
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.9)*self.width,0.9*self.height-next,width=0.1,fill='LightGrey')
               next = next +(0.8*self.height)/6
+          
+          self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
+          self.canvas.create_line(0.1*self.width,0.9*self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
+          self.canvas.create_line(0.9*self.width,0.9*self.height,0.9*self.width,0.91*self.height,width=2,fill=_color)    
 # -----------------------------------------------------------------
 # --------Calculating and writing of interval labels for L Grid
 # -----------------------------------------------------------------              
@@ -94,8 +95,6 @@ class XYPlot:
 # ---------------------Setting Up Cross Grid
 # -----------------------------------------------------------------
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
-          self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
-          self.canvas.create_line(0.5*self.width,0.05,0.5*self.width,self.height-0.05,fill=_color)
           self.canvas.create_text(0.48*self.width,0.53*self.height,text = '0')
           next = 0
           for i in range (0,14):
@@ -107,6 +106,8 @@ class XYPlot:
               self.canvas.create_line(0.5*self.width,0.95*self.height-next,0.49*self.width,0.95*self.height-next,width=2,fill=_color)
               self.canvas.create_line(0.05*self.width,0.95*self.height-next,0.95*self.width,0.95*self.height-next,width=0.1,fill='LightGrey')
               next = next +(0.45*self.height)/6
+          self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
+          self.canvas.create_line(0.5*self.width,0.05,0.5*self.width,self.height-0.05,fill=_color)   
 # -----------------------------------------------------------------
 # -----Calculating and writing of interval labels for Cross Grid
 # -----------------------------------------------------------------
@@ -323,14 +324,30 @@ class XYPlot:
           self.canvas.create_text(0.90*self.width, 0.95*self.height, text="t in Sekunden")
           space = 0
           for i in range(0,len(metaList)):
-              self.canvas.create_text((0.08+space)*self.width, 0.05*self.height, text=metaList[i]['vn_unit']+' ; ',fill = self.colorList[i])
+              if metaList[i]['vn_unit'].find('|') != -1:
+                  singledata =  metaList[i]['vn_unit'].split('|')
+                  down = 0
+                  for single in range (0,len(singledata)):
+                      self.canvas.create_text((0.08+space)*self.width, (0.02+down)*self.height, text=singledata[single],fill =  self.colorFade(self.colorList[i],single))
+                      down = down + 0.018
+              else:        
+                  self.canvas.create_text((0.08+space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit'],fill = self.colorList[i])
               space = space+0.08
               
       else:
           self.canvas.create_text(0.93*self.width, 0.60*self.height, text="t in Sekunden")
           space = 0
           for i in range(0,len(metaList)):
-              self.canvas.create_text((0.46-space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit']+' ; ',fill = self.colorList[i])
+              if metaList[i]['vn_unit'].find('|') != -1:
+                  singledata =  metaList[i]['vn_unit'].split('|')
+                  down = 0
+                  for single in range (0,len(singledata)):
+                      self.canvas.create_text((0.08+space)*self.width, (0.02+down)*self.height, text=singledata[single],fill =  self.colorFade(self.colorList[i],single))
+                      down = down + 0.018
+                      
+              
+              else:
+                  self.canvas.create_text((0.08+space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit'],fill = self.colorList[i])
               space = space+0.08
           
 
