@@ -86,7 +86,7 @@ class XYPlot:
                       if stringy_float != 0.0:
                           self.canvas.create_text(0.05*self.width,(0.9+newY)*self.height-next,text = y_str)
                       next = next + (0.8*self.height)/6        
-                  newY = newY+0.015    
+                  newY = newY+0.018   
                       
                       
       else:
@@ -161,7 +161,7 @@ class XYPlot:
                           self.canvas.create_text(0.45*self.width,(0.5+newY)*self.height-next,text = y_str)
                       
                       next = next + (0.45*self.height)/6
-                  newY = newY + 0.015    
+                  newY = newY + 0.018    
                       
                               
               
