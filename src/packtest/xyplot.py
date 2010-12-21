@@ -5,8 +5,11 @@ from calc import Calc
 class XYPlot:
     
   
-  """ init """
+  """ The XYPlot Class is responsible for everything concerning the Canvas.It contains
+  several drawing functions and scales the given data points onto the drawing layer.    """
+  
   def __init__(self,_parent,_width,_height):
+    ''' This Constructor sets default values for the main drawing Window'''  
     self.NegativValueBool = 0
     self.width=_width
     self.height=_height
@@ -19,8 +22,17 @@ class XYPlot:
     self.canvas.bind('<Configure>',self.resize)
     self.colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
                     'LightPink','PaleVioletRed','khaki']
+  
+  
     
   def repaint(self,_color,maxima = None):
+      '''The repaint method is called initionally and everytime something in the canvas is changed.
+      It is splittet into two parts, one Drawing the main L Grid for just positive Values and one in
+      cross Format for positiv and negativ Values.'''  
+      
+# -----------------------------------------------------------------
+# ---------------------Setting Up L Grid
+# -----------------------------------------------------------------      
       if self.NegativValueBool == 0:  
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
@@ -36,11 +48,14 @@ class XYPlot:
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.09)*self.width,0.9*self.height-next,width=2,fill=_color)
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.9)*self.width,0.9*self.height-next,width=0.1,fill='LightGrey')
               next = next +(0.8*self.height)/6
-              
+# -----------------------------------------------------------------
+# --------Calculating and writing of interval labels for L Grid
+# -----------------------------------------------------------------              
           if maxima != None:
               next = 0
               x_float = 0
               for i in range(0,7):
+              #Drawing text Labels on X-Axis    
                   if i<1:
                       x_float = 0
                   else:
@@ -58,6 +73,7 @@ class XYPlot:
                         
               newY  = 0        
               for countY in range (1,countMaxima):
+              #Drawing text labels on Y-Axis, depending on Maximum of each y     
                   next = 0
                   y_float = 0
                   for i in range (0,7):
@@ -74,6 +90,9 @@ class XYPlot:
                       
                       
       else:
+# -----------------------------------------------------------------
+# ---------------------Setting Up Cross Grid
+# -----------------------------------------------------------------
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
           self.canvas.create_line(0.5*self.width,0.05,0.5*self.width,self.height-0.05,fill=_color)
@@ -88,12 +107,16 @@ class XYPlot:
               self.canvas.create_line(0.5*self.width,0.95*self.height-next,0.49*self.width,0.95*self.height-next,width=2,fill=_color)
               self.canvas.create_line(0.05*self.width,0.95*self.height-next,0.95*self.width,0.95*self.height-next,width=0.1,fill='LightGrey')
               next = next +(0.45*self.height)/6
+# -----------------------------------------------------------------
+# -----Calculating and writing of interval labels for Cross Grid
+# -----------------------------------------------------------------
         
           if maxima != None:
               next = 0
               x_float = 0
               negx_float = 0
               for i in range(0,7):
+              #Drawing text Labels on X-Axis    
                   if i==0:
                       negx_float = -maxima[0]
                       
@@ -117,6 +140,7 @@ class XYPlot:
                                   
               newY = 0
               for countY in range (1,countMaxima):
+              #Drawing text labels on Y-Axis, depending on Maximum of each y    
                   next = 0
                   y_float = 0
                   negy_float = 0
@@ -145,54 +169,27 @@ class XYPlot:
             
 
   def resize(self,event ):
+    '''resizes canvas if user changes size of Application'''  
     self.repaint(self.bgcolor)
-    self.width=event.width-4
+    self.width=event.width-4 # This is just tested on Windows 7, have to look if it works on Mac OS 
     self.height=event.height-4
     self.canvas.configure(width=self.width,height=self.height)
     self.repaint(self.fgcolor)
-
-  def drawRectangle(self):
-    self.repaint(self.fgcolor)
-    self.canvas.create_rectangle(self.width/2-self.width/10,self.height/2-self.height/10, self.width/2+self.width/10, self.height/2+self.height/10,fill=self.drawcolor)
       
   def getExpData(self,event):
     self.repaint(self.fgcolor)
-    
-  def plotSampleData(self):
-    data=[]
-    for i in range(0,self.width,self.width/50):
-  	  data.append(i)
-  	  data.append(self.height-(randint(0,self.height)))
-    self.repaint(self.fgcolor)
-    self.canvas.create_line(data,fill=self.drawcolor)
-    
-  def drawSmooth(self):
-      '''test for drawing splines trough points'''
-      self.canvas.create_line(0,0,20,80,100,60,smooth = 'true')
-      
- 
-  def transAxis(self,x,y,maxX,maxY):
-      ''' Is OLD GET IT OUT'''
-      if x == 0.0 and y == 0.0:
-          x = 0.1 * self.width
-          y = 0.9 * self.height
-      elif x == 0.0 and y <> 0.0:
-         x =  x = 0.1 * self.width
-         y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
-      elif x <> 0.0 and y == 0.0:
-         x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
-         y = 0.9 * self.height
-      elif x<>0.0 and y <> 0.0:        
-          x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
-          y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
-          
-      return x,y
   
   def clear (self):
+      '''This method clears the canvas, it must be called on update, or when a new set is drawn so that
+      the old drawings aren't interferring with the new.'''
       self.repaint(self.bgcolor)
   
+# -----------------------------------------------------------------
+# --------------Several Transformation Functions 
+# -----------------------------------------------------------------  
   
   def negTransAxisX(self,x,y,maxX,maxY):
+      ''' returns an Transformed x value for the Crossgrid'''
       if x == 0.0 and y == 0.0:
           x = 0.5 *self.width
       elif x == 0.0 and y <> 0.0:
@@ -206,6 +203,7 @@ class XYPlot:
   
   
   def negTransAxisY(self,x,y,maxX,maxY):
+      ''' returns an Transformed y value for the Crossgrid'''
       if x == 0.0 and y == 0.0:
           y = 0.5 *self.height
       elif x == 0.0 and y <> 0.0:
@@ -221,7 +219,7 @@ class XYPlot:
       
 
   def transAxisX(self,x,y,maxX,maxY):
-      ''' Transforms x,y Values into scale of Canvas'''
+      ''' returns an Transformed x value for the L Grid'''
       if x == 0.0 and y == 0.0:
           x = 0.1 * self.width
       elif x == 0.0 and y <> 0.0:
@@ -235,7 +233,7 @@ class XYPlot:
   
   
   def transAxisY(self,x,y,maxX,maxY):
-      ''' Transforms x,y Values into scale of Canvas'''
+      ''' returns an Transformed y value for the L Grid'''
       if x == 0.0 and y == 0.0:
           y = 0.9 * self.height
       elif x == 0.0 and y <> 0.0:
@@ -247,16 +245,20 @@ class XYPlot:
       
       return y
   
-  
+# -----------------------------------------------------------------
+# -----Different drawing Functions to Draw on Canvas
+# -----------------------------------------------------------------   
           
           
   def drawControl(self,drawList,metaList,button):
+      '''This Method decides which drawing Function is called, and gives the drawing Function the color
+      for every Experiment and an maxima array used to scale data points'''
       maxima,minima = self.getMax(drawList)
       for i in range ( 0,len(maxima)):
           if abs(minima[i]) > maxima[i]:
               maxima [i] = abs(minima[i])
       absoluteMinimum = min(minima)
-      
+      #Here is decided which Grid is taken for the drawing by setting Negativ Value bool depending on absolute minimum of all minimum
       if absoluteMinimum < 0:
           self.NegativValueBool = 1
       else:
@@ -264,7 +266,7 @@ class XYPlot:
       
       self.repaint(self.fgcolor,maxima)
       self.drawMeta(metaList)
-      
+      #different drawing Functions are called dependig on which button is pushed
       if button == 1 :
           i = 0
           for element in drawList:
@@ -295,11 +297,13 @@ class XYPlot:
         
     
   def getMax(self,searchmax):
+      '''Here maxima and minima of every x or y-Data set in every Experiment drawn is calculatet and 
+      stored in an array''' 
       maxList = [0.0,0.0,0.0,0.0,0.0,0.0]
       minList = [0.0,0.0,0.0,0.0,0.0,0.0]
       changeListMax = [0.0,0.0,0.0,0.0,0.0,0.0]
       changeListMin = [0.0,0.0,0.0,0.0,0.0,0.0]
-      for element in searchmax:
+      for element in searchmax:#hopping through every Experiment searching for maxima and minima
           valuesTrans = zip(*element)
           for i in range(0,len(valuesTrans)):
               changeListMax[i]= max(valuesTrans[i]) 
@@ -313,7 +317,8 @@ class XYPlot:
       return maxList,minList
   
   def drawMeta(self,metaList):
-      
+      '''The units the x and y Axis are drawn on canvas.X is set default on "t in Sekunden", whereas y is taken from the 
+      metadatadictionary of an given Experiment'''       
       if self.NegativValueBool == 0:
           self.canvas.create_text(0.90*self.width, 0.95*self.height, text="t in Sekunden")
           space = 0
