@@ -1,43 +1,48 @@
 import csv
 import data_access
 from fail import Fail
+from data_access import Experiment
 
 class NewtonImporter:
-    def __init__(self,path,e):
+    def __init__(self,path,DBCount):
         try:
             
             self.collen = self.lookForLen(path)
             self.csvfile = open(path, 'r')
             dialect = csv.Sniffer().sniff(self.csvfile.read(1024))
             self.csvfile.seek(0)
-            self.exp = e
+            self.exp = None
             self.reader = csv.reader(self.csvfile,delimiter = ';' , dialect = csv.excel)
             self.values = []
             self.data = []
             self.meta= []
-            
+            self.stringI = str(DBCount)
             self.fillSql()
             self.csvfile.close()
             
         except csv.Error:
-            print "There is no File with this name "
+            Fail( "You are trying to open an file which is  not \n compatible with this Programm.\n This Programm can only read Data in the .csv file Format")
             
             
             
             
             
     def lookForLen(self,path):
-        
         collen = 0
-        lenTest = open(path, 'r')
-        reader = csv.reader(lenTest,delimiter = ';' , dialect = csv.excel)
-        
-        for row in reader:
-            print row
-            collen = len(row)
+        try:
+            lenTest = open(path, 'r')
+            reader = csv.reader(lenTest,delimiter = ';' , dialect = csv.excel)
+            i = 0
+        #This is very very inefficient still trying to figure out how to get a row list 
+            for row in reader:
+                if i == 0:
+                    collen = len(row)
+                i=i+1  
         
 
-        lenTest.close() 
+            lenTest.close() 
+        except csv.Error:
+            print ' Opening Fail Window in except of init ' 
         return collen  
                 
             
@@ -54,14 +59,19 @@ class NewtonImporter:
         
         for row in self.reader:
             if go > 0 :
-                if(row[1]!="" and row[2]!=""):
+                append = 0
+                for i in range (1,self.collen):
+                    if(row[i]=="" or row[i]=="NaN"):
+                        append =1
+                        
+                if(append !=1):
                     for i in range (1,self.collen):
+                        
                         self.values[i-1].append(float(row[i]))
                         
                         
               
                 if row[0]!="":
-                     print row[0]
                      self.meta.append(row[0])
             
                     
@@ -73,28 +83,20 @@ class NewtonImporter:
                    'vn_fault':self.meta[6],'additional_info':self.meta[7]}
         
      
-            
-                     
-        
-        print self.values
-        print self.metaDic
         self.values = zip(*self.values)
-        print self.values
-       
          
     def fillSql(self):
        print 'IMPORTING' 
        self.fillArray()
+       self.exp = Experiment('C:/Users/db/test'+self.stringI+'.db',self.collen-2)
        self.exp.store_metadata(self.metaDic)
-      
        self.exp.store_values(1,self.values)
        
-       #____________________Just look if it works
-       #testdic =  self.exp.load_metadata()
-       result = self.exp.load_values(1)
-       print result
-       
-       
+    def getExperiment(self):
+        if self.exp != None:
+            return self.exp
+        else:
+            return None   
        
        
                 
