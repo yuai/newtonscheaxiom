@@ -198,8 +198,8 @@ class NewtonApp:
        metaList = []
        tempI=0 # variable increment go thought the check-buttons
        tempSel=0 # variable increment by selected check-buttons for the color
-       colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
-                    'LightPink','PaleVioletRed','khaki']
+       colorList = ['#0000FF','#FF0000','#00FF00', '#FFCC00',
+                    '#FF66FF','#00FFFF']
        for index in self.explist.indexList:
            if self.statesPlot[tempI].get() == 1:
                values = self.explist.getValues(index)
