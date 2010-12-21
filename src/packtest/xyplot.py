@@ -20,8 +20,8 @@ class XYPlot:
     self.canvas = Canvas(self.parent,width=self.width,height=self.height,bg=self.bgcolor)
     self.repaint(self.fgcolor)
     self.canvas.bind('<Configure>',self.resize)
-    self.colorList = ['RoyalBlue','DarkOliveGreen','IndianRed', 'brown',
-                    'LightPink','PaleVioletRed','khaki']
+    self.colorList = ['#0000FF','#FF0000','#00FF00', '#FFCC00',
+                    '#FF66FF','#00FFFF']
   
   
     
@@ -343,10 +343,10 @@ class XYPlot:
        if self.NegativValueBool == 0 :
            while i < vn-1:
                del LineArray[:]
-               if i < 4:
-                   colortop = str(i+1)
+               if 0 < i < 4:
+                   newcolor = self.colorFade(color,i)
                else:
-                   colortop = '1'
+                   newcolor = color
                
                for j in range(0,len(valueList)):
                    print valueList[j][i+1] 
@@ -358,17 +358,17 @@ class XYPlot:
                    LineArray.append(self.transAxisY(x1,y1,maxX,maxY))
                
                if smooth == 0:
-                   self.canvas.create_line(LineArray,smooth = "false",fill = color+colortop)
+                   self.canvas.create_line(LineArray,smooth = "false",fill = newcolor)
                else:
-                   self.canvas.create_line(LineArray,smooth = "true",fill = color+colortop)
+                   self.canvas.create_line(LineArray,smooth = "true",fill = newcolor)
                i=i+1  
        else:
            while i < vn-1:
               del LineArray[:]
-              if i < 4:
-                  colortop = str(i+1)
+              if 0 < i < 4:
+                   newcolor = self.colorFade(color,i)
               else:
-                  colortop = '1' 
+                   newcolor = color
               for j in range (0,len(valueList)-1):
                   x1 = valueList[j][0]
                   y1 = valueList[j][i+1]
@@ -382,9 +382,9 @@ class XYPlot:
                   LineArray.append(self.negTransAxisY(x2,y2,maxX,maxY))
                   
               if smooth == 0:
-                  self.canvas.create_line(LineArray,smooth = 'false',fill = color+colortop)
+                  self.canvas.create_line(LineArray,smooth = 'false',fill = newcolor)
               else:
-                  self.canvas.create_line(LineArray,smooth = 'true',fill = color+colortop)
+                  self.canvas.create_line(LineArray,smooth = 'true',fill = newcolor)
                   
               i = i+1
   
@@ -393,35 +393,34 @@ class XYPlot:
                
               
   def drawDots(self,valueList,maxima,color):
-      
       vn = len ( valueList[0])
       i = 0
       if self.NegativValueBool == 0:
           while i < vn-1:
-              if i < 4:
-                  colortop = str(i+1)
+              if 0 < i < 4:
+                   newcolor = self.colorFade(color,i)
               else:
-                  colortop = '1'    
+                   newcolor = color   
               for j in range (0,len(valueList)):
                   x = valueList[j][0]
                   y = valueList[j][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
-                  self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = color+colortop)
+                  self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = newcolor)
               i = i+1
       else:
           while i < vn-1:
               colortop = str(i+1)
-              if i < 4:
-                  colortop = str(i+1)
+              if 0 < i < 4:
+                   newcolor = self.colorFade(color,i)
               else:
-                  colortop = '1' 
+                   newcolor = color
               for j in range (0,len(valueList)):
                   x = valueList[j][0]
                   y = valueList[j][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
-                  self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-3,self.negTransAxisY(x,y,maxX,maxY)-3,self.negTransAxisX(x,y,maxX,maxY)+3,self.negTransAxisY(x,y,maxX,maxY)+3,fill = color+colortop)
+                  self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-3,self.negTransAxisY(x,y,maxX,maxY)-3,self.negTransAxisX(x,y,maxX,maxY)+3,self.negTransAxisY(x,y,maxX,maxY)+3,fill = newcolor)
               i = i+1
               
               
@@ -435,10 +434,10 @@ class XYPlot:
        vn = len ( valueList[0])
        i = 0
        if self.NegativValueBool == 0:
-           if i < 4:
-                  colortop = str(i+1)
+           if 0 < i < 4:
+                   newcolor = self.colorFade(color,i)
            else:
-               colortop = '1'
+                   newcolor = color
            for j in range (0,len(valueList)): 
                x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
                maxX = maxima [0]
@@ -448,13 +447,13 @@ class XYPlot:
                x2 = self.transAxisX(x2, y2, maxX, maxY)
                y2 = self.transAxisY(x2, y2, maxX, maxY)
                
-               self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = color+colortop)
+               self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor)
                
        else:
-            if i < 4:
-                  colortop = str(i+1)
+            if 0 < i < 4:
+                   newcolor = self.colorFade(color,i)
             else:
-                  colortop = '1' 
+                   newcolor = color 
                   
             for j in range (0,len(valueList)): 
                x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
@@ -465,12 +464,34 @@ class XYPlot:
                x2 = self.negTransAxisX(x2, y2, maxX, maxY)
                y2 = self.negTransAxisY(x2, y2, maxX, maxY)
                
-               self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = color+colortop)
+               self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor)
                   
                    
                
-           
-           
+  
+       
+       
+         
+  def colorFade(self,hexstring,fade):
+      rgb = []
+      hex = hexstring.strip('#')
+      hexlen = len(hex)
+      for i in range(0,hexlen,hexlen/3):
+          str = hex[i]+hex[i+1]
+          print str
+          rgb.append(int(str,16))
+      print rgb
+      count = 0
+      print rgb 
+      index = rgb.index(max(rgb))   
+      rgb[index]=rgb[index]-(60*fade)
+      if rgb[index]<= 0:
+          rgb[index]=0
+      rgbtuple  = tuple(rgb)    
+          
+      
+      return "#%02x%02x%02x"%rgbtuple    
+          
        
       
       
