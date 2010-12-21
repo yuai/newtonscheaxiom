@@ -1,8 +1,16 @@
 #!/usr/bin/python
 # encoding: utf-8
 
-import sys
-import sqlite3
+import sys, sqlite3
+
+debug_flag = 0
+def debug(*args):
+    if not debug_flag:
+        return
+    import sys
+    f = sys._getframe(1)
+    if len(args) < 1: args = [""]
+    print "%s: %s(): %s" % (f.f_locals.values()[0].__class__, f.f_code.co_name, args[0] % args[1:])
 
 class Experiment:
     """
@@ -11,21 +19,19 @@ the latest version of this code can be found on github:
 https://github.com/P2000/penview
 (EpyDoc generated) documentation is available on wuala:
 http://content.wuala.com/contents/patrick2000/Shared/school/11_Projekt/Pendulum/Dokumentation/DB%20V3.pdf?dl=1
-initial version by Tobias Th�ring
+initial version by Tobias Thüring
 modified by Patrick Pfeifer
 Copyleft in December 2010 under the terms of the GNU GPL version 3 or any later version:
 http://www.gnu.org/licenses/gpl.html
 
 """
-    debug = 0
     
-    def create_experiment_table(self, p):
+    def create_experiment_table(self):
         """helper function for constructor (__init__)"""
 
         append = ""
         minv = 1
         maxv = 30
-        if self.debug == True: print "vn " + str(vn)
 
         if self.nvalues < minv or self.nvalues > maxv:
             err = "Input Error: Second parameter must be between 1 and "
@@ -35,21 +41,21 @@ http://www.gnu.org/licenses/gpl.html
         append = "".join(", v%d FLOAT" % n for n in range(2, self.nvalues+1))
 
         sql = "CREATE TABLE 'values' (n INT, t FLOAT, v1 FLOAT%s)" % append
-        if Experiment.debug == True: print "sql: " + str(sql)
+        debug("sql: %s" % sql)
         self.c.execute(sql)
        
-    def __init__(self, p=':memory:', vn = 1):
+    def __init__(self, p=':memory:', nv=1):
         """
 initiate a new experiment
 :Parameters:
 p is the filesystem path where the experiment will be stored
-vn is the number of parameters (y-values) in the data-set
+nv is the number of parameters (y-values) in the data-set
 
 (p defaults to ":memory:" if not specified:
 the database is lost when python quits - good for testing)
 """
         # number of x values
-        self.nvalues = vn;
+        self.nvalues = nv;
 
         self.conn = sqlite3.connect(p)
         self.c = self.conn.cursor()
@@ -63,72 +69,81 @@ the database is lost when python quits - good for testing)
         if type(p) != str:
             raise Exception("Input Error: First parameter must be a string")
         # Test if 2nd parameter has the right vartype
-        if type(vn) != int:
+        if type(nv) != int:
             raise Exception("Input Error: Second parameter must be an integer")
 
         # TODO: dokumentieren
         if 'values' not in tables and 'metadata' not in tables:
-            self.create_experiment_table(p)
+            self.create_experiment_table()
             sql = "CREATE TABLE 'metadata' (name TEXT UNIQUE, value TEXT)"
-            if Experiment.debug == True: print "sql: " + str(sql)
+            debug("sql: %s" % sql)
             self.c.execute(sql)
         elif not ('values' in tables and 'metadata' in tables):
             raise Exception("inconsistent database in %s - try another file" % p)
- # else:
- # pass # opening of an existing experiment
+        else:
+            # opening of an existing experiment
+            sql = "SELECT * from 'values' LIMIT 1"
+            debug("sql: %s" % sql)
+            self.c.execute(sql)
+            self.nvalues = len(self.c.fetchone())-2
+            debug("nvalues: %d", self.nvalues)
 
-    def store_values_v(self, nr, a):
-        store_values(zip(*a))        
-        
     def store_values(self, nr, a):
         """
 store values a in 'values' table
 :Parameters:
 nr data-set number
-a values - ex. array of [[t], [v1], v2, ...]]
+a values - ex. array of [[t, v1, v2, ...]]
 the data format is documented in "DB V3.pdf":
 http://content.wuala.com/contents/patrick2000/Shared/school/11_Projekt/Pendulum/Dokumentation/DB%20V3.pdf?dl=1
 """
  
         if type(nr) != int:
-            raise Exception("Experiment number must be given as an int")
-        
-        print len(a[0])-1
-        print self.nvalues
+            raise Exception("ExperimentFile number must be given as an int")
+
+        debug("a[0]: %s" % str(a[0]) )
         if len(a[0])-1 != self.nvalues:
             raise Exception("wrong number of values")
   
         sql = "INSERT INTO 'values' VALUES (%d, ?%s)" % (nr, (len(a[0])-1) * ", ?")
-        if Experiment.debug == True: print "sql: " + str(sql)
+        debug("sql: %s" % sql)
  
         self.c.executemany(sql, a)
 
         self.conn.commit()
 
-    def load_values(self, nr=None):
+    def load_values(self, nr=1):
         """
 load the experiments values
 :Parameters:
-n data series number (default: all)
-if you specify n, the data is returned in an array like this: [[t,v1,v2,...]]
-if you DON'T specify n, the data is returned in an array like this: [[n,t,v1,v2,...]]
+nr data series number (default: 1)
+if you specify nr, the data is returned in an array like this: [[t,v1,v2,...]]
 """
-
         if nr == None:
             sql = "SELECT * from 'values'"
-            if Experiment.debug == True: print "sql: " + str(sql)
+            debug("sql: %s" % sql)
             self.c.execute(sql)
             return self.c.fetchall()
 
         if type(nr) != int:
-            raise Exception("Experiment number must be given as an int")
+            raise Exception("ExperimentFile number must be given as an int")
+        
+        # test if there are any data series with n
+        sql_n = "SELECT DISTINCT n from 'values' "
+        debug("sql_n: %s" % sql_n )
+        self.c.execute(sql_n)
+        nlist = map(lambda x: x[0], self.c.fetchall())
+        debug("nr: %s\nnlist: %s" % ( nr, nlist ))
+        if nr not in nlist:
+            raise Exception("No such data series in values table. Specify another nr")
+            
 
         # construct a string like ", v2, v3, v4"
         # vN are numbered from 2 to self.nvalues
         append = "".join(", v%d" % n for n in range(2, self.nvalues+1))
         
         sql = "SELECT t, v1%s from 'values' WHERE n = %d" % (append, nr)
-        if Experiment.debug == True: print "sql: " + str(sql)
+        debug("sql: %s" % sql)
         self.c.execute(sql)
         
         return self.c.fetchall()
@@ -157,12 +172,12 @@ http://content.wuala.com/contents/patrick2000/Shared/school/11_Projekt/Pendulum/
  
         if update:
             sql = "UPDATE 'metadata' SET value = ? WHERE name = ?"
-            if Experiment.debug == True: print "sql: " + str(sql) + " (" + str(update) + ")"
+            debug("sql, update: %s ( %s )" % ( sql, update ))
             self.c.executemany(sql, update)
  
         if insert:
             sql = "INSERT INTO 'metadata' VALUES (?, ?)"
-            if Experiment.debug == True: print "sql: " + str(sql) + " (" + str(insert) + ")"
+            debug("sql, insert: %s ( %s )" % ( sql, insert ))
             self.c.executemany(sql, insert)
 
         self.conn.commit()
@@ -175,7 +190,7 @@ returns a new dictionary object of the experiments metadata values
 """
 
         sql = "SELECT * FROM 'metadata'"
-        if Experiment.debug == True: print "sql: " + str(sql)
+        debug("sql: %s" % sql )
         self.c.execute(sql)
 
         return dict(self.c.fetchall())
@@ -184,7 +199,8 @@ returns a new dictionary object of the experiments metadata values
         """
 close the experiment
 write all data to the disk and close the connection to the database file
-after calling Experiment.close() the object must no longer be used
+after calling ExperimentFile.close() the object must no longer be used
 """
         
         self.conn.close()
+
