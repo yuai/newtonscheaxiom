@@ -3,6 +3,7 @@ from expList import ExpList
 from xyplot import XYPlot
 from newtonImporter import NewtonImporter
 from data_access import Experiment
+from fail import Fail
 import os
 import tkFileDialog
 import csv
@@ -102,12 +103,15 @@ class NewtonApp:
       
    def importer(self):
        ''' open new Window to select a .csv file to import into to the DB '''
-       stringI = str(self.explist.dbCount)
-       self.explist.addExp(Experiment('C:/Users/db/test'+stringI+'.db',1))
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
-       NewtonImporter(filename,self.explist.getExp(self.explist.dbCount-1))
+       exp = NewtonImporter(filename,self.explist.dbCount)
+       if exp.getExperiment()!= None:
+           self.explist.addExp(exp.getExperiment())
+       
+   def sendDbCount(self):
+       return self.explist.dbCount    
        
        
    def showExp(self,event):
@@ -176,13 +180,17 @@ class NewtonApp:
                 # -------------------------- Show Values on List box 
                 # -----------------------------------------------------------------
                 result = valueList[tempI]
-                x,y = zip(*result)
-                intC = 0 # increment to get the x and y
-                for C in x:
-                    NewtonApp.tablecount = NewtonApp.tablecount+1
-                    xyString =  "x[%s] \t= %f \t y[%s] \t= %f" % (str(intC), x[intC], str(intC),y[intC]) 
-                    self.myTablelistbox.insert(NewtonApp.tablecount, xyString )
-                    intC = intC + 1
+                try:
+                    x,y = zip(*result)
+                    intC = 0 # increment to get the x and y
+                    for C in x:
+                        NewtonApp.tablecount = NewtonApp.tablecount+1
+                        xyString =  "x[%s] \t= %f \t y[%s] \t= %f" % (str(intC), x[intC], str(intC),y[intC]) 
+                        self.myTablelistbox.insert(NewtonApp.tablecount, xyString )
+                        intC = intC + 1
+                except ValueError:
+                    Fail("Sorry, Table only can show one Y-Axis\n If you want to see all you have to split your csv File into \n one for every Y-Set")        
+            
        
    def getDrawList(self):
        ''' get values from the experience '''
