@@ -359,11 +359,18 @@ class XYPlot:
        vn = len(valueList[0])
        LineArray = []
        i = 0
+       pattern  = None
        if self.NegativValueBool == 0 :
            while i < vn-1:
                del LineArray[:]
                if 0 < i < 4:
                    newcolor = self.colorFade(color,i)
+                   if i == 1:
+                       pattern = (1,2,3,4)
+                   elif i == 2:
+                       pattern =(1,2) 
+                   else:
+                       pattern = None         
                else:
                    newcolor = color
                
@@ -377,15 +384,21 @@ class XYPlot:
                    LineArray.append(self.transAxisY(x1,y1,maxX,maxY))
                
                if smooth == 0:
-                   self.canvas.create_line(LineArray,smooth = "false",width=2,fill = newcolor)
+                   self.canvas.create_line(LineArray,smooth = "false",width=2,fill = newcolor,dash = pattern)
                else:
-                   self.canvas.create_line(LineArray,smooth = "true",width=2,fill = newcolor)
+                   self.canvas.create_line(LineArray,smooth = "true",width=2,fill = newcolor,dash = pattern)
                i=i+1  
        else:
            while i < vn-1:
               del LineArray[:]
               if 0 < i < 4:
                    newcolor = self.colorFade(color,i)
+                   if i == 1:
+                       pattern = (1,2,3,4)
+                   elif i == 2:
+                       pattern =(1,2) 
+                   else:
+                       pattern = None      
               else:
                    newcolor = color
               for j in range (0,len(valueList)-1):
@@ -401,9 +414,9 @@ class XYPlot:
                   LineArray.append(self.negTransAxisY(x2,y2,maxX,maxY))
                   
               if smooth == 0:
-                  self.canvas.create_line(LineArray,smooth = 'false',width=2,fill = newcolor)
+                  self.canvas.create_line(LineArray,smooth = 'false',width=2,fill = newcolor,dash = pattern)
               else:
-                  self.canvas.create_line(LineArray,smooth = 'true',width=2,fill = newcolor)
+                  self.canvas.create_line(LineArray,smooth = 'true',width=2,fill = newcolor,dash = pattern )
                   
               i = i+1
   
