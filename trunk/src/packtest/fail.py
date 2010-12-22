@@ -7,7 +7,3 @@ class Fail:
         err_button = Button (self.failWindow,text = "OK",command=self.failWindow.destroy)
         err_message.pack()
         err_button.pack()
-        
-    
-
-        
