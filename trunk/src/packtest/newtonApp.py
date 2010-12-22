@@ -34,7 +34,7 @@ class NewtonApp:
       #---------------------------- XYPlot
       # -----------------------------------------------------------------
       self.mainWindow = Frame(main)
-      self.xyPlot=XYPlot(main,400,250)
+      self.xyPlot=XYPlot(main,800,600)
       # -----------------------------------------------------------------
       #---------------------------- ScrollBar, ListBox
       # -----------------------------------------------------------------
@@ -67,7 +67,6 @@ class NewtonApp:
       # -----------------------------------------------------------------
       self.xyPlot.canvas.pack(fill="both", expand="1")
       self.mainWindow.pack(fill="both",expand="1")
-      
    def opendDB(self):
       ''' open new window with the experiences from DB '''
       filewin = Toplevel(mainWindow)
@@ -233,8 +232,7 @@ class NewtonApp:
        bClean.pack(side="left")
        bUpdate = Button(fButton, text="Update",command=self.updatePlot)
        bUpdate.pack(side="left")
-       fButton.pack(fill="x",expand="0",side="bottom")
-
+       fButton.pack(fill="x",expand="0",side="bottom")        
 # -----------------------------------------------------------------  
 #---------------------------- Initial Tkinter
 # -----------------------------------------------------------------
@@ -251,5 +249,6 @@ main.pack(side="right",fill="both",expand="1")
 #---------------------------- Start Application
 # -----------------------------------------------------------------
 app=NewtonApp(main,left)
+
 app.createMenu()
 mainloop()
