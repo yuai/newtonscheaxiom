@@ -11,6 +11,7 @@ class XYPlot:
   def __init__(self,_parent,_width,_height):
     ''' This Constructor sets default values for the main drawing Window'''  
     self.NegativValueBool = 0
+    self.ALLSETGO = 0
     self.width=_width
     self.height=_height
     self.parent=_parent
@@ -172,12 +173,18 @@ class XYPlot:
             
 
   def resize(self,event ):
-    '''resizes canvas if user changes size of Application'''  
-    self.repaint(self.bgcolor)
-    self.width=event.width-4 # This is just tested on Windows 7, have to look if it works on Mac OS 
-    self.height=event.height-4
-    self.canvas.configure(width=self.width,height=self.height)
-    self.repaint(self.fgcolor)
+    if self.ALLSETGO <=2:
+        self.ALLSETGO += 1
+    else:
+        self.ALLSETGO = 2    
+   
+    if self.ALLSETGO >= 2:
+        self.repaint(self.bgcolor)
+        self.width=event.width # This is just tested on Windows 7, have to look if it works on Mac OS 
+        self.height=event.height
+        
+        self.canvas.configure(width=self.width,height=self.height)
+        self.repaint(self.fgcolor)
       
   def getExpData(self,event):
     self.repaint(self.fgcolor)
@@ -254,6 +261,7 @@ class XYPlot:
           
           
   def drawControl(self,drawList,metaList,button):
+      print 'ALLSET IS SET'
       '''This Method decides which drawing Function is called, and gives the drawing Function the color
       for every Experiment and an maxima array used to scale data points'''
       maxima,minima = self.getMax(drawList)
@@ -526,7 +534,7 @@ class XYPlot:
       return "#%02x%02x%02x"%rgbtuple    
           
        
-      
+    
       
       
 
