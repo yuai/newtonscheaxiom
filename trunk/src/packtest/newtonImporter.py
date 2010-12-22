@@ -37,7 +37,7 @@ class NewtonImporter:
         #This is very very inefficient still trying to figure out how to get a row list 
             for row in reader:
                 if i == 0:
-                    collen = len(row)
+                    collen = len(row)#MAKE BREAK HERERERERERE
                 i=i+1  
         
 
