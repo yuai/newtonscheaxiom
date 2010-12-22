@@ -302,10 +302,14 @@ class XYPlot:
   def getMax(self,searchmax):
       '''Here maxima and minima of every x or y-Data set in every Experiment drawn is calculatet and 
       stored in an array''' 
-      maxList = [0.0,0.0,0.0,0.0,0.0,0.0]
-      minList = [0.0,0.0,0.0,0.0,0.0,0.0]
-      changeListMax = [0.0,0.0,0.0,0.0,0.0,0.0]
-      changeListMin = [0.0,0.0,0.0,0.0,0.0,0.0]
+      #the following arrays are holding the maxima and minima of every y-Collumn of
+      #an csv File.They are Limited to 15, so that our programm isnt able to draw more than 15 y-collumns
+      #from the same file.Our group only works with a maximum of 3 y-collums.If you draw more than 4 y-collumns the
+      #graph is not readable because the labels on y Axiy are interferring  
+      maxList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+      minList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+      changeListMax = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+      changeListMin = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
       for element in searchmax:#hopping through every Experiment searching for maxima and minima
           valuesTrans = zip(*element)
           for i in range(0,len(valuesTrans)):
