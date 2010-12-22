@@ -4,7 +4,7 @@ from fail import Fail
 from data_access import Experiment
 
 class NewtonImporter:
-    def __init__(self,path,DBCount):
+    def __init__(self,path,storePath,DBCount):
         try:
             
             self.collen = self.lookForLen(path)
@@ -12,6 +12,7 @@ class NewtonImporter:
             dialect = csv.Sniffer().sniff(self.csvfile.read(1024))
             self.csvfile.seek(0)
             self.exp = None
+            self.store = storePath
             self.reader = csv.reader(self.csvfile,delimiter = ';' , dialect = csv.excel)
             self.values = []
             self.data = []
@@ -88,7 +89,7 @@ class NewtonImporter:
     def fillSql(self):
        print 'IMPORTING' 
        self.fillArray()
-       self.exp = Experiment('C:/Users/db/test'+self.stringI+'.db',self.collen-2)
+       self.exp = Experiment(self.store+self.stringI+'.db',self.collen-2)
        self.exp.store_metadata(self.metaDic)
        self.exp.store_values(1,self.values)
        
