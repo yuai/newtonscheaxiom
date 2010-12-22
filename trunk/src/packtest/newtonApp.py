@@ -23,11 +23,13 @@ class NewtonApp:
       self.statesTable = [] # states of table of the check buttons
       self.checkbuttonPlot = [] # save check button (for the plot) to change the color
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
+      self.mainPath = 'C:/Users/db/' #All SqliLite Files are stored here
+      self.namePath = 'C:/Users/db/test'#SQL data path with data name
       
-      file_count = len(os.listdir('C:/Users/db/'))
+      file_count = len(os.listdir(self.mainPath))
       for i in range(0,file_count):
           nr = str(i) # number (increment) for the database filename
-          self.explist.addExp(Experiment('C:/Users/db/test'+nr+'.db',1))
+          self.explist.addExp(Experiment(self.namePath+nr+'.db',1))
       # -----------------------------------------------------------------   
       #---------------------------- XYPlot
       # -----------------------------------------------------------------
@@ -106,7 +108,7 @@ class NewtonApp:
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
-       exp = NewtonImporter(filename,self.explist.dbCount)
+       exp = NewtonImporter(filename,self.namePath,self.explist.dbCount)
        if exp.getExperiment()!= None:
            self.explist.addExp(exp.getExperiment())
        
