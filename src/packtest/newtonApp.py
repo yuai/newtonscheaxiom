@@ -27,7 +27,7 @@ class NewtonApp:
       self.namePath = 'db/test'#SQL data path with data name
       
       file_count = len(os.listdir(self.mainPath))
-      for i in range(0,file_count):
+      for i in range(0,file_count-1):
           nr = str(i) # number (increment) for the database filename
           self.explist.addExp(Experiment(self.namePath+nr+'.db',1))
       # -----------------------------------------------------------------   
@@ -76,6 +76,9 @@ class NewtonApp:
       myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief="sunken" )
       scrollbar.config( command = myDBlist.yview )
       tempCount=0 # increment to load all metaData of the experiences
+      if self.explist.dbCount == 0 :
+          msg = Message(filewin, text="No file in DB", width=100)
+          msg.pack(side="top")
       for x in range(0,self.explist.dbCount):
           exp_metadata = self.explist.getMetaData(tempCount)
           nr_series = exp_metadata['nr_series']
