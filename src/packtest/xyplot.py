@@ -145,7 +145,7 @@ class XYPlot:
                   next = 0
                   y_float = 0
                   negy_float = 0
-                  for i in range (0,14):
+                  for i in range (0,7):
                       if i<1:
                           negy_float = -maxima[countY]
                       else:
