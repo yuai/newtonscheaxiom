@@ -27,7 +27,7 @@ class NewtonApp:
       self.namePath = 'db/test'#SQL data path with data name
       
       file_count = len(os.listdir(self.mainPath))
-      for i in range(0,file_count-1):
+      for i in range(0,file_count-1): # -1 nur fuer testzwecken
           nr = str(i) # number (increment) for the database filename
           self.explist.addExp(Experiment(self.namePath+nr+'.db',1))
       # -----------------------------------------------------------------   
