@@ -23,8 +23,11 @@ class NewtonApp:
       self.statesTable = [] # states of table of the check buttons
       self.checkbuttonPlot = [] # save check button (for the plot) to change the color
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
+      self.checkvarPlot = []
       self.mainPath = 'db/' #All SqliLite Files are stored here
       self.namePath = 'db/test'#SQL data path with data name
+      self.MAX_SHOWN_EXP = 6
+      self.MAX_LEN_EXPNAME = 30
       
       file_count = len(os.listdir(self.mainPath))
       for i in range(0,file_count-1): # -1 nur fuer testzwecken
@@ -67,6 +70,7 @@ class NewtonApp:
       # -----------------------------------------------------------------
       self.xyPlot.canvas.pack(fill="both", expand="1")
       self.mainWindow.pack(fill="both",expand="1")
+      
    def opendDB(self):
       ''' open new window with the experiences from DB '''
       filewin = Toplevel(mainWindow)
@@ -84,7 +88,7 @@ class NewtonApp:
           actor_name = exp_metadata['actor_name']
           exp_name = exp_metadata['exp_name']
           myDBlist.insert(tempCount, nr_series + ": " 
-                        + actor_name + " " + exp_name)
+                        + actor_name + " | " + exp_name)
           tempCount=tempCount+1
       myDBlist.pack( side="top", fill="both", expand=1)
       myDBlist.bind('<Double-Button-1>', self.showExp)
@@ -117,27 +121,37 @@ class NewtonApp:
    def sendDbCount(self):
        return self.explist.dbCount    
        
-       
+            
    def showExp(self,event):
        ''' show the specific added experience on the left side of the user interface '''
-       index = self.myDBlistbox.curselection()
-       i = int(index[0]) # convert tuple to integer
-       self.explist.addIndexList(i)
-       expName = self.myDBlistbox.get(index)
-       # -----------------------------------------------------------------
-       #---------------------------- CheckButton for experience
-       # -----------------------------------------------------------------
-       CheckVarPlot = IntVar()
-       CheckVarTable = IntVar()
-       self.statesTable.append(CheckVarTable)
-       self.statesPlot.append(CheckVarPlot)
-       c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot, anchor=NW, width="35")
-       c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
+       if (len(self.checkbuttonPlot)+1>self.MAX_SHOWN_EXP): # only
+           Fail( "You are trying to show more than "+str(self.MAX_SHOWN_EXP)+" experiences which is  not \n compatible with this Programm.")
+       else :
+           index = self.myDBlistbox.curselection()
+           i = int(index[0]) # convert tuple to integer
+           self.explist.addIndexList(i)
+           expNameActor = self.myDBlistbox.get(index)
+           expNameActorList = expNameActor.split('|')
+           expName = expNameActorList[1]
+           # -----------------------------------------------------------------
+           #---------------------------- CheckButton for experience
+           # -----------------------------------------------------------------
+           CheckVarPlot = IntVar()
+           CheckVarTable = IntVar()
+           self.statesTable.append(CheckVarTable)
+           self.statesPlot.append(CheckVarPlot)
+           if (len(expName)>self.MAX_LEN_EXPNAME):
+               cutexpName = expName[0:self.MAX_LEN_EXPNAME] +"..."
+               expName = cutexpName
+           
+           c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot, anchor=NW, width="35")
+           c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
                                 ,command=self.showTable,anchor=NW,width="35")
-       self.checkbuttonPlot.append(c1)
-       self.checkbuttonTable.append(c2)
-       c1.pack(side="bottom")
-       c2.pack(side="bottom")          
+           self.checkbuttonPlot.append(c1)
+           self.checkvarPlot.append(CheckVarPlot)
+           self.checkbuttonTable.append(c2)
+           c1.pack(side="bottom")
+           c2.pack(side="bottom")          
            
    
    def cleanAllExp(self):
@@ -154,7 +168,16 @@ class NewtonApp:
        self.checkbuttonPlot = []
        self.checkbuttonTable = []
        self.explist.resetIndexList()
-    
+       
+   def cleanSelExp(self): ## only for exp
+       self.var.set(0)
+       for i in range(0, len(self.checkvarPlot)):
+            if (self.statesPlot[i].get() == 1):
+                self.checkbuttonPlot[i].deselect()
+                self.checkbuttonPlot[i].destroy()
+                self.checkbuttonTable[i].deselect()
+                self.checkbuttonTable[i].destroy()
+            
    
    def updatePlot(self):
        self.getDrawList()
@@ -173,8 +196,9 @@ class NewtonApp:
                 allMetaString = str(allmetaOfExp['additional_info'])
                 splitedString = allMetaString.split('|')            
                 self.myTablelistbox.insert(NewtonApp.tablecount,"########################")
-                self.myTablelistbox.insert(NewtonApp.tablecount+1,'Name: '+allmetaOfExp['exp_name'])
-                tempTablecount=NewtonApp.tablecount+2 #tempTablecount for the meta data
+                self.myTablelistbox.insert(NewtonApp.tablecount+1,'ExpName: '+allmetaOfExp['exp_name'])
+                self.myTablelistbox.insert(NewtonApp.tablecount+2,'Actor: '+allmetaOfExp['actor_name'])
+                tempTablecount=NewtonApp.tablecount+3 #tempTablecount for the meta data
                 for temp in range(0,len(splitedString)) :
                     self.myTablelistbox.insert(tempTablecount, splitedString[temp])
                     tempTablecount=tempTablecount+1
@@ -224,15 +248,18 @@ class NewtonApp:
        #---------------------------- ListBox
        # -----------------------------------------------------------------
        myTablelist = Listbox(left, yscrollcommand = scrollbar.set, width="35")
+       myTablelist.xview() # for long name
        myTablelist.pack( side="bottom", fill="both", expand="1")
        scrollbar.config( command = myTablelist.yview )
        self.myTablelistbox = myTablelist
        fButton = Frame(left, border="2", relief="groove")
        bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
        bClean.pack(side="left")
+       #bSelClean = Button(fButton, text="Clean selected Plot",command=self.cleanSelExp)
+       #bSelClean.pack(side="left")
        bUpdate = Button(fButton, text="Update",command=self.updatePlot)
        bUpdate.pack(side="left")
-       fButton.pack(fill="x",expand="0",side="bottom")        
+       fButton.pack(fill="x",expand="0",side="bottom")
 # -----------------------------------------------------------------  
 #---------------------------- Initial Tkinter
 # -----------------------------------------------------------------
