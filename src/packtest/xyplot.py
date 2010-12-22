@@ -10,8 +10,8 @@ class XYPlot:
   
   def __init__(self,_parent,_width,_height):
     ''' This Constructor sets default values for the main drawing Window'''  
-    self.NegativValueBool = 0
-    self.ALLSETGO = 0
+    self.NegativValueBool = 0 #This 'Bool' decides which Grid-form is drawn
+    self.ALLSETGO = 0         #This 'Bool'is needed because of resize problems during initialisation
     self.width=_width
     self.height=_height
     self.parent=_parent
@@ -22,31 +22,37 @@ class XYPlot:
     self.repaint(self.fgcolor)
     self.canvas.bind('<Configure>',self.resize)
     self.colorList = ['#0000FF','#FF0000','#00FF00', '#FFCC00',
-                    '#FF66FF','#00FFFF']
+                    '#FF66FF','#00FFFF']#Blau,Rot,Gruen,Gelb,Pink,Tuerkis
   
   
     
   def repaint(self,_color,maxima = None):
       '''The repaint method is called initionally and everytime something in the canvas is changed.
       It is splittet into two parts, one Drawing the main L Grid for just positive Values and one in
-      cross Format for positiv and negativ Values.'''  
-      
+      cross Format for positiv and negativ Values.Every drawn Object is scaled with width and height
+      from mainWindow'''  
 # -----------------------------------------------------------------
 # ---------------------Setting Up L Grid
 # -----------------------------------------------------------------      
       if self.NegativValueBool == 0:  
+          #Drawing Backround of Plot-Canvas
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           next = 0
           for i in range (0,7):
+              #Drawing littlelines on X-Axis
               self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.91*self.height,width=2,fill=_color)
+              #Drawing lightGrey BackroundGrid Y-Direction
               self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.1*self.height,width=0.1,fill= 'LightGrey')
               next = next +(0.8*self.width)/6
+          
           next = 0    
           for i in range (0,7):
+              #Drawing littlelines on Y-Axis
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.09)*self.width,0.9*self.height-next,width=2,fill=_color)
+              #Drawing lightGrey BackroundGrid Y-Direction
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.9)*self.width,0.9*self.height-next,width=0.1,fill='LightGrey')
               next = next +(0.8*self.height)/6
-          
+          #Drawing X-Axis and Y-Axis plus a little zero line
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
           self.canvas.create_line(0.9*self.width,0.9*self.height,0.9*self.width,0.91*self.height,width=2,fill=_color)    
@@ -57,7 +63,7 @@ class XYPlot:
               next = 0
               x_float = 0
               for i in range(0,7):
-              #Drawing text Labels on X-Axis    
+              #Drawing value Labels on X-Axis    
                   if i<1:
                       x_float = 0
                   else:
@@ -75,7 +81,7 @@ class XYPlot:
                         
               newY  = 0        
               for countY in range (1,countMaxima):
-              #Drawing text labels on Y-Axis, depending on Maximum of each y     
+              #Drawing value labels on Y-Axis, depending on Maximum of each y     
                   next = 0
                   y_float = 0
                   for i in range (0,7):
@@ -95,18 +101,24 @@ class XYPlot:
 # -----------------------------------------------------------------
 # ---------------------Setting Up Cross Grid
 # -----------------------------------------------------------------
+          #Drawing Backround of Plot-Canvas
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_text(0.48*self.width,0.53*self.height,text = '0')
           next = 0
           for i in range (0,14):
+              #Drawing littlelines on X-Axis
               self.canvas.create_line((0.05)*self.width+next,0.5*self.height,(0.05)*self.width+next,0.51*self.height,width=2,fill=_color)
+              #Drawing lightGrey BackroundGrid Y-Direction
               self.canvas.create_line((0.05)*self.width+next,0.05*self.height,(0.05)*self.width+next,0.95*self.height,width=0.1,fill='LightGrey')
               next = next +(0.45*self.width)/6
           next = 0    
           for i in range (0,14):
+              #Drawing littlelines on X-Axis
               self.canvas.create_line(0.5*self.width,0.95*self.height-next,0.49*self.width,0.95*self.height-next,width=2,fill=_color)
+              #Drawing lightGrey BackroundGrid Y-Direction
               self.canvas.create_line(0.05*self.width,0.95*self.height-next,0.95*self.width,0.95*self.height-next,width=0.1,fill='LightGrey')
               next = next +(0.45*self.height)/6
+          #Drawing X-Axis and Y-Axis    
           self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
           self.canvas.create_line(0.5*self.width,0.05,0.5*self.width,self.height-0.05,fill=_color)   
 # -----------------------------------------------------------------
@@ -158,10 +170,10 @@ class XYPlot:
                       negy_str = str(stringnegy_float)
                       y_str = str(stringy_float)
                       if stringnegy_float != 0.0:
-                          print negy_str
+                          
                           self.canvas.create_text(0.45*self.width,(0.95+newY)*self.height-next,text = negy_str)
                       if stringy_float != 0.0:  
-                           print y_str 
+        
                            self.canvas.create_text(0.45*self.width,(0.5+newY)*self.height-next,text = y_str)
                       
                       next = next + (0.45*self.height)/6
@@ -173,6 +185,9 @@ class XYPlot:
             
 
   def resize(self,event ):
+    '''This Method is called by an event thrown by Mainwindow.It resizes the canvas.
+    We had to post the scalefit behind the initialisatioprocess of XY-Plot by using ALLSETGO.
+    If this isn't done the scale ends up in an endless Loop'''
     if self.ALLSETGO <=2:
         self.ALLSETGO += 1
     else:
@@ -180,14 +195,10 @@ class XYPlot:
    
     if self.ALLSETGO >= 2:
         self.repaint(self.bgcolor)
-        self.width=event.width # This is just tested on Windows 7, have to look if it works on Mac OS 
+        self.width=event.width 
         self.height=event.height
-        
         self.canvas.configure(width=self.width,height=self.height)
         self.repaint(self.fgcolor)
-      
-  def getExpData(self,event):
-    self.repaint(self.fgcolor)
   
   def clear (self):
       '''This method clears the canvas, it must be called on update, or when a new set is drawn so that
@@ -261,7 +272,6 @@ class XYPlot:
           
           
   def drawControl(self,drawList,metaList,button):
-      print 'ALLSET IS SET'
       '''This Method decides which drawing Function is called, and gives the drawing Function the color
       for every Experiment and an maxima array used to scale data points'''
       maxima,minima = self.getMax(drawList)
@@ -269,7 +279,8 @@ class XYPlot:
           if abs(minima[i]) > maxima[i]:
               maxima [i] = abs(minima[i])
       absoluteMinimum = min(minima)
-      #Here is decided which Grid is taken for the drawing by setting Negativ Value bool depending on absolute minimum of all minimum
+      
+      #Here is decided which Grid is taken for the drawing by setting Negativ Value bool depending on absolute minimum of all minima
       if absoluteMinimum < 0:
           self.NegativValueBool = 1
       else:
@@ -310,7 +321,7 @@ class XYPlot:
   def getMax(self,searchmax):
       '''Here maxima and minima of every x or y-Data set in every Experiment drawn is calculatet and 
       stored in an array''' 
-      #the following arrays are holding the maxima and minima of every y-Collumn of
+      #the following arrays are holding the maxima and minima of every value collumn of
       #an csv File.They are Limited to 15, so that our programm isnt able to draw more than 15 y-collumns
       #from the same file.Our group only works with a maximum of 3 y-collums.If you draw more than 4 y-collumns the
       #graph is not readable because the labels on y Axiy are interferring  
@@ -338,10 +349,10 @@ class XYPlot:
           self.canvas.create_text(0.90*self.width, 0.95*self.height, text="t in Sekunden")
           space = 0
           for i in range(0,len(metaList)):
-              if metaList[i]['vn_unit'].find('|') != -1:
+              if metaList[i]['vn_unit'].find('|') != -1:#Look if there is more than one MetaUnit
                   singledata =  metaList[i]['vn_unit'].split('|')
                   down = 0
-                  for single in range (0,len(singledata)):
+                  for single in range (0,len(singledata)):#Draw Meta units with fading colors exactly like their values
                       self.canvas.create_text((0.08+space)*self.width, (0.02+down)*self.height, text=singledata[single],fill =  self.colorFade(self.colorList[i],single))
                       down = down + 0.018
               else:        
@@ -367,11 +378,14 @@ class XYPlot:
 
 
   def drawLine(self,valueList,maxima,color,smooth):
-       self.drawDots(valueList, maxima, color)
-       vn = len(valueList[0])
+       '''This Method is drawing an Line in the given color through every point of the valueList.
+       If smooth is set True it draws an spline approximation through the points.Some Points may
+       not lie on this approximatet line.'''
+       self.drawDots(valueList, maxima, color)#First Draw all Dots, so that you can see the original reference
+       vn = len(valueList[0])#
        LineArray = []
        i = 0
-       pattern  = None
+       pattern  = None # Is the pattern of the line if more than one y-List is in the 
        if self.NegativValueBool == 0 :
            while i < vn-1:
                del LineArray[:]
@@ -387,7 +401,7 @@ class XYPlot:
                    newcolor = color
                
                for j in range(0,len(valueList)):
-                   print valueList[j][i+1] 
+                   
                    x1 = valueList[j][0]
                    y1 = valueList[j][i+1]
                    maxX = maxima[0]
@@ -437,22 +451,25 @@ class XYPlot:
                
               
   def drawDots(self,valueList,maxima,color):
+      '''Draws a dot for every x,y Koordinate in the valueList.It uses the maxima Array to scale
+      and the color, which it can fade in case of more than one y-Axis.'''
       vn = len ( valueList[0])
       i = 0
-      if self.NegativValueBool == 0:
+      if self.NegativValueBool == 0:#If true,drawing on scale of L Grid
           while i < vn-1:
               if 0 < i < 4:
                    newcolor = self.colorFade(color,i)
               else:
                    newcolor = color   
               for j in range (0,len(valueList)):
+                  print len(valueList[j])
                   x = valueList[j][0]
                   y = valueList[j][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
                   self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = newcolor)
               i = i+1
-      else:
+      else:#Drawing in Scale of Cross-Grid
           while i < vn-1:
               colortop = str(i+1)
               if 0 < i < 4:
@@ -477,39 +494,54 @@ class XYPlot:
        calc = Calc()
        vn = len ( valueList[0])
        i = 0
+       pattern = None
        if self.NegativValueBool == 0:
-           if 0 < i < 4:
+           while i < vn-1:
+               if 0 < i < 4:
                    newcolor = self.colorFade(color,i)
-           else:
+                   if i == 1:
+                       pattern = (1,2,3,4)
+                   elif i == 2:
+                       pattern =(1,2) 
+                   else:
+                       pattern = None 
+               else:
                    newcolor = color
-           for j in range (0,len(valueList)): 
-               x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
-               maxX = maxima [0]
-               maxY = maxima [i+1]
-               x1 = self.transAxisX(x1, y1, maxX, maxY)
-               y1 = self.transAxisY(x1, y1, maxX, maxY)
-               x2 = self.transAxisX(x2, y2, maxX, maxY)
-               y2 = self.transAxisY(x2, y2, maxX, maxY)
-               
-               self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor)
-               
+               for j in range (0,len(valueList)):
+                   print 'regressing'  
+                   x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
+                   maxX = maxima [0]
+                   maxY = maxima [i+1]
+                   x1 = self.transAxisX(x1, y1, maxX, maxY)
+                   y1 = self.transAxisY(x1, y1, maxX, maxY)
+                   x2 = self.transAxisX(x2, y2, maxX, maxY)
+                   y2 = self.transAxisY(x2, y2, maxX, maxY)
+                   self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
+               i = i+1    
        else:
-            if 0 < i < 4:
+           while i < vn-1:
+               if 0 < i < 4:
                    newcolor = self.colorFade(color,i)
-            else:
+                   if i == 1:
+                       pattern = (1,2,3,4)
+                   elif i == 2:
+                       pattern =(1,2) 
+                   else:
+                       pattern = None 
+               else:
                    newcolor = color 
                   
-            for j in range (0,len(valueList)): 
-               x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
-               maxX = maxima [0]
-               maxY = maxima [i+1]
-               x1 = self.negTransAxisX(x1, y1, maxX, maxY)
-               y1 = self.negTransAxisY(x1, y1, maxX, maxY)
-               x2 = self.negTransAxisX(x2, y2, maxX, maxY)
-               y2 = self.negTransAxisY(x2, y2, maxX, maxY)
-               
-               self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor)
-                  
+               for j in range (0,len(valueList)): 
+                   print 'regressing' 
+                   x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
+                   maxX = maxima [0]
+                   maxY = maxima [i+1]
+                   x1 = self.negTransAxisX(x1, y1, maxX, maxY)
+                   y1 = self.negTransAxisY(x1, y1, maxX, maxY)
+                   x2 = self.negTransAxisX(x2, y2, maxX, maxY)
+                   y2 = self.negTransAxisY(x2, y2, maxX, maxY)
+                   self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
+               i = i+1      
                    
                
   
@@ -517,6 +549,8 @@ class XYPlot:
        
          
   def colorFade(self,hexstring,fade):
+      '''This Function converts the given hex-value into RGB, subtracts the maximum so that the color
+      gets darker, than it reconverts into hex and returns the new color'''
       rgb = []
       hex = hexstring.strip('#')
       hexlen = len(hex)
