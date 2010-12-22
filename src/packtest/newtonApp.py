@@ -23,8 +23,8 @@ class NewtonApp:
       self.statesTable = [] # states of table of the check buttons
       self.checkbuttonPlot = [] # save check button (for the plot) to change the color
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
-      self.mainPath = 'C:/Users/db/' #All SqliLite Files are stored here
-      self.namePath = 'C:/Users/db/test'#SQL data path with data name
+      self.mainPath = 'db/' #All SqliLite Files are stored here
+      self.namePath = 'db/test'#SQL data path with data name
       
       file_count = len(os.listdir(self.mainPath))
       for i in range(0,file_count):
