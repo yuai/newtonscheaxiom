@@ -83,9 +83,9 @@ class NewtonApp:
       filewin = Toplevel(mainWindow) #create a new Window
       scrollbar = Scrollbar(filewin) 
       scrollbar.pack( side="right", fill="y" )
-      myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set
-                         , height=20,width=50, relief="sunken" )
-      scrollbar.config( command = myDBlist.yview )
+      self.myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set
+                         , height=20,width=50, relief="sunken" ) # to use information on the listbox outside of this method
+      scrollbar.config( command = self.myDBlist.yview )
       if self.explist.dbCount == 0 :
           msg = Message(filewin, text="No file in DB", width=100)
           msg.pack(side="top")
@@ -94,11 +94,10 @@ class NewtonApp:
           nr_series = exp_metadata['nr_series']
           actor_name = exp_metadata['actor_name']
           exp_name = exp_metadata['exp_name']
-          myDBlist.insert(i, nr_series + ": " 
+          self.myDBlist.insert(i, nr_series + ": " 
                         + actor_name + " |  " + exp_name)
-      myDBlist.pack( side="top", fill="both", expand=1)
-      myDBlist.bind('<Double-Button-1>', self.showExp) # event by double click on experiment
-      self.myDBlistbox = myDBlist # to use information on the listbox outside of this method
+      self.myDBlist.pack( side="top", fill="both", expand=1)
+      self.myDBlist.bind('<Double-Button-1>', self.showExp) # event by double click on experiment
       
    def createMenu(self):
       ''' create Menu for the application '''
@@ -132,10 +131,10 @@ class NewtonApp:
        if (len(self.checkbuttonPlot)+1>self.MAX_SHOWN_EXP): # only
            Fail( "You are trying to show more than "+str(self.MAX_SHOWN_EXP)+" experiments which is  not \n compatible with this Programm.")
        else :
-           index = self.myDBlistbox.curselection()
+           index = self.myDBlist.curselection()
            i = int(index[0]) # convert tuple to integer
            self.explist.addIndexList(i)
-           expNameActor = self.myDBlistbox.get(index)
+           expNameActor = self.myDBlist.get(index)
            expNameActorList = expNameActor.split('|')
            expName = expNameActorList[1]
            # -----------------------------------------------------------------
@@ -155,8 +154,7 @@ class NewtonApp:
            self.checkbuttonTable.append(c2)
            c1.pack(side="bottom")
            c2.pack(side="bottom")          
-           
-   
+            
    def cleanAllExp(self):
        ''' clean all experiments on the application '''
        self.var.set(0) # reset radio button
@@ -212,8 +210,7 @@ class NewtonApp:
                         intC = intC + 1
                 except ValueError:
                     Fail("Sorry, Table only can show one Y-Axis\n If you want to see all you have to split your csv File into \n one for every Y-Set")        
-            
-       
+                   
    def getDrawList(self):
        ''' get values from the experiment '''
        valueList = []
@@ -263,6 +260,7 @@ class NewtonApp:
 # -----------------------------------------------------------------  
 #---------------------------- Initial Tkinter
 # -----------------------------------------------------------------
+
 mainWindow=Tk()
 mainWindow.minsize(800,600)
 # -----------------------------------------------------------------
