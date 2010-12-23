@@ -214,8 +214,7 @@ class NewtonApp:
        tempI=0 # variable increment go thought the check-buttons
        tempSel=0 # variable increment by selected check-buttons for the color
        #self.xyPlot
-       colorList = ['#0000FF','#FF0000','#00FF00', '#FFCC00',
-                    '#FF66FF','#00FFFF']
+       colorList = self.xyPlot.getColorlist
        for index in self.explist.indexList:
            if self.statesPlot[tempI].get() == 1:
                values = self.explist.getValues(index)
