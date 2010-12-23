@@ -2,6 +2,11 @@ from Tkinter import *
 from random import *
 from calc import Calc
 from fail import Fail
+
+'''
+@author: Daniel Xander
+@author:John Truong
+'''
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class XYPlot:
     
@@ -84,7 +89,7 @@ class XYPlot:
               newY  = 0        
               for countY in range (1,countMaxima):
               #Drawing value labels on Y-Axis, depending on Maximum of each y  
-                  if countMaxima < 4:
+                  if countY < 5:
                       next = 0
                       y_float = 0
                       for i in range (0,7):
@@ -99,8 +104,8 @@ class XYPlot:
                           next = next + (0.8*self.height)/6        
                       newY = newY+0.018   
                   else:
-                      Fail('It is not possible to show more than ')
-                      
+                      Fail('It is not possible to show more than 4 Y-value Labels\n on the Y-Axis due to readability.All are drawn, but only the first 4 value Labels \n are shown, if you want to compare more than 4 you have to split up the .csv file and\n  import again ')
+                      break
                       
       else:
 # -----------------------------------------------------------------
@@ -163,26 +168,31 @@ class XYPlot:
                   next = 0
                   y_float = 0
                   negy_float = 0
-                  for i in range (0,7):
-                      if i<1:
-                          negy_float = -maxima[countY]
-                      else:
-                          negy_float = negy_float + (maxima[countY]/6)
-                          y_float = y_float + maxima[countY]/6
+                  
+                  if countY < 5:
+                      for i in range (0,7):
+                          if i<1:
+                              negy_float = -maxima[countY]
+                          else:
+                              negy_float = negy_float + (maxima[countY]/6)
+                              y_float = y_float + maxima[countY]/6
                           
-                      stringnegy_float = round(negy_float,3)
-                      stringy_float = round(y_float,3)    
-                      negy_str = str(stringnegy_float)
-                      y_str = str(stringy_float)
-                      if stringnegy_float != 0.0:
+                          stringnegy_float = round(negy_float,3)
+                          stringy_float = round(y_float,3)    
+                          negy_str = str(stringnegy_float)
+                          y_str = str(stringy_float)
+                          if stringnegy_float != 0.0:
                           
-                          self.canvas.create_text(0.45*self.width,(0.95+newY)*self.height-next,text = negy_str)
-                      if stringy_float != 0.0:  
+                               self.canvas.create_text(0.45*self.width,(0.95+newY)*self.height-next,text = negy_str)
+                          if stringy_float != 0.0:  
         
-                           self.canvas.create_text(0.45*self.width,(0.5+newY)*self.height-next,text = y_str)
+                               self.canvas.create_text(0.45*self.width,(0.5+newY)*self.height-next,text = y_str)
                       
-                      next = next + (0.45*self.height)/6
-                  newY = newY + 0.018    
+                          next = next + (0.45*self.height)/6
+                      newY = newY + 0.018
+                  else:
+                       Fail('It is not possible to show more than 4 Y-value Labels\n on the Y-Axis due to readability.All are drawn, but only the first 4 value Labels \n are shown, if you want to compare more than 4 you have to split up the .csv file and\n  import again ')  
+                       break    
                       
                               
               
