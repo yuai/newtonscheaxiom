@@ -1,36 +1,36 @@
 from data_access import Experiment
 
 class ExpList:
-    ''' list of experiences '''
+    ''' list of experiments '''
     
     dbCount = 0
     
     def __init__(self):
         ''' init '''
-        self.expList = [] # all experiences
-        ExpList.dbCount = 0  # amount of experiences 
-        self.indexList = [] # selected experiences
+        self.expList = [] # all experiments
+        ExpList.dbCount = 0  # amount of experiments 
+        self.indexList = [] # selected experiments
         
     def addExp(self,exp):
-        ''' add experience into the expList'''
+        ''' add experiment into the expList'''
         self.expList.append(exp)
         ExpList.dbCount=ExpList.dbCount+1
     
     def addIndexList(self,i):
-        ''' add experience into the indexList '''    
-        self.indexList.append(i) # add all added experience into indexList[]
+        ''' add experiment into the indexList '''    
+        self.indexList.append(i) # add all added experiment into indexList[]
     
     def resetIndexList(self):
         ''' reset indexList '''
         self.indexList = []
         
     def getMetaData(self,index):
-       ''' return meta data from experience with index '''
+       ''' return meta data from experiment with index '''
        metadata = self.expList[index].load_metadata()
        return metadata
    
     def getExp(self,id):
-       ''' return experience with id '''
+       ''' return experiment with id '''
        return self.expList[id]
 
     def getValueList(self):
