@@ -38,7 +38,8 @@ class NewtonImporter:
             
     def lookForLen(self,path):
         '''This function is neccessary to identify the number of y-collumns in order to
-        fill in arrays correct'''
+        fill in arrays correct.It returns the length of the FIRST row, therefore it is important
+        to fill in the csv file correctly '''
         collen = 0
         try:
             lenTest = open(path, 'r')
