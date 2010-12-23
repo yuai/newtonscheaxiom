@@ -28,7 +28,7 @@ class XYPlot:
     self.repaint(self.fgcolor)
     self.canvas.bind('<Configure>',self.resize)
     self.colorList = ['#0000FF','#FF0000','#00FF00', '#FFCC00',
-                    '#FF66FF','#00FFFF']#Blau,Rot,Gruen,Gelb,Pink,Tuerkis
+                    '#FF66FF','#00FFFF'] #Blau,Rot,Gruen,Gelb,Pink,Tuerkis
 
   
   def repaint(self,_color,maxima = None):
