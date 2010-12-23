@@ -29,11 +29,7 @@ class XYPlot:
     self.canvas.bind('<Configure>',self.resize)
     self.colorList = ['#0000FF','#FF0000','#00FF00', '#FFCC00',
                     '#FF66FF','#00FFFF']#Blau,Rot,Gruen,Gelb,Pink,Tuerkis
-  
-  
-  def getColorlist(self):
-      '''Sends color list to mainApp'''
-      return self.colorlist  
+
   
   def repaint(self,_color,maxima = None):
       '''The repaint method is called initionally and everytime something in the canvas is changed.
