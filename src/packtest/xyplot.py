@@ -1,6 +1,7 @@
 from Tkinter import *
 from random import *
 from calc import Calc
+from fail import Fail
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class XYPlot:
     
@@ -25,12 +26,14 @@ class XYPlot:
                     '#FF66FF','#00FFFF']#Blau,Rot,Gruen,Gelb,Pink,Tuerkis
   
   
-    
+  def getColorlist(self):
+      return self.colorlist  
+  
   def repaint(self,_color,maxima = None):
       '''The repaint method is called initionally and everytime something in the canvas is changed.
       It is splittet into two parts, one Drawing the main L Grid for just positive Values and one in
       cross Format for positiv and negativ Values.Every drawn Object is scaled with width and height
-      from mainWindow'''  
+      of the canvas'''  
 # -----------------------------------------------------------------
 # ---------------------Setting Up L Grid
 # -----------------------------------------------------------------      
@@ -52,10 +55,9 @@ class XYPlot:
               #Drawing lightGrey BackroundGrid Y-Direction
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.9)*self.width,0.9*self.height-next,width=0.1,fill='LightGrey')
               next = next +(0.8*self.height)/6
-          #Drawing X-Axis and Y-Axis plus a little zero line
+          #Drawing X-Axis and Y-Axis
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
-          self.canvas.create_line(0.9*self.width,0.9*self.height,0.9*self.width,0.91*self.height,width=2,fill=_color)    
 # -----------------------------------------------------------------
 # --------Calculating and writing of interval labels for L Grid
 # -----------------------------------------------------------------              
@@ -81,20 +83,23 @@ class XYPlot:
                         
               newY  = 0        
               for countY in range (1,countMaxima):
-              #Drawing value labels on Y-Axis, depending on Maximum of each y     
-                  next = 0
-                  y_float = 0
-                  for i in range (0,7):
-                      if i<1:
-                          y_float = 0
-                      else:
-                          y_float = y_float + maxima[countY]/6
-                      stringy_float = round (y_float,3)
-                      y_str = str(stringy_float)
-                      if stringy_float != 0.0:
-                          self.canvas.create_text(0.05*self.width,(0.9+newY)*self.height-next,text = y_str)
-                      next = next + (0.8*self.height)/6        
-                  newY = newY+0.018   
+              #Drawing value labels on Y-Axis, depending on Maximum of each y  
+                  if countMaxima < 4:
+                      next = 0
+                      y_float = 0
+                      for i in range (0,7):
+                          if i<1:
+                              y_float = 0
+                          else:
+                              y_float = y_float + maxima[countY]/6
+                          stringy_float = round (y_float,3)
+                          y_str = str(stringy_float)
+                          if stringy_float != 0.0:
+                              self.canvas.create_text(0.05*self.width,(0.9+newY)*self.height-next,text = y_str)
+                          next = next + (0.8*self.height)/6        
+                      newY = newY+0.018   
+                  else:
+                      Fail('It is not possible to show more than ')
                       
                       
       else:
@@ -379,14 +384,15 @@ class XYPlot:
 
   def drawLine(self,valueList,maxima,color,smooth):
        '''This Method is drawing an Line in the given color through every point of the valueList.
-       If smooth is set True it draws an spline approximation through the points.Some Points may
+       The Line is scaled by the maxima array and can change into three patterns for three different
+       y-Axis.If smooth is set True it draws an spline approximation through the points.Some Points may
        not lie on this approximatet line.'''
-       self.drawDots(valueList, maxima, color)#First Draw all Dots, so that you can see the original reference
+       self.drawDots(valueList, maxima, color)#First Draw all Dots, so that you can see the original for reference
        vn = len(valueList[0])#
        LineArray = []
        i = 0
        pattern  = None # Is the pattern of the line if more than one y-List is in the 
-       if self.NegativValueBool == 0 :
+       if self.NegativValueBool == 0 :#If set to zero, method is drawing on L-Grid scale
            while i < vn-1:
                del LineArray[:]
                if 0 < i < 4:
@@ -414,7 +420,7 @@ class XYPlot:
                else:
                    self.canvas.create_line(LineArray,smooth = "true",width=2,fill = newcolor,dash = pattern)
                i=i+1  
-       else:
+       else:               #in this case Method is drawing in cross-Grid scale
            while i < vn-1:
               del LineArray[:]
               if 0 < i < 4:
@@ -452,7 +458,7 @@ class XYPlot:
               
   def drawDots(self,valueList,maxima,color):
       '''Draws a dot for every x,y Koordinate in the valueList.It uses the maxima Array to scale
-      and the color, which it can fade in case of more than one y-Axis.'''
+      and the color, which it can fade  in case of more than one y-Axis.'''
       vn = len ( valueList[0])
       i = 0
       if self.NegativValueBool == 0:#If true,drawing on scale of L Grid
@@ -469,7 +475,7 @@ class XYPlot:
                   maxY = maxima [i+1]
                   self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = newcolor)
               i = i+1
-      else:#Drawing in Scale of Cross-Grid
+      else:#Drawing in scale of Cross-Grid
           while i < vn-1:
               colortop = str(i+1)
               if 0 < i < 4:
@@ -507,8 +513,7 @@ class XYPlot:
                        pattern = None 
                else:
                    newcolor = color
-               for j in range (0,len(valueList)):
-                   print 'regressing'  
+               for j in range (0,len(valueList)):  
                    x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
                    maxX = maxima [0]
                    maxY = maxima [i+1]
@@ -531,8 +536,7 @@ class XYPlot:
                else:
                    newcolor = color 
                   
-               for j in range (0,len(valueList)): 
-                   print 'regressing' 
+               for j in range (0,len(valueList)):  
                    x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
                    maxX = maxima [0]
                    maxY = maxima [i+1]
