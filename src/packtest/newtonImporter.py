@@ -1,5 +1,4 @@
 import csv
-import data_access
 from infoWindow import Fail
 from data_access import Experiment
 
