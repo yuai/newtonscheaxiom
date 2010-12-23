@@ -1,7 +1,5 @@
 '''
-Created on 07.12.2010
-
-@author: Xandman
+@author: Daniel Xander
 '''
 class Calc:
     ''' This Class Calculates different approximation Models of numeric data'''
