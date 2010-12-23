@@ -4,6 +4,7 @@ from xyplot import XYPlot
 from newtonImporter import NewtonImporter
 from data_access import Experiment
 from fail import Fail
+from fail import About
 import os
 import tkFileDialog
 import csv
@@ -25,7 +26,7 @@ class NewtonApp:
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
       self.mainPath = 'db/' #All SqliLite Files are stored here
       self.namePath = 'db/test'#SQL data path with data name
-      self.MAX_SHOWN_EXP = 6
+      self.MAX_SHOWN_EXP = 6 # max experiment 
       self.MAX_LEN_EXPNAME = 30
       
       file_count = len(os.listdir(self.mainPath))
@@ -71,7 +72,7 @@ class NewtonApp:
       self.mainWindow.pack(fill="both",expand="1")
       
    def opendDB(self):
-      ''' open new window with the experiences from DB in a ListBox'''
+      ''' open new window with the experiments from DB in a ListBox'''
       filewin = Toplevel(mainWindow) #create a new Window
       scrollbar = Scrollbar(filewin) 
       scrollbar.pack( side="right", fill="y" )
@@ -89,7 +90,7 @@ class NewtonApp:
           myDBlist.insert(i, nr_series + ": " 
                         + actor_name + " |  " + exp_name)
       myDBlist.pack( side="top", fill="both", expand=1)
-      myDBlist.bind('<Double-Button-1>', self.showExp) # event by double click on experience
+      myDBlist.bind('<Double-Button-1>', self.showExp) # event by double click on experiment
       self.myDBlistbox = myDBlist # to use information on the listbox outside of this method
       
    def createMenu(self):
@@ -103,7 +104,7 @@ class NewtonApp:
       menubar.add_cascade(label="File", menu=filemenu)
       helpmenu = Menu(menubar, tearoff=0)
       helpmenu.add_command(label="Help Index")
-      helpmenu.add_command(label="About...")
+      helpmenu.add_command(label="About...", command=self.openAbout)
       menubar.add_cascade(label="Help", menu=helpmenu)
       mainWindow.config(menu=menubar)   
       
@@ -120,9 +121,9 @@ class NewtonApp:
        return self.explist.dbCount    
               
    def showExp(self,event):
-       ''' show the specific added experience on the left side of the user interface '''
+       ''' show the specific added experiment on the left side of the user interface '''
        if (len(self.checkbuttonPlot)+1>self.MAX_SHOWN_EXP): # only
-           Fail( "You are trying to show more than "+str(self.MAX_SHOWN_EXP)+" experiences which is  not \n compatible with this Programm.")
+           Fail( "You are trying to show more than "+str(self.MAX_SHOWN_EXP)+" experiments which is  not \n compatible with this Programm.")
        else :
            index = self.myDBlistbox.curselection()
            i = int(index[0]) # convert tuple to integer
@@ -131,7 +132,7 @@ class NewtonApp:
            expNameActorList = expNameActor.split('|')
            expName = expNameActorList[1]
            # -----------------------------------------------------------------
-           #---------------------------- CheckButton for experience
+           #---------------------------- CheckButton for experiment
            # -----------------------------------------------------------------
            CheckVarPlot = IntVar()
            CheckVarTable = IntVar()
@@ -150,7 +151,7 @@ class NewtonApp:
            
    
    def cleanAllExp(self):
-       ''' clean all experiences on the application '''
+       ''' clean all experiments on the application '''
        self.var.set(0) # reset radio button
        self.statesTable = []
        self.statesPlot = []
@@ -169,7 +170,7 @@ class NewtonApp:
        self.getDrawList()
                
    def showTable(self): 
-        ''' show values of the experience in the list-box '''
+        ''' show values of the experiment in the list-box '''
         self.myTablelistbox.delete(0, END) # delete list-box, list-box will be always generated completely
         valueList = self.explist.getValueList()
         metaList = self.explist.getMetaList() 
@@ -207,7 +208,7 @@ class NewtonApp:
             
        
    def getDrawList(self):
-       ''' get values from the experience '''
+       ''' get values from the experiment '''
        valueList = []
        metaList = []
        tempI=0 # variable increment go thought the check-buttons
@@ -229,7 +230,7 @@ class NewtonApp:
        self.xyPlot.drawControl(valueList,metaList,self.var.get())  
        
    def initListBox(self):
-       ''' initial the ListBox on the left side (for the table and experiences) '''
+       ''' initial the ListBox on the left side (for the table and experiments) '''
        scrollbar = Scrollbar(left)
        scrollbar.pack( side="right", fill="y")
        # -----------------------------------------------------------------
@@ -241,13 +242,16 @@ class NewtonApp:
        scrollbar.config( command = myTablelist.yview )
        self.myTablelistbox = myTablelist
        fButton = Frame(left, border="2", relief="groove")
-       # clean all experiences
+       # clean all experiments
        bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
        bClean.pack(side="left")
        # update the changes for the plot
        bUpdate = Button(fButton, text="Update",command=self.updatePlot)
        bUpdate.pack(side="left")
        fButton.pack(fill="x",expand="0",side="bottom")
+       
+   def openAbout(self):
+       About()
 # -----------------------------------------------------------------  
 #---------------------------- Initial Tkinter
 # -----------------------------------------------------------------
