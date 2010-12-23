@@ -35,7 +35,7 @@ class Calc:
         x1 = 0
         y1 = c
         
-        
+      
         while i ==0:
             if a <= 0.1 or xpart<=0.1:
                 i=1
@@ -51,3 +51,29 @@ class Calc:
             y2 = y2 + a 
                
         return x1,y1,x2,y2
+    
+    
+    
+    def getMax(self,searchmax):
+      '''Here maxima and minima of every x or y-Data set in every Experiment drawn is calculatet and 
+      stored in an array''' 
+      #the following arrays are holding the maxima and minima of every value collumn of
+      #an csv File.They are Limited to 15, so that our programm isnt able to draw more than 15 y-collumns
+      #from the same file.Our group only works with a maximum of 3 y-collums.If you draw more than 4 y-collumns the
+      #graph is not readable because the labels on y Axiy are interferring  
+      maxList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+      minList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+      changeListMax = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+      changeListMin = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+      for element in searchmax:#hopping through every Experiment searching for maxima and minima
+          valuesTrans = zip(*element)
+          for i in range(0,len(valuesTrans)):
+              changeListMax[i]= max(valuesTrans[i]) 
+              changeListMin[i]= min(valuesTrans[i])
+          for j in range(0,len(changeListMax)):
+              if changeListMax[j] > maxList[j]:
+                  maxList[j] = changeListMax[j]
+              if changeListMin[j] < minList[j]:
+                  minList[j] = changeListMin[j]
+            
+      return maxList,minList    
