@@ -21,9 +21,8 @@ class NewtonApp:
       self.explist = ExpList()
       self.statesPlot = [] # states of plot of the check-buttons
       self.statesTable = [] # states of table of the check buttons
-      self.checkbuttonPlot = [] # save check button (for the plot) to change the color
+      self.checkbuttonPlot = [] # save check button to change the color
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
-      self.checkvarPlot = []
       self.mainPath = 'db/' #All SqliLite Files are stored here
       self.namePath = 'db/test'#SQL data path with data name
       self.MAX_SHOWN_EXP = 6
@@ -51,7 +50,7 @@ class NewtonApp:
       # -----------------------------------------------------------------
       #---------------------------- RadioButton
       # -----------------------------------------------------------------
-      self.var = IntVar()
+      self.var = IntVar() # variable for the radioButton
       R1 = Radiobutton(fButtons, text="Draw Dot", variable=self.var, value=1
                        ,command=self.getDrawList,indicatoron =0)
       R1.pack(side="right")
@@ -72,27 +71,26 @@ class NewtonApp:
       self.mainWindow.pack(fill="both",expand="1")
       
    def opendDB(self):
-      ''' open new window with the experiences from DB '''
-      filewin = Toplevel(mainWindow)
-      scrollbar = Scrollbar(filewin)
+      ''' open new window with the experiences from DB in a ListBox'''
+      filewin = Toplevel(mainWindow) #create a new Window
+      scrollbar = Scrollbar(filewin) 
       scrollbar.pack( side="right", fill="y" )
-      myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set, height=20,width=50, relief="sunken" )
+      myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set
+                         , height=20,width=50, relief="sunken" )
       scrollbar.config( command = myDBlist.yview )
-      tempCount=0 # increment to load all metaData of the experiences
       if self.explist.dbCount == 0 :
           msg = Message(filewin, text="No file in DB", width=100)
           msg.pack(side="top")
-      for x in range(0,self.explist.dbCount):
-          exp_metadata = self.explist.getMetaData(tempCount)
+      for i in range(0,self.explist.dbCount): # get all meta information from all DB
+          exp_metadata = self.explist.getMetaData(i)
           nr_series = exp_metadata['nr_series']
           actor_name = exp_metadata['actor_name']
           exp_name = exp_metadata['exp_name']
-          myDBlist.insert(tempCount, nr_series + ": " 
-                        + actor_name + " | " + exp_name)
-          tempCount=tempCount+1
+          myDBlist.insert(i, nr_series + ": " 
+                        + actor_name + " |  " + exp_name)
       myDBlist.pack( side="top", fill="both", expand=1)
-      myDBlist.bind('<Double-Button-1>', self.showExp)
-      self.myDBlistbox = myDBlist
+      myDBlist.bind('<Double-Button-1>', self.showExp) # event by double click on experience
+      self.myDBlistbox = myDBlist # to use information on the listbox outside of this method
       
    def createMenu(self):
       ''' create Menu for the application '''
@@ -120,8 +118,7 @@ class NewtonApp:
        
    def sendDbCount(self):
        return self.explist.dbCount    
-       
-            
+              
    def showExp(self,event):
        ''' show the specific added experience on the left side of the user interface '''
        if (len(self.checkbuttonPlot)+1>self.MAX_SHOWN_EXP): # only
@@ -143,18 +140,17 @@ class NewtonApp:
            if (len(expName)>self.MAX_LEN_EXPNAME):
                cutexpName = expName[0:self.MAX_LEN_EXPNAME] +"..."
                expName = cutexpName
-           
            c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot, anchor=NW, width="35")
            c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
                                 ,command=self.showTable,anchor=NW,width="35")
            self.checkbuttonPlot.append(c1)
-           self.checkvarPlot.append(CheckVarPlot)
            self.checkbuttonTable.append(c2)
            c1.pack(side="bottom")
            c2.pack(side="bottom")          
            
    
    def cleanAllExp(self):
+       ''' clean all experiences on the application '''
        self.var.set(0) # reset radio button
        self.statesTable = []
        self.statesPlot = []
@@ -168,16 +164,6 @@ class NewtonApp:
        self.checkbuttonPlot = []
        self.checkbuttonTable = []
        self.explist.resetIndexList()
-       
-   def cleanSelExp(self): ## only for exp
-       self.var.set(0)
-       for i in range(0, len(self.checkvarPlot)):
-            if (self.statesPlot[i].get() == 1):
-                self.checkbuttonPlot[i].deselect()
-                self.checkbuttonPlot[i].destroy()
-                self.checkbuttonTable[i].deselect()
-                self.checkbuttonTable[i].destroy()
-            
    
    def updatePlot(self):
        self.getDrawList()
@@ -226,6 +212,7 @@ class NewtonApp:
        metaList = []
        tempI=0 # variable increment go thought the check-buttons
        tempSel=0 # variable increment by selected check-buttons for the color
+       #self.xyPlot
        colorList = ['#0000FF','#FF0000','#00FF00', '#FFCC00',
                     '#FF66FF','#00FFFF']
        for index in self.explist.indexList:
@@ -242,6 +229,7 @@ class NewtonApp:
        self.xyPlot.drawControl(valueList,metaList,self.var.get())  
        
    def initListBox(self):
+       ''' initial the ListBox on the left side (for the table and experiences) '''
        scrollbar = Scrollbar(left)
        scrollbar.pack( side="right", fill="y")
        # -----------------------------------------------------------------
@@ -253,10 +241,10 @@ class NewtonApp:
        scrollbar.config( command = myTablelist.yview )
        self.myTablelistbox = myTablelist
        fButton = Frame(left, border="2", relief="groove")
+       # clean all experiences
        bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
        bClean.pack(side="left")
-       #bSelClean = Button(fButton, text="Clean selected Plot",command=self.cleanSelExp)
-       #bSelClean.pack(side="left")
+       # update the changes for the plot
        bUpdate = Button(fButton, text="Update",command=self.updatePlot)
        bUpdate.pack(side="left")
        fButton.pack(fill="x",expand="0",side="bottom")
