@@ -2,7 +2,7 @@
 @author: Daniel Xander
 '''
 class Calc:
-    ''' This Class Calculates different approximation Models of numeric data'''
+    ''' This Class Calculates a Linear regression of a given x,y table'''
     
     
     def linreg(self,X,Y,maxX,maxY):
