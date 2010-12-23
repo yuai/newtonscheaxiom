@@ -26,8 +26,8 @@ class NewtonApp:
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
       self.mainPath = 'db/' #All SqliLite Files are stored here
       self.namePath = 'db/test'#SQL data path with data name
-      self.MAX_SHOWN_EXP = 6 # max experiment 
-      self.MAX_LEN_EXPNAME = 30
+      self.MAX_SHOWN_EXP = 6 # max experiment on the same time
+      self.MAX_LEN_EXPNAME = 30 # max length for the listBox on the left side (e.g. that_is_a_long_ 
       
       file_count = len(os.listdir(self.mainPath))
       for i in range(0,file_count-1): # -1 nur fuer testzwecken
@@ -213,8 +213,7 @@ class NewtonApp:
        metaList = []
        tempI=0 # variable increment go thought the check-buttons
        tempSel=0 # variable increment by selected check-buttons for the color
-       #self.xyPlot
-       colorList = self.xyPlot.getColorlist
+       colorList = self.xyPlot.colorList
        for index in self.explist.indexList:
            if self.statesPlot[tempI].get() == 1:
                values = self.explist.getValues(index)
