@@ -2,6 +2,7 @@ from Tkinter import *
 from random import *
 from calc import Calc
 from infoWindow import Fail
+from gridTransform import GridTransform
 
 '''
 @author: Daniel Xander
@@ -9,8 +10,6 @@ from infoWindow import Fail
 '''
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class XYPlot:
-    
-  
   """ The XYPlot Class is responsible for everything concerning the Canvas.It contains
   several drawing functions and scales the given data points onto the drawing layer.    """
   
@@ -29,7 +28,8 @@ class XYPlot:
     self.canvas.bind('<Configure>',self.resize)
     self.colorList = ['#0000FF','#FF0000','#00FF00', '#FFCC00',
                     '#FF66FF','#00FFFF'] #Blau,Rot,Gruen,Gelb,Pink,Tuerkis
-
+    self.calc = Calc()
+    self.gridtransform = GridTransform()
   
   def repaint(self,_color,maxima = None):
       '''The repaint method is called initionally and everytime something in the canvas is changed.
@@ -190,12 +190,7 @@ class XYPlot:
                   else:
                        Fail('It is not possible to show more than 4 Y-value Labels\n on the Y-Axis due to readability.All are drawn, but only the first 4 value Labels \n are shown, if you want to compare more than 4 you have to split up the .csv file and\n  import again ')  
                        break    
-                      
-                              
-              
-        
-            
-
+                    
   def resize(self,event ):
     '''This Method is called by an event thrown by Mainwindow.It resizes the canvas.
     We had to post the scalefit behind the initialisatioprocess of XY-Plot by using ALLSETGO.
@@ -221,72 +216,15 @@ class XYPlot:
 # --------------Several Transformation Functions 
 # -----------------------------------------------------------------  
   
-  def negTransAxisX(self,x,y,maxX,maxY):
-      ''' returns an Transformed x value for the Crossgrid'''
-      if x == 0.0 and y == 0.0:
-          x = 0.5 *self.width
-      elif x == 0.0 and y <> 0.0:
-          x = 0.5*self.width
-      elif x <> 0.0 and y ==0.0:
-          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)   
-      elif x <> 0.0 and y <> 0.0:
-          x = 0.5 * self.width + (0.45*self.width)/(maxX/x)
-           
-      return x
-  
-  
-  def negTransAxisY(self,x,y,maxX,maxY):
-      ''' returns an Transformed y value for the Crossgrid'''
-      if x == 0.0 and y == 0.0:
-          y = 0.5 *self.height
-      elif x == 0.0 and y <> 0.0:
-          y = 0.5 * self.height - (0.45*self.height/(maxY/y))
-      elif x <> 0.0 and y ==0.0:
-          y = 0.5 * self.height    
-      elif x <> 0.0 and y <> 0.0:
-          y = 0.5 * self.height - (0.45*self.height/(maxY/y))
-           
-      return y
-              
-          
-      
-
-  def transAxisX(self,x,y,maxX,maxY):
-      ''' returns an Transformed x value for the L Grid'''
-      if x == 0.0 and y == 0.0:
-          x = 0.1 * self.width
-      elif x == 0.0 and y <> 0.0:
-         x = 0.1 * self.width
-      elif x <> 0.0 and y == 0.0:
-         x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
-      elif x<>0.0 and y <> 0.0:        
-          x = 0.1 * self.width + (0.8*self.width)/(maxX/x)
-          
-      return x
-  
-  
-  def transAxisY(self,x,y,maxX,maxY):
-      ''' returns an Transformed y value for the L Grid'''
-      if x == 0.0 and y == 0.0:
-          y = 0.9 * self.height
-      elif x == 0.0 and y <> 0.0:
-         y = 0.9 * self.height - (0.8*self.height)/(maxY/y)
-      elif x <> 0.0 and y == 0.0:
-         y = 0.9 * self.height
-      elif x<>0.0 and y <> 0.0:        
-          y = 0.9 * self.height - (0.8*self.height)/(maxY/y)   
-      
-      return y
   
 # -----------------------------------------------------------------
 # -----Different drawing Functions to Draw on Canvas
 # -----------------------------------------------------------------   
-          
-          
+                    
   def drawControl(self,drawList,metaList,button):
       '''This Method decides which drawing Function is called, and gives the drawing Function the color
       for every Experiment and an maxima array used to scale data points'''
-      maxima,minima = self.getMax(drawList)
+      maxima,minima = self.calc.getMax(drawList)
       for i in range ( 0,len(maxima)):
           if abs(minima[i]) > maxima[i]:
               maxima [i] = abs(minima[i])
@@ -325,34 +263,8 @@ class XYPlot:
               color = self.colorList[i]
               self.drawLine(element,maxima,color,1)
               i = i+1   
-                  
-        
-        
-        
-    
-  def getMax(self,searchmax):
-      '''Here maxima and minima of every x or y-Data set in every Experiment drawn is calculatet and 
-      stored in an array''' 
-      #the following arrays are holding the maxima and minima of every value collumn of
-      #an csv File.They are Limited to 15, so that our programm isnt able to draw more than 15 y-collumns
-      #from the same file.Our group only works with a maximum of 3 y-collums.If you draw more than 4 y-collumns the
-      #graph is not readable because the labels on y Axiy are interferring  
-      maxList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-      minList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-      changeListMax = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-      changeListMin = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-      for element in searchmax:#hopping through every Experiment searching for maxima and minima
-          valuesTrans = zip(*element)
-          for i in range(0,len(valuesTrans)):
-              changeListMax[i]= max(valuesTrans[i]) 
-              changeListMin[i]= min(valuesTrans[i])
-          for j in range(0,len(changeListMax)):
-              if changeListMax[j] > maxList[j]:
-                  maxList[j] = changeListMax[j]
-              if changeListMin[j] < minList[j]:
-                  minList[j] = changeListMin[j]
-            
-      return maxList,minList
+
+
   
   def drawMeta(self,metaList):
       '''The units the x and y Axis are drawn on canvas.X is set default on "t in Sekunden", whereas y is taken from the 
@@ -387,8 +299,6 @@ class XYPlot:
                   self.canvas.create_text((0.08+space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit'],fill = self.colorList[i])
               space = space+0.08
           
-
-
   def drawLine(self,valueList,maxima,color,smooth):
        '''This Method is drawing an Line in the given color through every point of the valueList.
        The Line is scaled by the maxima array and can change into three patterns for three different
@@ -419,8 +329,8 @@ class XYPlot:
                    y1 = valueList[j][i+1]
                    maxX = maxima[0]
                    maxY = maxima[i+1]
-                   LineArray.append(self.transAxisX(x1,y1,maxX,maxY))
-                   LineArray.append(self.transAxisY(x1,y1,maxX,maxY))
+                   LineArray.append(self.gridtransform.transAxisX(x1,y1,maxX,maxY,self.width))
+                   LineArray.append(self.gridtransform.transAxisY(x1,y1,maxX,maxY,self.height))
                
                if smooth == 0:
                    self.canvas.create_line(LineArray,smooth = "false",width=2,fill = newcolor,dash = pattern)
@@ -447,10 +357,10 @@ class XYPlot:
                   y2 = valueList[j+1][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
-                  LineArray.append(self.negTransAxisX(x1,y1,maxX,maxY))
-                  LineArray.append(self.negTransAxisY(x1,y1,maxX,maxY))
-                  LineArray.append(self.negTransAxisX(x2,y2,maxX,maxY))
-                  LineArray.append(self.negTransAxisY(x2,y2,maxX,maxY))
+                  LineArray.append(self.gridtransform.negTransAxisX(x1,y1,maxX,maxY,self.width))
+                  LineArray.append(self.gridtransform.negTransAxisY(x1,y1,maxX,maxY,self.height))
+                  LineArray.append(self.gridtransform.negTransAxisX(x2,y2,maxX,maxY,self.width))
+                  LineArray.append(self.gridtransform.negTransAxisY(x2,y2,maxX,maxY,self.height))
                   
               if smooth == 0:
                   self.canvas.create_line(LineArray,smooth = 'false',width=2,fill = newcolor,dash = pattern)
@@ -458,11 +368,7 @@ class XYPlot:
                   self.canvas.create_line(LineArray,smooth = 'true',width=2,fill = newcolor,dash = pattern )
                   
               i = i+1
-  
-      
-      
-               
-              
+            
   def drawDots(self,valueList,maxima,color):
       '''Draws a dot for every x,y Koordinate in the valueList.It uses the maxima Array to scale
       and the color, which it can fade  in case of more than one y-Axis.'''
@@ -483,7 +389,10 @@ class XYPlot:
                   y = valueList[j][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
-                  self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-ovalsize,self.transAxisY(x,y,maxX,maxY)-ovalsize,self.transAxisX(x,y,maxX,maxY)+ovalsize,self.transAxisY(x,y,maxX,maxY)+ovalsize,fill = newcolor)
+                  self.canvas.create_oval(self.gridtransform.transAxisX(x,y,maxX,maxY,self.width)-ovalsize
+                                          ,self.gridtransform.transAxisY(x,y,maxX,maxY,self.height)-ovalsize
+                                          ,self.gridtransform.transAxisX(x,y,maxX,maxY,self.width)+ovalsize
+                                          ,self.gridtransform.transAxisY(x,y,maxX,maxY,self.height)+ovalsize,fill = newcolor)
               i = i+1
       else:#Drawing in scale of Cross-Grid
           while i < vn-1:
@@ -497,19 +406,17 @@ class XYPlot:
                   y = valueList[j][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
-                  self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-ovalsize,self.negTransAxisY(x,y,maxX,maxY)-ovalsize,self.negTransAxisX(x,y,maxX,maxY)+ovalsize,self.negTransAxisY(x,y,maxX,maxY)+ovalsize,fill = newcolor)
+                  self.canvas.create_oval(self.gridtransform.negTransAxisX(x,y,maxX,maxY,self.width)-ovalsize
+                                          ,self.gridtransform.negTransAxisY(x,y,maxX,maxY,self.height)-ovalsize
+                                          ,self.gridtransform.negTransAxisX(x,y,maxX,maxY,self.width)+ovalsize
+                                          ,self.gridtransform.negTransAxisY(x,y,maxX,maxY,self.height)+ovalsize,fill = newcolor)
               i = i+1
-              
-              
-              
-              
-              
+                            
   def drawRegLine(self,valueList,maxima,color):
        '''This method uses the Calc Class to draw a Linear Regression of the Data points 
        in the valueList.I also changes color and pattern for the first 3 Lines pro Experiment'''
        self.drawDots(valueList, maxima, color)
        regList = zip(*valueList)
-       calc = Calc()
        vn = len ( valueList[0])
        i = 0
        pattern = None
@@ -527,14 +434,14 @@ class XYPlot:
                    newcolor = color
                for j in range (0,len(valueList)):  
                    #using calc.linreg to generate an regression
-                   x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
+                   x1,y1,x2,y2=self.calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
                    
                    maxX = maxima [0]
                    maxY = maxima [i+1]
-                   x1 = self.transAxisX(x1, y1, maxX, maxY)
-                   y1 = self.transAxisY(x1, y1, maxX, maxY)
-                   x2 = self.transAxisX(x2, y2, maxX, maxY)
-                   y2 = self.transAxisY(x2, y2, maxX, maxY)
+                   x1 = self.gridtransform.transAxisX(x1, y1, maxX, maxY, self.width)
+                   y1 = self.gridtransform.transAxisY(x1, y1, maxX, maxY, self.height)
+                   x2 = self.gridtransform.transAxisX(x2, y2, maxX, maxY, self.width)
+                   y2 = self.gridtransform.transAxisY(x2, y2, maxX, maxY, self.height)
                    self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
                i = i+1    
        else:             #Cross-Grid scale
@@ -552,16 +459,17 @@ class XYPlot:
                   
                for j in range (0,len(valueList)): 
                    #using calc.linreg to generate an regression 
-                   x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
+                   x1,y1,x2,y2=self.calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
                    
                    maxX = maxima [0]
                    maxY = maxima [i+1]
-                   x1 = self.negTransAxisX(x1, y1, maxX, maxY)
-                   y1 = self.negTransAxisY(x1, y1, maxX, maxY)
-                   x2 = self.negTransAxisX(x2, y2, maxX, maxY)
-                   y2 = self.negTransAxisY(x2, y2, maxX, maxY)
+                   x1 = self.gridtransform.negTransAxisX(x1, y1, maxX, maxY, self.width)
+                   y1 = self.gridtransform.negTransAxisY(x1, y1, maxX, maxY, self.height)
+                   x2 = self.gridtransform.negTransAxisX(x2, y2, maxX, maxY, self.width)
+                   y2 = self.gridtransform.negTransAxisY(x2, y2, maxX, maxY, self.height)
                    self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
-               i = i+1      
+               i = i+1
+
 # -----------------------------------------------------------------
 # ------------Function to Fade color from bright to dark 
 # -----------------------------------------------------------------          
@@ -582,10 +490,4 @@ class XYPlot:
       rgbtuple  = tuple(rgb)    
           
       
-      return "#%02x%02x%02x"%rgbtuple    
-          
-       
-    
-      
-      
-
+      return "#%02x%02x%02x"%rgbtuple
