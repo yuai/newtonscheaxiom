@@ -1,7 +1,7 @@
 from Tkinter import *
 from random import *
 from calc import Calc
-from fail import Fail
+from infoWindow import Fail
 
 '''
 @author: Daniel Xander
