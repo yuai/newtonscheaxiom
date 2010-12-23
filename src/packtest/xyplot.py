@@ -5,7 +5,7 @@ from fail import Fail
 
 '''
 @author: Daniel Xander
-@author:John Truong
+@author: John Truong
 '''
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class XYPlot:
@@ -32,6 +32,7 @@ class XYPlot:
   
   
   def getColorlist(self):
+      '''Sends color list to mainApp'''
       return self.colorlist  
   
   def repaint(self,_color,maxima = None):
@@ -470,6 +471,10 @@ class XYPlot:
       '''Draws a dot for every x,y Koordinate in the valueList.It uses the maxima Array to scale
       and the color, which it can fade  in case of more than one y-Axis.'''
       vn = len ( valueList[0])
+      if len(valueList) < 40:
+          ovalsize = 3
+      else:
+          ovalsize = 2    
       i = 0
       if self.NegativValueBool == 0:#If true,drawing on scale of L Grid
           while i < vn-1:
@@ -478,12 +483,11 @@ class XYPlot:
               else:
                    newcolor = color   
               for j in range (0,len(valueList)):
-                  print len(valueList[j])
                   x = valueList[j][0]
                   y = valueList[j][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
-                  self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-3,self.transAxisY(x,y,maxX,maxY)-3,self.transAxisX(x,y,maxX,maxY)+3,self.transAxisY(x,y,maxX,maxY)+3,fill = newcolor)
+                  self.canvas.create_oval(self.transAxisX(x,y,maxX,maxY)-ovalsize,self.transAxisY(x,y,maxX,maxY)-ovalsize,self.transAxisX(x,y,maxX,maxY)+ovalsize,self.transAxisY(x,y,maxX,maxY)+ovalsize,fill = newcolor)
               i = i+1
       else:#Drawing in scale of Cross-Grid
           while i < vn-1:
@@ -497,7 +501,7 @@ class XYPlot:
                   y = valueList[j][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
-                  self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-3,self.negTransAxisY(x,y,maxX,maxY)-3,self.negTransAxisX(x,y,maxX,maxY)+3,self.negTransAxisY(x,y,maxX,maxY)+3,fill = newcolor)
+                  self.canvas.create_oval(self.negTransAxisX(x,y,maxX,maxY)-ovalsize,self.negTransAxisY(x,y,maxX,maxY)-ovalsize,self.negTransAxisX(x,y,maxX,maxY)+ovalsize,self.negTransAxisY(x,y,maxX,maxY)+ovalsize,fill = newcolor)
               i = i+1
               
               
@@ -505,13 +509,15 @@ class XYPlot:
               
               
   def drawRegLine(self,valueList,maxima,color):
+       '''This method uses the Calc Class to draw a Linear Regression of the Data points 
+       in the valueList.I also changes color and pattern for the first 3 Lines pro Experiment'''
        self.drawDots(valueList, maxima, color)
        regList = zip(*valueList)
        calc = Calc()
        vn = len ( valueList[0])
        i = 0
        pattern = None
-       if self.NegativValueBool == 0:
+       if self.NegativValueBool == 0:#drawing in L-Grid scale
            while i < vn-1:
                if 0 < i < 4:
                    newcolor = self.colorFade(color,i)
@@ -524,7 +530,9 @@ class XYPlot:
                else:
                    newcolor = color
                for j in range (0,len(valueList)):  
+                   #using calc.linreg to generate an regression
                    x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
+                   
                    maxX = maxima [0]
                    maxY = maxima [i+1]
                    x1 = self.transAxisX(x1, y1, maxX, maxY)
@@ -533,7 +541,7 @@ class XYPlot:
                    y2 = self.transAxisY(x2, y2, maxX, maxY)
                    self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
                i = i+1    
-       else:
+       else:             #Cross-Grid scale
            while i < vn-1:
                if 0 < i < 4:
                    newcolor = self.colorFade(color,i)
@@ -546,8 +554,10 @@ class XYPlot:
                else:
                    newcolor = color 
                   
-               for j in range (0,len(valueList)):  
+               for j in range (0,len(valueList)): 
+                   #using calc.linreg to generate an regression 
                    x1,y1,x2,y2=calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
+                   
                    maxX = maxima [0]
                    maxY = maxima [i+1]
                    x1 = self.negTransAxisX(x1, y1, maxX, maxY)
@@ -556,12 +566,9 @@ class XYPlot:
                    y2 = self.negTransAxisY(x2, y2, maxX, maxY)
                    self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
                i = i+1      
-                   
-               
-  
-       
-       
-         
+# -----------------------------------------------------------------
+# ------------Function to Fade color from bright to dark 
+# -----------------------------------------------------------------          
   def colorFade(self,hexstring,fade):
       '''This Function converts the given hex-value into RGB, subtracts the maximum so that the color
       gets darker, than it reconverts into hex and returns the new color'''
