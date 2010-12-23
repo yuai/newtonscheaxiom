@@ -34,11 +34,10 @@ class NewtonImporter:
             lenTest = open(path, 'r')
             reader = csv.reader(lenTest,delimiter = ';' , dialect = csv.excel)
             i = 0
-        #This is very very inefficient still trying to figure out how to get a row list 
+        
             for row in reader:
-                if i == 0:
-                    collen = len(row)#MAKE BREAK HERERERERERE
-                i=i+1  
+                collen = len(row)
+                break  
         
 
             lenTest.close() 
