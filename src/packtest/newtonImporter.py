@@ -72,7 +72,7 @@ class NewtonImporter:
                 if go > 0 :
                     append = 0
                     for i in range (1,self.collen):
-                        if(row[i]=="" or row[i]=="NaN"):
+                        if(row[i]=="" or row[i]=="NaN"):#Looking if row is empty or has an Nonvalue
                             append =1
                         
                     if(append !=1):
@@ -97,22 +97,25 @@ class NewtonImporter:
                 self.FillSQL = 1  
        
         
-        self.values = zip(*self.values)#Have to transpose array in order to match SQL standard
+        self.values = zip(*self.values)#Have to transpose array in order to match given SQL standard
          
     def fillSql(self):
         '''This method writes the data of the value arrays and the metadictionary into an
         SQLLite file where it is stored'''
-        self.fillArray()
-        if self.FillSQL == 0: #Only start filling if no Error occurred while reading the arrays
+        self.fillArray()#First getting data out of csv File
+        
+        if self.FillSQL == 0: #Only start filling if no Error occurred while writing the arrays
             self.exp = Experiment(self.store+self.stringI+'.db',self.collen-2)
             self.exp.store_metadata(self.metaDic)
             self.exp.store_values(1,self.values)
        
     def getExperiment(self):
         '''This Functions sends back an experiment Object filled with the data of an SQLLite File'''
-        if self.exp != None:
-            return self.exp
-        else:
-            return None   
+        try:
+            if self.exp != None:
+                return self.exp   
+       
+        except AttributeError:
+            return None    
 
 
