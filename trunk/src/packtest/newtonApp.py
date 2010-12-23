@@ -3,11 +3,11 @@ from expList import ExpList
 from xyplot import XYPlot
 from newtonImporter import NewtonImporter
 from data_access import Experiment
-from fail import Fail
-from fail import About
-import os
-import tkFileDialog
-import csv
+from infoWindow import Fail
+from infoWindow import About
+from infoWindow import Help
+import os # to get number of available experiments respectively databases
+import tkFileDialog # to get the selected filename on local disk space 
     
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class NewtonApp:
@@ -103,7 +103,7 @@ class NewtonApp:
       filemenu.add_command(label="Exit", command=mainWindow.quit)
       menubar.add_cascade(label="File", menu=filemenu)
       helpmenu = Menu(menubar, tearoff=0)
-      helpmenu.add_command(label="Help Index")
+      helpmenu.add_command(label="Help Index", command=self.openHelp)
       helpmenu.add_command(label="About...", command=self.openAbout)
       menubar.add_cascade(label="Help", menu=helpmenu)
       mainWindow.config(menu=menubar)   
@@ -252,6 +252,9 @@ class NewtonApp:
        
    def openAbout(self):
        About()
+       
+   def openHelp(self):
+       Help()
 # -----------------------------------------------------------------  
 #---------------------------- Initial Tkinter
 # -----------------------------------------------------------------
