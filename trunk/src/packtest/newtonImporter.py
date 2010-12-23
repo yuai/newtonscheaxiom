@@ -1,6 +1,6 @@
 import csv
 import data_access
-from fail import Fail
+from infoWindow import Fail
 from data_access import Experiment
 
 '''
