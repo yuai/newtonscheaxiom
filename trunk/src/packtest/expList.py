@@ -1,5 +1,8 @@
 from data_access import Experiment
 
+'''
+@author: John Truong
+'''
 class ExpList:
     ''' list of experiments '''
     

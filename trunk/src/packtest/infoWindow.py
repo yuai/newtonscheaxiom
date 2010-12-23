@@ -1,5 +1,10 @@
 from Tkinter import *
 
+'''
+@author: Daniel Xander
+@author: John Truong
+'''
+
 class Fail:
     def __init__(self,message):
         self.failWindow = Tk()
