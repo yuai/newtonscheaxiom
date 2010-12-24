@@ -1,5 +1,6 @@
+''' Several Transformation Functions '''
 class GridTransform:
-  
+
   def negTransAxisX(self,x,y,maxX,maxY,width):
       ''' returns an Transformed x value for the Crossgrid'''
       if x == 0.0 and y == 0.0:
