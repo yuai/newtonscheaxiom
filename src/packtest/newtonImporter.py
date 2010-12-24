@@ -31,11 +31,7 @@ class NewtonImporter:
             
         except csv.Error:
             Fail( "You are trying to open an file which is  not \n compatible with this Programm.\n This Programm can only read Data in the .csv file Format")
-            
-            
-            
-            
-            
+                             
     def lookForLen(self,path):
         '''This function is neccessary to identify the number of y-collumns in order to
         fill in arrays correct.It returns the length of the FIRST row, therefore it is important

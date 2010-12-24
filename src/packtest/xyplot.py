@@ -48,10 +48,6 @@ class XYPlot:
               self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.91*self.height,width=2,fill=_color)
               #Drawing lightGrey BackroundGrid Y-Direction
               self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.1*self.height,width=0.1,fill= 'LightGrey')
-              next = next +(0.8*self.width)/6
-          
-          next = 0    
-          for i in range (0,7):
               #Drawing littlelines on Y-Axis
               self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.09)*self.width,0.9*self.height-next,width=2,fill=_color)
               #Drawing lightGrey BackroundGrid Y-Direction
@@ -117,9 +113,6 @@ class XYPlot:
               self.canvas.create_line((0.05)*self.width+next,0.5*self.height,(0.05)*self.width+next,0.51*self.height,width=2,fill=_color)
               #Drawing lightGrey BackroundGrid Y-Direction
               self.canvas.create_line((0.05)*self.width+next,0.05*self.height,(0.05)*self.width+next,0.95*self.height,width=0.1,fill='LightGrey')
-              next = next +(0.45*self.width)/6
-          next = 0    
-          for i in range (0,14):
               #Drawing littlelines on X-Axis
               self.canvas.create_line(0.5*self.width,0.95*self.height-next,0.49*self.width,0.95*self.height-next,width=2,fill=_color)
               #Drawing lightGrey BackroundGrid Y-Direction
@@ -211,11 +204,7 @@ class XYPlot:
       '''This method clears the canvas, it must be called on update, or when a new set is drawn so that
       the old drawings aren't interferring with the new.'''
       self.repaint(self.bgcolor)
-  
-# -----------------------------------------------------------------
-# --------------Several Transformation Functions 
-# -----------------------------------------------------------------  
-  
+
   
 # -----------------------------------------------------------------
 # -----Different drawing Functions to Draw on Canvas
@@ -350,17 +339,14 @@ class XYPlot:
                        pattern = None      
               else:
                    newcolor = color
-              for j in range (0,len(valueList)-1):
+              for j in range (0,len(valueList)):
                   x1 = valueList[j][0]
                   y1 = valueList[j][i+1]
-                  x2 = valueList[j+1][0]
-                  y2 = valueList[j+1][i+1]
                   maxX = maxima [0]
                   maxY = maxima [i+1]
                   LineArray.append(self.gridtransform.negTransAxisX(x1,y1,maxX,maxY,self.width))
                   LineArray.append(self.gridtransform.negTransAxisY(x1,y1,maxX,maxY,self.height))
-                  LineArray.append(self.gridtransform.negTransAxisX(x2,y2,maxX,maxY,self.width))
-                  LineArray.append(self.gridtransform.negTransAxisY(x2,y2,maxX,maxY,self.height))
+
                   
               if smooth == 0:
                   self.canvas.create_line(LineArray,smooth = 'false',width=2,fill = newcolor,dash = pattern)
