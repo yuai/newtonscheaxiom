@@ -260,33 +260,21 @@ class XYPlot:
       metadatadictionary of an given Experiment'''       
       if self.NegativValueBool == 0:
           self.canvas.create_text(0.90*self.width, 0.95*self.height, text="t in Sekunden")
-          space = 0
-          for i in range(0,len(metaList)):
-              if metaList[i]['vn_unit'].find('|') != -1:#Look if there is more than one MetaUnit
-                  singledata =  metaList[i]['vn_unit'].split('|')
-                  down = 0
-                  for single in range (0,len(singledata)):#Draw Meta units with fading colors exactly like their values
-                      self.canvas.create_text((0.08+space)*self.width, (0.02+down)*self.height, text=singledata[single],fill =  self.colorFade(self.colorList[i],single))
-                      down = down + 0.018
-              else:        
-                  self.canvas.create_text((0.08+space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit'],fill = self.colorList[i])
-              space = space+0.08
-              
       else:
-          self.canvas.create_text(0.93*self.width, 0.60*self.height, text="t in Sekunden")
-          space = 0
-          for i in range(0,len(metaList)):
-              if metaList[i]['vn_unit'].find('|') != -1:
-                  singledata =  metaList[i]['vn_unit'].split('|')
-                  down = 0
-                  for single in range (0,len(singledata)):
-                      self.canvas.create_text((0.08+space)*self.width, (0.02+down)*self.height, text=singledata[single],fill =  self.colorFade(self.colorList[i],single))
-                      down = down + 0.018
-                      
+           self.canvas.create_text(0.93*self.width, 0.60*self.height, text="t in Sekunden")
               
-              else:
-                  self.canvas.create_text((0.08+space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit'],fill = self.colorList[i])
-              space = space+0.08
+      space = 0
+      for i in range(0,len(metaList)):
+          if metaList[i]['vn_unit'].find('|') != -1:#Look if there is more than one MetaUnit
+              singledata =  metaList[i]['vn_unit'].split('|')
+              down = 0
+              for single in range (0,len(singledata)):#Draw Meta units with fading colors exactly like their values
+                  self.canvas.create_text((0.08+space)*self.width, (0.02+down)*self.height, text=singledata[single],fill =  self.colorFade(self.colorList[i],single))
+                  down = down + 0.018
+          else:        
+              self.canvas.create_text((0.08+space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit'],fill = self.colorList[i])
+          space = space+0.08
+     
           
   def drawLine(self,valueList,maxima,color,smooth):
        '''This Method is drawing an Line in the given color through every point of the valueList.
@@ -298,63 +286,46 @@ class XYPlot:
        LineArray = []
        i = 0
        pattern  = None # Is the pattern of the line if more than one y-List is in the 
-       if self.NegativValueBool == 0 :#If set to zero, method is drawing on L-Grid scale
-           while i < vn-1:
-               del LineArray[:]
-               if 0 < i < 4:
-                   newcolor = self.colorFade(color,i)
-                   if i == 1:
-                       pattern = (1,2,3,4)
-                   elif i == 2:
-                       pattern =(1,2) 
-                   else:
-                       pattern = None         
-               else:
-                   newcolor = color
+       
+       while i < vn-1:
+         
+         del LineArray[:]
+         
+         if 0 < i < 4:
+             newcolor = self.colorFade(color,i)
+             if i == 1:
+                 pattern = (1,2,3,4)
+             elif i == 2:
+                     pattern =(1,2) 
+             else:
+                 
+                 pattern = None         
+         else:
+             
+             newcolor = color
                
-               for j in range(0,len(valueList)):
-                   
-                   x1 = valueList[j][0]
-                   y1 = valueList[j][i+1]
-                   maxX = maxima[0]
-                   maxY = maxima[i+1]
-                   LineArray.append(self.gridtransform.transAxisX(x1,y1,maxX,maxY,self.width))
-                   LineArray.append(self.gridtransform.transAxisY(x1,y1,maxX,maxY,self.height))
+         for j in range(0,len(valueList)):
+             x1 = valueList[j][0]
+             y1 = valueList[j][i+1]
+             maxX = maxima[0]
+             maxY = maxima[i+1]
+             if self.NegativValueBool == 0 :#If set to zero, method is drawing on L-Grid scale
+                 LineArray.append(self.gridtransform.transAxisX(x1,y1,maxX,maxY,self.width))
+                 LineArray.append(self.gridtransform.transAxisY(x1,y1,maxX,maxY,self.height))
+             else: # Method is drawing on Cross-Grid scale     
+                 LineArray.append(self.gridtransform.negTransAxisX(x1,y1,maxX,maxY,self.width))
+                 LineArray.append(self.gridtransform.negTransAxisY(x1,y1,maxX,maxY,self.height))
                
-               if smooth == 0:
-                   self.canvas.create_line(LineArray,smooth = "false",width=2,fill = newcolor,dash = pattern)
-               else:
-                   self.canvas.create_line(LineArray,smooth = "true",width=2,fill = newcolor,dash = pattern)
-               i=i+1  
-       else:               #in this case Method is drawing in cross-Grid scale
-           while i < vn-1:
-              del LineArray[:]
-              if 0 < i < 4:
-                   newcolor = self.colorFade(color,i)
-                   if i == 1:
-                       pattern = (1,2,3,4)
-                   elif i == 2:
-                       pattern =(1,2) 
-                   else:
-                       pattern = None      
-              else:
-                   newcolor = color
-              for j in range (0,len(valueList)):
-                  x1 = valueList[j][0]
-                  y1 = valueList[j][i+1]
-                  maxX = maxima [0]
-                  maxY = maxima [i+1]
-                  LineArray.append(self.gridtransform.negTransAxisX(x1,y1,maxX,maxY,self.width))
-                  LineArray.append(self.gridtransform.negTransAxisY(x1,y1,maxX,maxY,self.height))
+         if smooth == 0:
+             self.canvas.create_line(LineArray,smooth = "false",width=2,fill = newcolor,dash = pattern)
+         else:
+             self.canvas.create_line(LineArray,smooth = "true",width=2,fill = newcolor,dash = pattern)
+               
+         i=i+1  
+       
+                 
 
                   
-              if smooth == 0:
-                  self.canvas.create_line(LineArray,smooth = 'false',width=2,fill = newcolor,dash = pattern)
-              else:
-                  self.canvas.create_line(LineArray,smooth = 'true',width=2,fill = newcolor,dash = pattern )
-                  
-              i = i+1
-            
   def drawDots(self,valueList,maxima,color):
       '''Draws a dot for every x,y Koordinate in the valueList.It uses the maxima Array to scale
       and the color, which it can fade  in case of more than one y-Axis.'''
@@ -364,39 +335,30 @@ class XYPlot:
       else:
           ovalsize = 2    
       i = 0
-      if self.NegativValueBool == 0:#If true,drawing on scale of L Grid
-          while i < vn-1:
-              if 0 < i < 4:
-                   newcolor = self.colorFade(color,i)
-              else:
-                   newcolor = color   
-              for j in range (0,len(valueList)):
-                  x = valueList[j][0]
-                  y = valueList[j][i+1]
-                  maxX = maxima [0]
-                  maxY = maxima [i+1]
+     
+      while i < vn-1:
+          if 0 < i < 4:
+              newcolor = self.colorFade(color,i)
+          else:
+              newcolor = color   
+          for j in range (0,len(valueList)):
+              x = valueList[j][0]
+              y = valueList[j][i+1]
+              maxX = maxima [0]
+              maxY = maxima [i+1]
+        
+              if self.NegativValueBool == 0:#If 0,drawing on scale of L Grid   
                   self.canvas.create_oval(self.gridtransform.transAxisX(x,y,maxX,maxY,self.width)-ovalsize
                                           ,self.gridtransform.transAxisY(x,y,maxX,maxY,self.height)-ovalsize
                                           ,self.gridtransform.transAxisX(x,y,maxX,maxY,self.width)+ovalsize
                                           ,self.gridtransform.transAxisY(x,y,maxX,maxY,self.height)+ovalsize,fill = newcolor)
-              i = i+1
-      else:#Drawing in scale of Cross-Grid
-          while i < vn-1:
-              colortop = str(i+1)
-              if 0 < i < 4:
-                   newcolor = self.colorFade(color,i)
-              else:
-                   newcolor = color
-              for j in range (0,len(valueList)):
-                  x = valueList[j][0]
-                  y = valueList[j][i+1]
-                  maxX = maxima [0]
-                  maxY = maxima [i+1]
+              else: #drawing on scale of Cross-Grid      
                   self.canvas.create_oval(self.gridtransform.negTransAxisX(x,y,maxX,maxY,self.width)-ovalsize
                                           ,self.gridtransform.negTransAxisY(x,y,maxX,maxY,self.height)-ovalsize
                                           ,self.gridtransform.negTransAxisX(x,y,maxX,maxY,self.width)+ovalsize
                                           ,self.gridtransform.negTransAxisY(x,y,maxX,maxY,self.height)+ovalsize,fill = newcolor)
-              i = i+1
+          i = i+1
+    
                             
   def drawRegLine(self,valueList,maxima,color):
        '''This method uses the Calc Class to draw a Linear Regression of the Data points 
@@ -406,55 +368,41 @@ class XYPlot:
        vn = len ( valueList[0])
        i = 0
        pattern = None
-       if self.NegativValueBool == 0:#drawing in L-Grid scale
-           while i < vn-1:
-               if 0 < i < 4:
-                   newcolor = self.colorFade(color,i)
-                   if i == 1:
-                       pattern = (1,2,3,4)
-                   elif i == 2:
-                       pattern =(1,2) 
-                   else:
-                       pattern = None 
+       
+       while i < vn-1:
+           if 0 < i < 4:
+               newcolor = self.colorFade(color,i)
+               if i == 1:
+                   pattern = (1,2,3,4)
+               elif i == 2:
+                   pattern =(1,2) 
                else:
-                   newcolor = color
-               for j in range (0,len(valueList)):  
-                   #using calc.linreg to generate an regression
-                   x1,y1,x2,y2=self.calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
+                   pattern = None 
+           else:
+               newcolor = color
+               
+           for j in range (0,len(valueList)):  
+               #using calc.linreg to generate an regression
+               x1,y1,x2,y2=self.calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
                    
-                   maxX = maxima [0]
-                   maxY = maxima [i+1]
+               maxX = maxima [0]
+               maxY = maxima [i+1]
+               if self.NegativValueBool == 0:#drawing in L-Grid scale
                    x1 = self.gridtransform.transAxisX(x1, y1, maxX, maxY, self.width)
                    y1 = self.gridtransform.transAxisY(x1, y1, maxX, maxY, self.height)
                    x2 = self.gridtransform.transAxisX(x2, y2, maxX, maxY, self.width)
                    y2 = self.gridtransform.transAxisY(x2, y2, maxX, maxY, self.height)
-                   self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
-               i = i+1    
-       else:             #Cross-Grid scale
-           while i < vn-1:
-               if 0 < i < 4:
-                   newcolor = self.colorFade(color,i)
-                   if i == 1:
-                       pattern = (1,2,3,4)
-                   elif i == 2:
-                       pattern =(1,2) 
-                   else:
-                       pattern = None 
-               else:
-                   newcolor = color 
-                  
-               for j in range (0,len(valueList)): 
-                   #using calc.linreg to generate an regression 
-                   x1,y1,x2,y2=self.calc.linreg(regList[0],regList[i+1],maxima[0],maxima[i+1])
-                   
-                   maxX = maxima [0]
-                   maxY = maxima [i+1]
+               else:    
                    x1 = self.gridtransform.negTransAxisX(x1, y1, maxX, maxY, self.width)
                    y1 = self.gridtransform.negTransAxisY(x1, y1, maxX, maxY, self.height)
                    x2 = self.gridtransform.negTransAxisX(x2, y2, maxX, maxY, self.width)
                    y2 = self.gridtransform.negTransAxisY(x2, y2, maxX, maxY, self.height)
-                   self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
-               i = i+1
+                  
+               self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
+           i = i+1    
+      
+                   
+                 
 
 # -----------------------------------------------------------------
 # ------------Function to Fade color from bright to dark 
