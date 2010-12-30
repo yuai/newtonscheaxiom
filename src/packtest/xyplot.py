@@ -257,24 +257,24 @@ class XYPlot:
   
   def drawMeta(self,metaList):
       '''The units the x and y Axis are drawn on canvas.X is set default on "t in Sekunden", whereas y is taken from the 
-      metadatadictionary of an given Experiment'''       
+      metadatadictionary of an given Experiment'''     
       if self.NegativValueBool == 0:
           self.canvas.create_text(0.90*self.width, 0.95*self.height, text="t in Sekunden")
       else:
-           self.canvas.create_text(0.93*self.width, 0.60*self.height, text="t in Sekunden")
-              
+          self.canvas.create_text(0.93*self.width, 0.60*self.height, text="t in Sekunden")
+          
       space = 0
       for i in range(0,len(metaList)):
-          if metaList[i]['vn_unit'].find('|') != -1:#Look if there is more than one MetaUnit
-              singledata =  metaList[i]['vn_unit'].split('|')
-              down = 0
-              for single in range (0,len(singledata)):#Draw Meta units with fading colors exactly like their values
-                  self.canvas.create_text((0.08+space)*self.width, (0.02+down)*self.height, text=singledata[single],fill =  self.colorFade(self.colorList[i],single))
-                  down = down + 0.018
-          else:        
-              self.canvas.create_text((0.08+space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit'],fill = self.colorList[i])
-          space = space+0.08
-     
+              if metaList[i]['vn_unit'].find('|') != -1:#Look if there is more than one MetaUnit
+                  singledata =  metaList[i]['vn_unit'].split('|')
+                  down = 0
+                  for single in range (0,len(singledata)):#Draw Meta units with fading colors exactly like their values
+                      self.canvas.create_text((0.08+space)*self.width, (0.02+down)*self.height, text=singledata[single],fill =  self.colorFade(self.colorList[i],single))
+                      down = down + 0.018
+              else:        
+                  self.canvas.create_text((0.08+space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit'],fill = self.colorList[i])
+              space = space+0.08
+          
           
   def drawLine(self,valueList,maxima,color,smooth):
        '''This Method is drawing an Line in the given color through every point of the valueList.
@@ -286,6 +286,21 @@ class XYPlot:
        LineArray = []
        i = 0
        pattern  = None # Is the pattern of the line if more than one y-List is in the 
+
+       if self.NegativValueBool == 0 :#If set to zero, method is drawing on L-Grid scale
+           while i < vn-1:
+               del LineArray[:]
+               if 0 < i < 4:
+                   newcolor = self.colorFade(color,i)
+                   if i == 1:
+                       pattern = (1,2,3,4)
+                   elif i == 2:
+                       pattern =(1,2)
+                   else:
+                       pattern = None
+               else:
+                   newcolor = color
+
        
        while i < vn-1:
          
@@ -303,6 +318,7 @@ class XYPlot:
          else:
              
              newcolor = color
+
                
          for j in range(0,len(valueList)):
              x1 = valueList[j][0]
