@@ -50,10 +50,7 @@ class NewtonImporter:
             lenTest.close() 
         except csv.Error:
             print ' Opening Fail Window in except of _init_ ' 
-        return collen  
-                
-            
-    
+        return collen      
     
     def fillArray(self):
         '''fill Method, iterates through every Row of csv file and fills arrays and 
@@ -113,5 +110,3 @@ class NewtonImporter:
        
         except AttributeError:
             return None    
-
-
