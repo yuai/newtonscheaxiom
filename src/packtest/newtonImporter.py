@@ -86,7 +86,7 @@ class NewtonImporter:
                        'vn_fault':self.meta[6],'additional_info':self.meta[7]}
         except IndexError:
             if self.FillSQL == 0:
-                Fail("Could not import File\nIt seems you didn't fill in your metadata into the csv file the right way.\n Look again at the official Template, your expermient must be filled in exactly as \n given in the file" )
+                Fail("Could not import File\nIt seems you didn't fill in your metadata into the csv file the right way.\n Look again at the official Template, your experiment must be filled in exactly as \n given in the file" )
                 self.FillSQL = 1  
        
         
