@@ -2,7 +2,7 @@
 @author: Daniel Xander
 '''
 class Calc:
-    ''' This Class Calculates a Linear regression of a given x,y table'''
+    ''' This Class has Functions calculating maxima and a linear Regression '''
     
     
     def linreg(self,X,Y,maxX,maxY):
@@ -22,6 +22,7 @@ class Calc:
         x_w = x_w/len(X) 
         y_w = y_w/len(Y)
         
+        #Skalarmultiplication
         for i in range (0, len(X)):
             Sxx += (X[i]-x_w)* (X[i]-x_w)
         for i in range (0, len(Y)):
@@ -29,13 +30,13 @@ class Calc:
     
         Sxx = Sxx /(len(X))
         Sxy = Sxy /(len(Y))  
-        a = Sxy/Sxx
-        c = y_w - a* x_w
+        a = Sxy/Sxx #gradient of function
+        c = y_w - a* x_w #interception-point of function and Y-Axis
         xpart = 1
         x1 = 0
         y1 = c
         
-      
+        #dividining gradient until size 0.1 is reached by counter or denominator
         while i ==0:
             if a <= 0.1 or xpart<=0.1:
                 i=1
@@ -45,7 +46,7 @@ class Calc:
                 
         x2 = x1
         y2 = y1
-                
+        #adding gradient to startpoint until end of drawing Canvas is reached        
         while x2 <= maxX and y2 <= maxY:
             x2 = x2 + xpart
             y2 = y2 + a 
@@ -55,7 +56,7 @@ class Calc:
     
     
     def getMax(self,searchmax):
-      '''Here maxima and minima of every x or y-Data set in every Experiment drawn is calculatet and 
+      '''Here maxima and minima of every x or y-Data set in every Experiment drawn is calculated and 
       stored in an array''' 
       #the following arrays are holding the maxima and minima of every value collumn of
       #an csv File.They are Limited to 15, so that our programm isnt able to draw more than 15 y-collumns
