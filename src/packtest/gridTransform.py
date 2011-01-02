@@ -1,6 +1,13 @@
-''' Several Transformation Functions '''
-class GridTransform:
+'''
+@author: Daniel Xander
+@author: John Truong
+'''
 
+class GridTransform:
+  '''This class contains functions which are transforming X and Y Values, so that they are
+  scaled onto the drawing Canvas '''
+    
+    
   def negTransAxisX(self,x,y,maxX,maxY,width):
       ''' returns an Transformed x value for the Crossgrid'''
       if x == 0.0 and y == 0.0:
