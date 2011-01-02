@@ -306,7 +306,7 @@ class XYPlot:
          
          del LineArray[:]
          
-         if 0 < i < 4:
+         if 0 < i < 4:#Fading color of the first 3 Experiments
              newcolor = self.colorFade(color,i)
              if i == 1:
                  pattern = (1,2,3,4)
@@ -333,8 +333,10 @@ class XYPlot:
                  LineArray.append(self.gridtransform.negTransAxisY(x1,y1,maxX,maxY,self.height))
                
          if smooth == 0:
+             #Drawing direct Lines from point to point
              self.canvas.create_line(LineArray,smooth = "false",width=2,fill = newcolor,dash = pattern)
          else:
+             #Drawing approximation using given points
              self.canvas.create_line(LineArray,smooth = "true",width=2,fill = newcolor,dash = pattern)
                
          i=i+1  
@@ -403,12 +405,14 @@ class XYPlot:
                    
                maxX = maxima [0]
                maxY = maxima [i+1]
-               if self.NegativValueBool == 0:#drawing in L-Grid scale
+               if self.NegativValueBool == 0:
+                   #drawing in L-Grid scale
                    x1 = self.gridtransform.transAxisX(x1, y1, maxX, maxY, self.width)
                    y1 = self.gridtransform.transAxisY(x1, y1, maxX, maxY, self.height)
                    x2 = self.gridtransform.transAxisX(x2, y2, maxX, maxY, self.width)
                    y2 = self.gridtransform.transAxisY(x2, y2, maxX, maxY, self.height)
                else:    
+                   #drawing in Cross-Grid scale
                    x1 = self.gridtransform.negTransAxisX(x1, y1, maxX, maxY, self.width)
                    y1 = self.gridtransform.negTransAxisY(x1, y1, maxX, maxY, self.height)
                    x2 = self.gridtransform.negTransAxisX(x2, y2, maxX, maxY, self.width)
