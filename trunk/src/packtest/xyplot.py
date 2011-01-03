@@ -42,17 +42,20 @@ class XYPlot:
       if self.NegativValueBool == 0:  
           #Drawing Backround of Plot-Canvas
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
-          next = 0
+          nextX = 0
+          nextY = 0
           for i in range (0,7):
               #Drawing littlelines on X-Axis
-              self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.91*self.height,width=2,fill=_color)
-              #Drawing lightGrey BackroundGrid Y-Direction
-              self.canvas.create_line((0.1)*self.width+next,0.9*self.height,(0.1)*self.width+next,0.1*self.height,width=0.1,fill= 'LightGrey')
+              self.canvas.create_line((0.1)*self.width+nextX,0.9*self.height,(0.1)*self.width+nextX,0.91*self.height,width=2,fill=_color)
+              #Drawing lightGrey BackroundGrid X-Direction
+              self.canvas.create_line((0.1)*self.width+nextX,0.9*self.height,(0.1)*self.width+nextX,0.1*self.height,width=0.1,fill= 'LightGrey')
               #Drawing littlelines on Y-Axis
-              self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.09)*self.width,0.9*self.height-next,width=2,fill=_color)
+              self.canvas.create_line(0.1*self.width,0.9*self.height-nextY,(0.09)*self.width,0.9*self.height-nextY,width=2,fill=_color)
               #Drawing lightGrey BackroundGrid Y-Direction
-              self.canvas.create_line(0.1*self.width,0.9*self.height-next,(0.9)*self.width,0.9*self.height-next,width=0.1,fill='LightGrey')
-              next = next +(0.8*self.height)/6
+              self.canvas.create_line(0.1*self.width,0.9*self.height-nextY,0.9*self.width,0.9*self.height-nextY,width=0.1,fill='LightGrey')
+              nextX = nextX +(0.8*self.width)/6
+              nextY = nextY +(0.8*self.height)/6
+              
           #Drawing X-Axis and Y-Axis
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.9*self.width,0.9*self.height,width=2,fill =_color)
           self.canvas.create_line(0.1*self.width,0.9*self.height,0.1*self.width,0.1*self.height,width=2,fill=_color)
@@ -107,17 +110,20 @@ class XYPlot:
           #Drawing Backround of Plot-Canvas
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
           self.canvas.create_text(0.48*self.width,0.53*self.height,text = '0')
-          next = 0
+          nextX = 0
+          nextY = 0
           for i in range (0,14):
               #Drawing littlelines on X-Axis
-              self.canvas.create_line((0.05)*self.width+next,0.5*self.height,(0.05)*self.width+next,0.51*self.height,width=2,fill=_color)
+              self.canvas.create_line((0.05)*self.width+nextX,0.5*self.height,(0.05)*self.width+nextX,0.51*self.height,width=2,fill=_color)
+              #Drawing lightGrey BackroundGrid X-Direction
+              self.canvas.create_line((0.05)*self.width+nextX,0.05*self.height,(0.05)*self.width+nextX,0.95*self.height,width=0.1,fill='LightGrey')
+              #Drawing littlelines on Y-Axis
+              self.canvas.create_line(0.5*self.width,0.95*self.height-nextY,0.49*self.width,0.95*self.height-nextY,width=2,fill=_color)
               #Drawing lightGrey BackroundGrid Y-Direction
-              self.canvas.create_line((0.05)*self.width+next,0.05*self.height,(0.05)*self.width+next,0.95*self.height,width=0.1,fill='LightGrey')
-              #Drawing littlelines on X-Axis
-              self.canvas.create_line(0.5*self.width,0.95*self.height-next,0.49*self.width,0.95*self.height-next,width=2,fill=_color)
-              #Drawing lightGrey BackroundGrid Y-Direction
-              self.canvas.create_line(0.05*self.width,0.95*self.height-next,0.95*self.width,0.95*self.height-next,width=0.1,fill='LightGrey')
-              next = next +(0.45*self.height)/6
+              self.canvas.create_line(0.05*self.width,0.95*self.height-nextY,0.95*self.width,0.95*self.height-nextY,width=0.1,fill='LightGrey')
+              nextX = nextX +(0.45*self.width)/6
+              nextY = nextY +(0.45*self.height)/6
+              
           #Drawing X-Axis and Y-Axis    
           self.canvas.create_line(0.05,0.5*self.height,self.width-0.05,0.5*self.height,fill=_color)
           self.canvas.create_line(0.5*self.width,0.05,0.5*self.width,self.height-0.05,fill=_color)   
