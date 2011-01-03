@@ -44,7 +44,7 @@ class NewtonApp:
       #---------------------------- XYPlot
       # -----------------------------------------------------------------
       self.mainWindow = Frame(main)
-      self.xyPlot=XYPlot(main,800,600)
+      self.xyPlot=XYPlot(main,800,600) # default size for canvas
       # -----------------------------------------------------------------
       #---------------------------- ScrollBar, ListBox
       # -----------------------------------------------------------------
@@ -75,12 +75,12 @@ class NewtonApp:
       # -----------------------------------------------------------------
       #---------------------------- Canvas
       # -----------------------------------------------------------------
-      self.xyPlot.canvas.pack(fill="both", expand="1")
+      self.xyPlot.canvas.pack(fill="both", expand="1") # pack canvas after buttons for resize
       self.mainWindow.pack(fill="both",expand="1")
       
    def opendDB(self):
       ''' open new window with the experiments from DB in a ListBox'''
-      filewin = Toplevel(mainWindow) #create a new Window
+      filewin = Toplevel(mainWindow) # create a new Window
       scrollbar = Scrollbar(filewin) 
       scrollbar.pack( side="right", fill="y" )
       self.myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set
@@ -119,9 +119,14 @@ class NewtonApp:
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
-       exp = NewtonImporter(filename,self.namePath,self.explist.dbCount)
-       if exp.getExperiment()!= None:
-           self.explist.addExp(exp.getExperiment())
+       filename = str(filename) # convert to string
+       # problem with import .py file csv.Error do not resolve it. so we have to do like this
+       if filename[len(filename)-3:len(filename)] == "csv":
+           exp = NewtonImporter(filename,self.namePath,self.explist.dbCount)
+           if exp.getExperiment()!= None:
+               self.explist.addExp(exp.getExperiment())
+       else:
+           Fail( "You are trying to open an file which is  not \n compatible with this Programm.\n This Programm can only read Data in the .csv file Format")
        
    def sendDbCount(self):
        return self.explist.dbCount    
@@ -134,24 +139,24 @@ class NewtonApp:
            index = self.myDBlist.curselection()
            i = int(index[0]) # convert tuple to integer
            self.explist.addIndexList(i)
-           expNameActor = self.myDBlist.get(index)
-           expNameActorList = expNameActor.split('|')
-           expName = expNameActorList[1]
+           expNameActor = self.myDBlist.get(index) # expNameActor with experiment name and actor name
+           expNameActorList = expNameActor.split('|') # split experiment name with actor name
+           expName = expNameActorList[1] # show only experiment name
            # -----------------------------------------------------------------
            #---------------------------- CheckButton for experiment
            # -----------------------------------------------------------------
            CheckVarPlot = IntVar()
            CheckVarTable = IntVar()
-           self.statesTable.append(CheckVarTable)
-           self.statesPlot.append(CheckVarPlot)
-           if (len(expName)>self.MAX_LEN_EXPNAME):
-               cutexpName = expName[0:self.MAX_LEN_EXPNAME] +"..."
+           self.statesTable.append(CheckVarTable) # add to a list to know which is selected for show table
+           self.statesPlot.append(CheckVarPlot) # add to a list to know which is selected for show on plot
+           if (len(expName)>self.MAX_LEN_EXPNAME): # if experiment name is too long
+               cutexpName = expName[0:self.MAX_LEN_EXPNAME] +"..." # cut experiment name
                expName = cutexpName
            c1 = Checkbutton(left, text="Plot["+expName+"]",variable=CheckVarPlot, anchor=NW, width="35")
            c2 = Checkbutton(left, text="Table["+expName+"]",variable=CheckVarTable
                                 ,command=self.showTable,anchor=NW,width="35")
-           self.checkbuttonPlot.append(c1)
-           self.checkbuttonTable.append(c2)
+           self.checkbuttonPlot.append(c1) # add to a list to destroy by button "clean all" and to change color by selecting
+           self.checkbuttonTable.append(c2) # add to a list to destroy by button "clean all"
            c1.pack(side="bottom")
            c2.pack(side="bottom")          
             
@@ -166,35 +171,35 @@ class NewtonApp:
            self.checkbuttonPlot[i].destroy()
        for i in range(0, len(self.checkbuttonTable)):
            self.checkbuttonTable[i].destroy()
-           
        self.checkbuttonPlot = []
        self.checkbuttonTable = []
        self.explist.resetIndexList()
    
    def updatePlot(self):
+       ''' update Plot after changing on checkBoxes '''
        self.getDrawList()
                
    def showTable(self): 
         ''' show values of the experiment in the list-box '''
         self.myTablelistbox.delete(0, END) # delete list-box, list-box will be always generated completely
         valueList = self.explist.getValueList()
-        metaList = self.explist.getMetaList() 
+        metaList = self.explist.getMetaList()
         for tempI in range(0,len(valueList)):
             if self.statesTable[tempI].get() == 1: # if argument is 0 do nothing
                 # -----------------------------------------------------------------
                 # -------------------------- Show Meta Data on List box
                 # -----------------------------------------------------------------
-                allmetaOfExp = metaList[tempI]
-                allMetaString = str(allmetaOfExp['additional_info'])
-                splitedString = allMetaString.split('|')            
-                self.myTablelistbox.insert(NewtonApp.tablecount,"########################")
+                allmetaOfExp = metaList[tempI] # all meta data
+                allMetaString = str(allmetaOfExp['additional_info']) # additional info like "Masse, Winkel"
+                splitedString = allMetaString.split('|') 
+                self.myTablelistbox.insert(NewtonApp.tablecount,"########################") # after this are meta data
                 self.myTablelistbox.insert(NewtonApp.tablecount+1,'ExpName: '+allmetaOfExp['exp_name'])
                 self.myTablelistbox.insert(NewtonApp.tablecount+2,'Actor: '+allmetaOfExp['actor_name'])
                 tempTablecount=NewtonApp.tablecount+3 #tempTablecount for the meta data
-                for temp in range(0,len(splitedString)) :
+                for temp in range(0,len(splitedString)) : # add additional info
                     self.myTablelistbox.insert(tempTablecount, splitedString[temp])
                     tempTablecount=tempTablecount+1
-                self.myTablelistbox.insert(tempTablecount+1,"-------------------------------")
+                self.myTablelistbox.insert(tempTablecount+1,"-------------------------------") # end of meta data
                 NewtonApp.tablecount = tempTablecount+2 # set the new tablecount plus the meta data
                 # -----------------------------------------------------------------
                 # -------------------------- Show Values on List box 
@@ -203,7 +208,7 @@ class NewtonApp:
                 try:
                     x,y = zip(*result)
                     intC = 0 # increment to get the x and y
-                    for C in x:
+                    for C in x: # print all value respectively points of experiment
                         NewtonApp.tablecount = NewtonApp.tablecount+1
                         xyString =  "x[%s] \t= %f \t y[%s] \t= %f" % (str(intC), x[intC], str(intC),y[intC]) 
                         self.myTablelistbox.insert(NewtonApp.tablecount, xyString )
@@ -219,15 +224,15 @@ class NewtonApp:
        tempSel=0 # variable increment by selected check-buttons for the color
        colorList = self.xyPlot.colorList
        for index in self.explist.indexList:
-           if self.statesPlot[tempI].get() == 1:
+           if self.statesPlot[tempI].get() == 1: # selected checkBox for plot
                values = self.explist.getValues(index)
                metadata = self.explist.getMetaData(index)
                metaList.append(metadata)
                valueList.append(values)
-               self.checkbuttonPlot[tempI].config(selectcolor=colorList[tempSel])
+               self.checkbuttonPlot[tempI].config(selectcolor=colorList[tempSel]) # change color
                tempSel=tempSel+1
-           if self.statesPlot[tempI].get() == 0:
-               self.checkbuttonPlot[tempI].config(selectcolor="white")    
+           if self.statesPlot[tempI].get() == 0: # not selected checkBox for plot
+               self.checkbuttonPlot[tempI].config(selectcolor="white") # default color is white of a checkBox
            tempI=tempI+1
        self.xyPlot.drawControl(valueList,metaList,self.var.get())  
        
@@ -253,27 +258,27 @@ class NewtonApp:
        fButton.pack(fill="x",expand="0",side="bottom")
        
    def openAbout(self):
+       ''' open new window for about information '''
        About()
        
    def openHelp(self):
+       ''' open new window for help information '''
        Help()
 # -----------------------------------------------------------------  
 #---------------------------- Initial Tkinter
 # -----------------------------------------------------------------
-
 mainWindow=Tk()
-mainWindow.minsize(800,600)
+mainWindow.minsize(800,600) # minsize for mainWindow for less problem with resize
 # -----------------------------------------------------------------
 #---------------------------- Label
 # -----------------------------------------------------------------
-left = Label(mainWindow,width="35")
+left = Label(mainWindow,width="35") # Label for the experiments and table
 left.pack(side="left",fill="y",expand="0")
-main = Label(mainWindow)
+main = Label(mainWindow) # main Label for the canvas and buttons
 main.pack(side="right",fill="both",expand="1")
 # -----------------------------------------------------------------
 #---------------------------- Start Application
 # -----------------------------------------------------------------
-app=NewtonApp(main,left)
-
-app.createMenu()
+app=NewtonApp(main,left) # create a application
+app.createMenu() # create menu for the application
 mainloop()
