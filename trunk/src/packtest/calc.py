@@ -13,7 +13,8 @@ class Calc:
         Sxy = 0.0
         a = 0.0
         c = 0.0
-     
+        
+        #getting mean Value of each Array
         for i in range (0, len (X)):
             x_w += X[i]
         for i in range (0, len(Y)):
@@ -46,6 +47,7 @@ class Calc:
                 
         x2 = x1
         y2 = y1
+       
         #adding gradient to startpoint until end of drawing Canvas is reached        
         while x2 <= maxX and y2 <= maxY:
             x2 = x2 + xpart
