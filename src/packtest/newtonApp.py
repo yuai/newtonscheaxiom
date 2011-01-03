@@ -59,16 +59,16 @@ class NewtonApp:
       #---------------------------- RadioButton
       # -----------------------------------------------------------------
       self.var = IntVar() # variable for the radioButton
-      R1 = Radiobutton(fButtons, text="Draw Dot", variable=self.var, value=1
+      R1 = Radiobutton(fButtons, text="Draw dot", variable=self.var, value=1
                        ,command=self.getDrawList,indicatoron =0)
       R1.pack(side="right")
-      R2 = Radiobutton(fButtons, text="Draw Line", variable=self.var, value=2
+      R2 = Radiobutton(fButtons, text="Draw line", variable=self.var, value=2
                        ,command=self.getDrawList,indicatoron =0)
       R2.pack(side="right")
-      R3 = Radiobutton(fButtons, text="Approximate Line", variable=self.var, value=3
+      R3 = Radiobutton(fButtons, text="Draw linear regression", variable=self.var, value=3
                        ,command=self.getDrawList,indicatoron =0)
       R3.pack(side="right")
-      R4 = Radiobutton(fButtons, text="Draw Spline", variable=self.var, value=4
+      R4 = Radiobutton(fButtons, text="Draw curve", variable=self.var, value=4
                        ,command=self.getDrawList,indicatoron =0)
       R4.pack(side="right")
       fButtons.pack(fill="x",expand="0",side="bottom")
