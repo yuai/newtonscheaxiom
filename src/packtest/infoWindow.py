@@ -25,7 +25,7 @@ class Help:
                              + "\n 2.0 Via Menu (File-open DB) a new Window will be open and than you can choose by double click the experiments," 
                              + "\n       that you like to see on plot or table."
                              + "\n 2.1 Only 6 experiments can shown on same time."
-                             + "\n 2.2 Experiment name can be cut if it is too long. (but the hole name is on the listBox)"
+                             + "\n 2.2 Experiment name can be cut if it is too long. max length of name 30 (but the hole name is on the listBox)"
                              + "\n"
                              + "\n--- SHOW TABLE ---"
                              + "\n 3.0 Show value on table by clicking the checkBoxes"
