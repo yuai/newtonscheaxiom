@@ -231,33 +231,40 @@ class XYPlot:
       else:
           self.NegativValueBool = 0   
       
+      if max(maxima)==0 and min(minima)==0:#Looking if max and min are correct to avoid dividing through zero
+          self.NegativValueBool = 2  
+          
+              
+      
       self.repaint(self.fgcolor,maxima)
       self.drawMeta(metaList)
       #different drawing Functions are called dependig on which button is pushed
-      if button == 1 :
-          i = 0
-          for element in drawList:
-              color = self.colorList[i]
-              self.drawDots(element,maxima,color)
-              i = i+1
-      elif button == 2 :
-           i = 0
-           for element in drawList:
-              color = self.colorList[i]
-              self.drawLine(element,maxima,color,0)
-              i = i+1
-      elif button == 3 :
-           i = 0
-           for element in drawList:
-              color = self.colorList[i]
-              self.drawRegLine(element,maxima,color)
-              i = i+1
-      elif button == 4:
-           i = 0
-           for element in drawList:
-              color = self.colorList[i]
-              self.drawLine(element,maxima,color,1)
-              i = i+1   
+      
+      if self.NegativValueBool != 2:#If this is not true an error ocurred in getMax function.
+          if button == 1 :
+              i = 0
+              for element in drawList:
+                  color = self.colorList[i]
+                  self.drawDots(element,maxima,color)
+                  i = i+1
+          elif button == 2 :
+               i = 0
+               for element in drawList:
+                  color = self.colorList[i]
+                  self.drawLine(element,maxima,color,0)
+                  i = i+1
+          elif button == 3 :
+               i = 0
+               for element in drawList:
+                  color = self.colorList[i]
+                  self.drawRegLine(element,maxima,color)
+                  i = i+1
+          elif button == 4:
+               i = 0
+               for element in drawList:
+                  color = self.colorList[i]
+                  self.drawLine(element,maxima,color,1)
+                  i = i+1   
 
 
   
