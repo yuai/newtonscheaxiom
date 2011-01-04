@@ -17,9 +17,30 @@ class Help:
     def __init__(self):
         helpWindow = Tk()
         title = Label(helpWindow, text="Help", font=("Helvetica", 16))
-        help_message = Label(helpWindow, text = "1. Via Menu (File-Import) you can import .csv file with a specific format into the application"
-                             + "2. Via Menu (File-open DB) a new Window will be open and than you can choose by double click the experiments, that you like to see on plot"
-                             + "3. ")
+        help_message = Label(helpWindow, text = 
+                                 " 1.0 Via Menu (File-Import) you can import .csv file with a specific format into the application"
+                             + "\n"
+                             + "\n 2.0 Via Menu (File-open DB) a new Window will be open and than you can choose by double click the experiments," 
+                             + "\n       that you like to see on plot or table."
+                             + "\n 2.1 Only 6 experiments can shown on same time."
+                             + "\n 2.2 Experiment name can be cut if it is too long. (but the hole name is on the listBox)"
+                             + "\n"
+                             + "\n 3.0 Show value on table by clicking the checkBoxes"
+                             + "\n 3.1 ListBox show the hole experiment name (you can move horizontal)"
+                             + "\n 3.2 Table are among one another"
+                             + "\n 3.3 More than one indicator in one collection of data value can not be shown on table. (only metaData)"
+                             + "\n"
+                             + "\n 4.0 Show value on plot by clicking the checkBoxes and the button function (like show_line) "
+                             + "\n 4.1 ColorList for the plot and checkBoxes blue,red,green,yellow,pink,turquoise"
+                             + "\n 4.2 More than one indicator can be shown on plot for example by different blue"
+                             + "\n 4.3 Maximal 6 experiments can be shown on same time"
+                             + "\n 4.4 After selected button function (like show_line) you can change checkBoxes and update by"
+                             + "\n       Button Update"
+                             + "\n"
+                             + "\n 5.0 You can only delete all experiments by button clean all"
+                             + "\n"
+                             + "\n 6.0 Exit application by Button Quit"
+                             , justify="left")
         help_button = Button(helpWindow, text = "OK", command=helpWindow.destroy)
         help_message.pack()
         help_button.pack()
