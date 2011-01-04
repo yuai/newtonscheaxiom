@@ -1,3 +1,5 @@
+from infoWindow import Fail
+
 '''
 @author: Daniel Xander
 '''
@@ -68,15 +70,18 @@ class Calc:
       minList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
       changeListMax = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
       changeListMin = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
-      for element in searchmax:#hopping through every Experiment searching for maxima and minima
-          valuesTrans = zip(*element)
-          for i in range(0,len(valuesTrans)):
-              changeListMax[i]= max(valuesTrans[i]) 
-              changeListMin[i]= min(valuesTrans[i])
-          for j in range(0,len(changeListMax)):
-              if changeListMax[j] > maxList[j]:
-                  maxList[j] = changeListMax[j]
-              if changeListMin[j] < minList[j]:
-                  minList[j] = changeListMin[j]
+      try:
+          for element in searchmax:#hopping through every Experiment searching for maxima and minima
+              valuesTrans = zip(*element)
+              for i in range(0,len(valuesTrans)):
+                  changeListMax[i]= max(valuesTrans[i]) 
+                  changeListMin[i]= min(valuesTrans[i])
+              for j in range(0,len(changeListMax)):
+                  if changeListMax[j] > maxList[j]:
+                      maxList[j] = changeListMax[j]
+                  if changeListMin[j] < minList[j]:
+                      minList[j] = changeListMin[j]
+      except IndexError:
+          Fail("Maximum of drawable y-datas per csv sheet is reached.\nPlease split your data into sheets with less than 15\n y-data rows and import them one after another")                       
             
       return maxList,minList    
