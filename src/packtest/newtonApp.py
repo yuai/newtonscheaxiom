@@ -84,18 +84,21 @@ class NewtonApp:
       scrollbar = Scrollbar(filewin) 
       scrollbar.pack( side="right", fill="y" )
       self.myDBlist = Listbox(filewin, yscrollcommand = scrollbar.set
-                         , height=20,width=50, relief="sunken" ) # to use information on the listbox outside of this method
+                         , height=20,width=100, relief="sunken" ) # to use information on the listbox outside of this method
       scrollbar.config( command = self.myDBlist.yview )
       if self.explist.dbCount == 0 :
           msg = Message(filewin, text="No file in DB", width=100)
           msg.pack(side="top")
+      
       for i in range(0,self.explist.dbCount): # get all meta information from all DB
           exp_metadata = self.explist.getMetaData(i)
           nr_series = exp_metadata['nr_series']
+          exp_data = exp_metadata['date']
           actor_name = exp_metadata['actor_name']
           exp_name = exp_metadata['exp_name']
-          self.myDBlist.insert(i, nr_series + ": " 
-                        + actor_name + " |  " + exp_name)
+          exp_addinfo = exp_metadata['additional_info']
+          self.myDBlist.insert(i, nr_series + ": " + exp_name + " |   " 
+                        + actor_name + " |  " + exp_data + ", " + exp_addinfo)
       self.myDBlist.pack( side="top", fill="both", expand=1)
       self.myDBlist.bind('<Double-Button-1>', self.showExp) # event by double click on experiment
       
@@ -141,7 +144,7 @@ class NewtonApp:
            self.explist.addIndexList(i)
            expNameActor = self.myDBlist.get(index) # expNameActor with experiment name and actor name
            expNameActorList = expNameActor.split('|') # split experiment name with actor name
-           expName = expNameActorList[1] # show only experiment name
+           expName = expNameActorList[0] # show only experiment name
            # -----------------------------------------------------------------
            #---------------------------- CheckButton for experiment
            # -----------------------------------------------------------------
@@ -193,9 +196,11 @@ class NewtonApp:
                 allMetaString = str(allmetaOfExp['additional_info']) # additional info like "Masse, Winkel"
                 splitedString = allMetaString.split('|') 
                 self.myTablelistbox.insert(NewtonApp.tablecount,"########################") # after this are meta data
-                self.myTablelistbox.insert(NewtonApp.tablecount+1,'ExpName: '+allmetaOfExp['exp_name'])
-                self.myTablelistbox.insert(NewtonApp.tablecount+2,'Actor: '+allmetaOfExp['actor_name'])
-                tempTablecount=NewtonApp.tablecount+3 #tempTablecount for the meta data
+                self.myTablelistbox.insert(NewtonApp.tablecount+1,'ID: '+allmetaOfExp['nr_series'])
+                self.myTablelistbox.insert(NewtonApp.tablecount+2,'ExpName: '+allmetaOfExp['exp_name'])
+                self.myTablelistbox.insert(NewtonApp.tablecount+3,'Actor: '+allmetaOfExp['actor_name'])
+                self.myTablelistbox.insert(NewtonApp.tablecount+4,'Date: '+allmetaOfExp['date'])
+                tempTablecount=NewtonApp.tablecount+5 #tempTablecount for the meta data
                 for temp in range(0,len(splitedString)) : # add additional info
                     self.myTablelistbox.insert(tempTablecount, splitedString[temp])
                     tempTablecount=tempTablecount+1
