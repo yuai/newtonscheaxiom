@@ -121,6 +121,7 @@ class NewtonApp:
        toplevel = Tk()
        toplevel.withdraw()
        filename = tkFileDialog.askopenfilename()
+       print filename
        filename = str(filename) # convert to string
        # problem with import .py file csv.Error do not resolve it. so we have to do like this
        if filename[len(filename)-3:len(filename)] == "csv":
