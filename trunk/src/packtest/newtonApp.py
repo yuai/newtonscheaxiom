@@ -89,7 +89,6 @@ class NewtonApp:
       if self.explist.dbCount == 0 :
           msg = Message(filewin, text="No file in DB", width=100)
           msg.pack(side="top")
-      
       for i in range(0,self.explist.dbCount): # get all meta information from all DB
           exp_metadata = self.explist.getMetaData(i)
           nr_series = exp_metadata['nr_series']
