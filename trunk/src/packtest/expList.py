@@ -1,4 +1,5 @@
 from data_access import Experiment
+import os # to get number of available experiments respectively databases
 
 '''
 @author: John Truong
@@ -56,3 +57,10 @@ class ExpList:
            metas = self.expList[pin].load_metadata()
            metaList.append(metas)
        return metaList
+   
+    def addAllexistedDBFile(self,mainPath,namePath):
+        ''' add all existed file DB from self.namePaht '''
+        file_count = len(os.listdir(mainPath))
+        for i in range(0,file_count-1): # -1 nur fuer testzwecken
+            nr = str(i) # number (increment) for the database filename
+            self.addExp(Experiment(namePath+nr+'.db',1))
