@@ -17,19 +17,18 @@ class XYPlot:
     ''' This Constructor sets default values for the main drawing Window'''  
     self.NegativValueBool = 0 #This 'Bool' decides which Grid-form is drawn
     self.ALLSETGO = 0         #This 'Bool'is needed because of resize problems during initialisation
-    self.width=_width
-    self.height=_height
-    self.parent=_parent
+    self.width=_width         #initial width of canvas
+    self.height=_height       #initial height of canvas
+    self.parent=_parent       #parent window of canvas
     self.bgcolor="white"
     self.fgcolor="black"
-    self.drawcolor="blue"
     self.canvas = Canvas(self.parent,width=self.width,height=self.height,bg=self.bgcolor)
     self.repaint(self.fgcolor)
     self.canvas.bind('<Configure>',self.resize)
     self.colorList = ['#0000FF','#FF0000','#00FF00', '#FFCC00',
-                    '#FF66FF','#00FFFF'] #Blau,Rot,Gruen,Gelb,Pink,Tuerkis
-    self.calc = Calc()
-    self.gridtransform = GridTransform()
+                    '#FF66FF','#00FFFF'] #blue,red,green,yellow,pink,turky
+    self.calc = Calc()                   #Calculating Object, used regression and maxima search
+    self.gridtransform = GridTransform() #Object, used for scaling 
   
   def repaint(self,_color,maxima = None):
       '''The repaint method is called initionally and everytime something in the canvas is changed.
@@ -42,6 +41,7 @@ class XYPlot:
       if self.NegativValueBool == 0:  
           #Drawing Backround of Plot-Canvas
           self.canvas.create_rectangle(0,0, self.width, self.height,fill=self.bgcolor)
+         
           nextX = 0
           nextY = 0
           for i in range (0,7):
