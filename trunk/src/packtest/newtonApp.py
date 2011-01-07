@@ -2,11 +2,9 @@ from Tkinter import *
 from expList import ExpList
 from xyplot import XYPlot
 from newtonImporter import NewtonImporter
-from data_access import Experiment
 from infoWindow import Fail
 from infoWindow import About
 from infoWindow import Help
-import os # to get number of available experiments respectively databases
 import tkFileDialog # to get the selected filename on local disk space 
 
 '''
@@ -15,50 +13,86 @@ import tkFileDialog # to get the selected filename on local disk space
 '''    
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 class NewtonApp:
-   # -----------------------------------------------------------------
+   ''' the class NewtonApp is the main class of the application '''
    # ---------------------------- variables of class NewtonApp
-   # -----------------------------------------------------------------
-   ''' set tablecount. increment to show more tables in the list-box '''
-   tablecount = 0
+   tablecount = 0 #set tablecount. increment to show more tables in the list-box
    
    def __init__(self, parent=0,left=0):
-      ''' constructor '''
-      self.explist = ExpList()
+      ''' constructor of the application '''
+      # ---------------------------- list for the application 
       self.statesPlot = [] # states of plot of the check-buttons
       self.statesTable = [] # states of table of the check buttons
       self.checkbuttonPlot = [] # save check button to change the color
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
-      self.mainPath = 'db/' #All SqliLite Files are stored here
-      self.namePath = 'db/test'#SQL data path with data name
-      self.MAX_SHOWN_EXP = 6 # max experiment on the same time
-      self.MAX_LEN_EXPNAME = 30 
-      # max length for the overview of the selected experiment on the left side
-      # (e.g. that_is_a_long_experimentname --> that_is_a_long_experimentnam...
-      # not apply for the listBox
       
-      file_count = len(os.listdir(self.mainPath))
-      for i in range(0,file_count-1): # -1 nur fuer testzwecken
-          nr = str(i) # number (increment) for the database filename
-          self.explist.addExp(Experiment(self.namePath+nr+'.db',1))
-      # -----------------------------------------------------------------   
-      #---------------------------- XYPlot
-      # -----------------------------------------------------------------
-      self.mainWindow = Frame(main)
-      self.xyPlot=XYPlot(main,800,600) # default size for canvas
-      # -----------------------------------------------------------------
-      #---------------------------- ScrollBar, ListBox
-      # -----------------------------------------------------------------
-      self.initListBox()
-      # -----------------------------------------------------------------
-      # ---------------------------- Buttons for Canvas
-      # -----------------------------------------------------------------
+      # ---------------------------- constant of the application
+      self.mainPath = 'db/' #All SqliLite Files are stored here
+      self.namePath = 'db/test' #SQL data path with data name
+      self.MAX_SHOWN_EXP = 6 # max experiment on the same time
+      self.MAX_LEN_EXPNAME = 30 # max length for the overview of the selected experiment on the left side
+                                # (e.g. that_is_a_long_experimentname --> that_is_a_long_experimentnam...
+                                # not apply for the listBox
+    
+    
+      self.explist = ExpList() # list for experiments
+      self.explist.addAllexistedDBFile(self.mainPath,self.namePath) # add all existed SQlite file from path self.namePath into the list
+      
+      self.mainWindow = Frame(main) # initial main Window
+      
+      self.xyPlot=XYPlot(main,800,600) # initial XYPlot default size for canvas
+      
+      self.myTablelistbox = [] # to show table
+      self.initListBox() # initial ScrollBar, ListBox
+      
+      self.var = IntVar() # variable for the radioButton (on or off)
+      self.initRadioButton() # initial button for canvas
+      
+      self.xyPlot.canvas.pack(fill="both", expand="1") # pack canvas after buttons for resize
+      self.mainWindow.pack(fill="both",expand="1") # pack mainWindow
+            
+   def initMenu(self):
+      ''' create Menu for the application '''
+      menubar = Menu(mainWindow)
+      filemenu = Menu(menubar, tearoff=0)
+      filemenu.add_command(label="Import", command=self.importer)
+      filemenu.add_command(label="open DB", command=self.opendDB)
+      filemenu.add_separator()
+      filemenu.add_command(label="Exit", command=mainWindow.quit)
+      menubar.add_cascade(label="File", menu=filemenu)
+      helpmenu = Menu(menubar, tearoff=0)
+      helpmenu.add_command(label="Help Index", command=self.openHelp)
+      helpmenu.add_command(label="About...", command=self.openAbout)
+      menubar.add_cascade(label="Help", menu=helpmenu)
+      mainWindow.config(menu=menubar)  
+      
+   def initListBox(self):
+       ''' initial the ListBox on the left side (for the table and experiments) '''
+       scrollbar = Scrollbar(left)
+       scrollbar.pack( side="right", fill="y")
+       # -----------------------------------------------------------------
+       #---------------------------- ListBox
+       # -----------------------------------------------------------------
+       myTablelist = Listbox(left, yscrollcommand = scrollbar.set, width="35")
+       myTablelist.xview() # for long name
+       myTablelist.pack( side="bottom", fill="both", expand="1")
+       scrollbar.config( command = myTablelist.yview )
+       self.myTablelistbox = myTablelist
+       fButton = Frame(left, border="2", relief="groove")
+       # clean all experiments
+       bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
+       bClean.pack(side="left")
+       # update the changes for the plot
+       bUpdate = Button(fButton, text="Update",command=self.updatePlot)
+       bUpdate.pack(side="left")
+       fButton.pack(fill="x",expand="0",side="bottom")
+   
+   def initRadioButton(self):
+      ''' initial RadioButton for Canvas '''
+      
       fButtons = Frame(main, border="2", relief="groove")
       bQuit = Button(fButtons, text="Quit",command=self.mainWindow.quit)
       bQuit.pack(side="right")
-      # -----------------------------------------------------------------
-      #---------------------------- RadioButton
-      # -----------------------------------------------------------------
-      self.var = IntVar() # variable for the radioButton
+      
       R1 = Radiobutton(fButtons, text="Draw dot", variable=self.var, value=1
                        ,command=self.getDrawList,indicatoron =0)
       R1.pack(side="right")
@@ -71,13 +105,12 @@ class NewtonApp:
       R4 = Radiobutton(fButtons, text="Draw curve", variable=self.var, value=4
                        ,command=self.getDrawList,indicatoron =0)
       R4.pack(side="right")
-      fButtons.pack(fill="x",expand="0",side="bottom")
-      # -----------------------------------------------------------------
-      #---------------------------- Canvas
-      # -----------------------------------------------------------------
-      self.xyPlot.canvas.pack(fill="both", expand="1") # pack canvas after buttons for resize
-      self.mainWindow.pack(fill="both",expand="1")
-      
+      fButtons.pack(fill="x",expand="0",side="bottom") 
+
+
+# -----------------------------------------------------------------
+# ------------ Start: Functions of the application 
+# -----------------------------------------------------------------            
    def opendDB(self):
       ''' open new window with the experiments from DB in a ListBox'''
       filewin = Toplevel(mainWindow) # create a new Window
@@ -100,22 +133,7 @@ class NewtonApp:
                         + actor_name + " |  " + exp_data + ", " + exp_addinfo)
       self.myDBlist.pack( side="top", fill="both", expand=1)
       self.myDBlist.bind('<Double-Button-1>', self.showExp) # event by double click on experiment
-      
-   def createMenu(self):
-      ''' create Menu for the application '''
-      menubar = Menu(mainWindow)
-      filemenu = Menu(menubar, tearoff=0)
-      filemenu.add_command(label="Import", command=self.importer)
-      filemenu.add_command(label="open DB", command=self.opendDB)
-      filemenu.add_separator()
-      filemenu.add_command(label="Exit", command=mainWindow.quit)
-      menubar.add_cascade(label="File", menu=filemenu)
-      helpmenu = Menu(menubar, tearoff=0)
-      helpmenu.add_command(label="Help Index", command=self.openHelp)
-      helpmenu.add_command(label="About...", command=self.openAbout)
-      menubar.add_cascade(label="Help", menu=helpmenu)
-      mainWindow.config(menu=menubar)   
-      
+
    def importer(self):
        ''' open new Window to select a .csv file to import into to the DB '''
        toplevel = Tk()
@@ -130,9 +148,6 @@ class NewtonApp:
                self.explist.addExp(exp.getExperiment())
        else:
            Fail( "You are trying to open an file which is  not \n compatible with this Programm.\n This Programm can only read Data in the .csv file Format")
-       
-   def sendDbCount(self):
-       return self.explist.dbCount    
               
    def showExp(self,event):
        ''' show the specific added experiment on the left side of the user interface '''
@@ -240,28 +255,7 @@ class NewtonApp:
                self.checkbuttonPlot[tempI].config(selectcolor="white") # default color is white of a checkBox
            tempI=tempI+1
        self.xyPlot.drawControl(valueList,metaList,self.var.get())  
-       
-   def initListBox(self):
-       ''' initial the ListBox on the left side (for the table and experiments) '''
-       scrollbar = Scrollbar(left)
-       scrollbar.pack( side="right", fill="y")
-       # -----------------------------------------------------------------
-       #---------------------------- ListBox
-       # -----------------------------------------------------------------
-       myTablelist = Listbox(left, yscrollcommand = scrollbar.set, width="35")
-       myTablelist.xview() # for long name
-       myTablelist.pack( side="bottom", fill="both", expand="1")
-       scrollbar.config( command = myTablelist.yview )
-       self.myTablelistbox = myTablelist
-       fButton = Frame(left, border="2", relief="groove")
-       # clean all experiments
-       bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
-       bClean.pack(side="left")
-       # update the changes for the plot
-       bUpdate = Button(fButton, text="Update",command=self.updatePlot)
-       bUpdate.pack(side="left")
-       fButton.pack(fill="x",expand="0",side="bottom")
-       
+              
    def openAbout(self):
        ''' open new window for about information '''
        About()
@@ -269,10 +263,13 @@ class NewtonApp:
    def openHelp(self):
        ''' open new window for help information '''
        Help()
-# -----------------------------------------------------------------  
-#---------------------------- Initial Tkinter
+
 # -----------------------------------------------------------------
-mainWindow=Tk()
+# ------------ End: Functions of the application 
+# ----------------------------------------------------------------- 
+
+
+mainWindow=Tk() # Initial Tkinter
 mainWindow.minsize(800,600) # minsize for mainWindow for less problem with resize
 # -----------------------------------------------------------------
 #---------------------------- Label
@@ -285,5 +282,5 @@ main.pack(side="right",fill="both",expand="1")
 #---------------------------- Start Application
 # -----------------------------------------------------------------
 app=NewtonApp(main,left) # create a application
-app.createMenu() # create menu for the application
+app.initMenu() # create menu for the application
 mainloop()
