@@ -275,8 +275,6 @@ class XYPlot:
                   color = self.colorList[i]
                   self.drawLine(element,maxima,color,1)
                   i = i+1   
-
-
   
   def drawMeta(self,metaList):
       '''The units the x and y Axis are drawn on canvas.X is set default on "t in Sekunden", whereas y is taken from the 
@@ -297,8 +295,7 @@ class XYPlot:
           else:        
               self.canvas.create_text((0.08+space)*self.width, 0.02*self.height, text=metaList[i]['vn_unit'],fill = self.colorList[i])
           space = space+0.08
-     
-          
+               
   def drawLine(self,valueList,maxima,color,smooth):
        '''This Method is drawing an Line in the given color through every point of the valueList.
        The Line is scaled by the maxima array and can change into three patterns for three different
@@ -347,10 +344,7 @@ class XYPlot:
              self.canvas.create_line(LineArray,smooth = "true",width=2,fill = newcolor,dash = pattern)
                
          i=i+1  
-       
-                 
-
-                  
+                         
   def drawDots(self,valueList,maxima,color):
       '''Draws a dot for every x,y Koordinate in the valueList.It uses the maxima Array to scale
       and the color, which it can fade  in case of more than one y-Axis.'''
@@ -383,8 +377,7 @@ class XYPlot:
                                           ,self.gridtransform.negTransAxisX(x,y,maxX,maxY,self.width)+ovalsize
                                           ,self.gridtransform.negTransAxisY(x,y,maxX,maxY,self.height)+ovalsize,fill = newcolor)
           i = i+1
-    
-                            
+                         
   def drawRegLine(self,valueList,maxima,color):
        '''This method uses the Calc Class to draw a Linear Regression of the Data points 
        in the valueList.I also changes color and pattern for the first 3 Lines pro Experiment'''
@@ -428,9 +421,6 @@ class XYPlot:
                self.canvas.create_line(x1,y1,x2,y2,width=1.5,fill = newcolor,dash = pattern)
            i = i+1    
       
-                   
-                 
-
 # -----------------------------------------------------------------
 # ------------Function to Fade color from bright to dark 
 # -----------------------------------------------------------------          
