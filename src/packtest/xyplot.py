@@ -68,17 +68,22 @@ class XYPlot:
               for i in range(0,7):
               #Drawing value Labels on X-Axis    
                   if i<1:
+                      #to prevent division by zero
                       x_float = 0
                   else:
+                      #stepsize on x axis is maxima divided by 6
                       x_float = x_float + maxima[0]/6
-                  stringx_float = round(x_float,3)   
+                 
+                  stringx_float = round(x_float,3) #important to use new float, to prevent rounding error  
                   x_str = str(stringx_float)
+                 
                   if x_str != '0':
                       self.canvas.create_text(0.1 * self.width+next,0.92*self.height, text=x_str)
                   next = next +(0.8*self.width)/6
               
               countMaxima = 0
               for i in range (0,len(maxima)-1):
+                  #look how many values must be drawn per step
                               if maxima[i]!= 0.0:
                                   countMaxima = countMaxima +1
                         
@@ -92,7 +97,7 @@ class XYPlot:
                           if i<1:
                               y_float = 0
                           else:
-                              y_float = y_float + maxima[countY]/6
+                              y_float = y_float + maxima[countY]/6#divide maxima by 6 to get step values
                           stringy_float = round (y_float,3)
                           y_str = str(stringy_float)
                           if stringy_float != 0.0:
@@ -143,10 +148,12 @@ class XYPlot:
                   else:
                       negx_float =negx_float + (maxima[0]/6)
                       x_float = x_float + (maxima[0]/6)        
+                 
                   stringnegx_float = round(negx_float,3)
                   stringx_float = round(x_float,3)    
                   negx_str = str(stringnegx_float)
                   x_str = str(stringx_float)
+                 
                   if stringnegx_float != 0.0:
                       self.canvas.create_text(0.05 * self.width+next,0.53*self.height, text=negx_str)
                   if stringx_float != 0.0:
@@ -231,16 +238,19 @@ class XYPlot:
       else:
           self.NegativValueBool = 0   
       
-      if max(maxima)==0 and min(minima)==0:#Looking if max and min are correct to avoid dividing through zero
+      #Looking if max and min are correct to avoid dividing through zero
+      if max(maxima)==0 and min(minima)==0:
           self.NegativValueBool = 2  
           
               
       
       self.repaint(self.fgcolor,maxima)
       self.drawMeta(metaList)
-      #different drawing Functions are called dependig on which button is pushed
+      
       
       if self.NegativValueBool != 2:#If this is not true an error ocurred in getMax function.
+     
+      #different drawing Functions are called depending on which button is pushed    
           if button == 1 :
               i = 0
               for element in drawList:
