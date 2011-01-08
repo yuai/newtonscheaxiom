@@ -4,27 +4,31 @@ from infoWindow import About
 from infoWindow import Help
 from expList import ExpList
 from xyplot import XYPlot
+from newtonImporter import NewtonImporter
 import tkFileDialog # to get the selected filename on local disk space
 
 '''
-@author: Daniel Xander
 @author: John Truong
 '''
 class NewtonAppFunction:
+   ''' this class NewtonAppFunction has the main functions of the application.
+       without function for the canvas.
+       the method getDrawList are the method for the xyPlot and controlled the changes/function for the xyPlot.
+   '''
     
-   # ---------------------------- variables of class NewtonApp
+   # ---------------------------- variables of class NewtonAppFunction
    tablecount = 0 #set tablecount. increment to show more tables in the list-box
         
-   def __init__(self,left,xyPlot,var):
+   def __init__(self,left,xyPlot,var,myTablelistbox):
       # ---------------------------- list for the application 
       self.statesPlot = [] # states of plot of the check-buttons
       self.statesTable = [] # states of table of the check buttons
       self.checkbuttonPlot = [] # save check button to change the color
       self.checkbuttonTable = [] # save checkbuttonTable to destroy it
-      self.myTablelistbox = [] # to show table
+      self.myTablelistbox = myTablelistbox # to show table
       self.left = left # left side of the application to add experiment
-      self.xyPlot = xyPlot
-      self.var = var
+      self.xyPlot = xyPlot # to show dots on xyPlot
+      self.var = var # variable to change function
       
       # ---------------------------- constant of the application
       self.mainPath = 'db/' #All SqliLite Files are stored here
@@ -35,11 +39,7 @@ class NewtonAppFunction:
                                 # not apply for the listBox
       self.explist = ExpList() # list for experiments
       self.explist.addAllexistedDBFile(self.mainPath,self.namePath) # add all existed SQlite file from path self.namePath into the list
-      
-         
-# -----------------------------------------------------------------
-# ------------ Start: Functions of the application 
-# -----------------------------------------------------------------            
+               
    def opendDB(self):
       ''' open new window with the experiments from DB in a ListBox'''
       filewin = Toplevel() # create a new Window
@@ -166,7 +166,7 @@ class NewtonAppFunction:
                     Fail("Sorry, Table only can show one Y-Axis\n If you want to see all you have to split your csv File into \n one for every Y-Set")        
                    
    def getDrawList(self):
-       ''' get values from the experiment '''
+       ''' get values from the experiment and open method drawControl from class XYPlot'''
        valueList = []
        metaList = []
        tempI=0 # variable increment go thought the check-buttons
@@ -184,27 +184,6 @@ class NewtonAppFunction:
                self.checkbuttonPlot[tempI].config(selectcolor="white") # default color is white of a checkBox
            tempI=tempI+1
        self.xyPlot.drawControl(valueList,metaList,self.var.get())
-       
-   def initListBox(self):
-       ''' initial the ListBox on the left side (for the table and experiments) '''
-       scrollbar = Scrollbar(self.left)
-       scrollbar.pack( side="right", fill="y")
-       # -----------------------------------------------------------------
-       #---------------------------- ListBox
-       # -----------------------------------------------------------------
-       myTablelist = Listbox(self.left, yscrollcommand = scrollbar.set, width="35")
-       myTablelist.xview() # for long name
-       myTablelist.pack( side="bottom", fill="both", expand="1")
-       scrollbar.config( command = myTablelist.yview )
-       self.myTablelistbox = myTablelist
-       fButton = Frame(self.left, border="2", relief="groove")
-       # clean all experiments
-       bClean = Button(fButton, text="Clean all",command=self.cleanAllExp)
-       bClean.pack(side="left")
-       # update the changes for the plot
-       bUpdate = Button(fButton, text="Update",command=self.updatePlot)
-       bUpdate.pack(side="left")
-       fButton.pack(fill="x",expand="0",side="bottom")
               
    def openAbout(self):
        ''' open new window for about information '''
