@@ -91,6 +91,7 @@ class NewtonImporter:
        
         
         self.values = zip(*self.values)#Have to transpose array in order to match given SQL standard
+    
     def fillSql(self):
         '''This method writes the data of the value arrays and the metadictionary into an
         SQLLite file where it is stored'''
