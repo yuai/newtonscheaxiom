@@ -6,6 +6,7 @@ from Tkinter import *
 '''
 
 class Fail:
+    '''Opens an Window with an Error information telling the user how to solve an problem.'''
     def __init__(self,message):
         self.failWindow = Tk()
         err_message = Label(self.failWindow, text = message)
@@ -14,6 +15,7 @@ class Fail:
         err_button.pack()
         
 class Help:
+    '''Opens an instructional window telling the user how to operate the application'''
     def __init__(self):
         helpWindow = Tk()
         help_title = Label(helpWindow, text="Help", font=("Helvetica", 16))
@@ -54,6 +56,7 @@ class Help:
         
         
 class About:
+    '''Shows an Window with information about the application and the developers'''
     def __init__(self):
         aboutWindow = Tk()
         title = Label(aboutWindow, text="Newton\n--------------", font=("Helvetica", 16))
