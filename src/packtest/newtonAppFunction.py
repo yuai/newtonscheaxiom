@@ -32,7 +32,7 @@ class NewtonAppFunction:
       
       # ---------------------------- constant of the application
       self.mainPath = 'db/' #All SqliLite Files are stored here
-      self.namePath = 'db/test' #SQL data path with data name
+      self.namePath = 'db/file' #SQL data path with data name
       self.MAX_SHOWN_EXP = 6 # max experiment on the same time
       self.MAX_LEN_EXPNAME = 30 # max length for the overview of the selected experiment on the left side
                                 # (e.g. that_is_a_long_experimentname --> that_is_a_long_experimentnam...
